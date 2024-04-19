@@ -1,0 +1,13 @@
+---
+import { getEntry } from 'astro:content';
+
+const { lang, slug } = Astro.params;
+const page = await getEntry('help', `${lang}/${slug}`);
+
+if (!page) {
+  return Astro.redirect('/404');
+}
+
+const { Content, headings } = await page.render();
+---
+<Content/>
