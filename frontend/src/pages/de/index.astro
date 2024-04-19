@@ -1,0 +1,16 @@
+---
+import DefaultLayout from "~/layouts/DefaultLayout.astro";
+
+import { getLangFromUrl, useTranslations } from '~/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<DefaultLayout title={t('nav.home')}>
+    <section class="mb-12 mt-12">
+        <div class="container">
+        <h2 class="mb-16 text-6xl">{t('index')}</h2>
+        <p>{t('workInProgress')}</p>
+        </div>
+    </section>
+</DefaultLayout>

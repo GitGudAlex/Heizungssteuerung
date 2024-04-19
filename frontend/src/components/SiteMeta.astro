@@ -1,9 +1,13 @@
 ---
 import { ViewTransitions } from 'astro:transitions'
+import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 
-const { title, description, url, author } = Astro.props
+const { title, description, author } = Astro.props
 
-let subtitle = 'Heizungssteuerung'
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+let subtitle = t('title');
 ---
 
 <!-- general meta -->

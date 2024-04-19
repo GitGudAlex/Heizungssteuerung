@@ -1,13 +1,16 @@
 ---
+import LanguagePicker from "./LanguagePicker.astro"
+
 const currentYear = new Date().getFullYear()
 ---
 
 <footer>
   <section class="py-8">
-    <div class="container">
-      <p>
-        &copy; {currentYear} - <a href="https://www.hdm-stuttgart.de/" target="_blank">Hochschule der Medien</a> - Heizungssteuerung
+    <div class="container flex items-center justify-between">
+      <p class="inline">
+        &copy; {currentYear}
       </p>
+      <LanguagePicker />
     </div>
   </section>
 </footer>
