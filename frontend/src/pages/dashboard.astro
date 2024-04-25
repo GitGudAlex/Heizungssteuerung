@@ -1,9 +1,7 @@
 ---
 import DefaultLayout from "~/layouts/DefaultLayout.astro";
-
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from "~/utils/auth/CheckAuth";
-import AuthLogout from "~/components/auth/AuthLogout.svelte";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -20,17 +18,12 @@ if(!Astro.cookies.has('token')) {
         console.log('User authorized');
     }
 }
-
-const logoutTranslations: Record<string, string> =  await {
-    "logout": t('logout'),
-};
 ---
-<DefaultLayout title={t('nav.settings')}>
+<DefaultLayout title={t('dashboard')}>
     <section class="mb-12 mt-12">
         <div class="container">
-        <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
+        <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
         <p>{t('workInProgress')}</p>
-        <AuthLogout client:load translations={logoutTranslations} lang={lang}  />   
         </div>
     </section>
 </DefaultLayout>

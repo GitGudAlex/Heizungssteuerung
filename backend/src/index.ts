@@ -1,11 +1,58 @@
-import 'dotenv/config'
+import * as dotenv from 'dotenv'
+import cors from 'cors'
 import express from 'express'
+import session from 'express-session'
+import mongoose from 'mongoose'
+import jwt from 'jsonwebtoken'
+import authRouter from './routes/auth'
+dotenv.config()
 
 const app = express()
-const port = (process.env.PORT != null) || 3000
 
-app.get('/', (req, res) => {
+const port = (process.env.PORT != null) ? parseInt(process.env.PORT, 10) : 3000
+const secretKey: string = process.env.SECRET_KEY
+const jwtWebTokenSecret: string = process.env.JWT_WEB_TOKEN_SECRET
+const dbUrl = process.env.DATABASE_URL
+
+// MongoDB connection
+mongoose.connect(dbUrl)
+
+const db = mongoose.connection
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+
+app.use(session({
+  secret: secretKey, // session encryption key
+  resave: false,
+  saveUninitialized: true
+}))
+
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+// routes
+app.use('/', authRouter)
+
+app.get('/', (_, res) => {
   res.send('Hello World!')
+})
+
+// Middleware to verify JWT token
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers.authorization
+  const token = authHeader?.split(' ')[1]
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, jwtWebTokenSecret, (err, user) => {
+    if (err) return res.sendStatus(403)
+    req.user = user
+    next()
+  })
+}
+
+// Protected route
+app.get('/verifyAuth', authenticateToken, (req, res) => {
+  res.json({ message: 'Access granted' })
 })
 
 app.listen(port, () => {
