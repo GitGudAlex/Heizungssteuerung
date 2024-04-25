@@ -3,17 +3,36 @@ import Navigation from '../components/Navigation.astro'
 import { SkipLinks } from 'accessible-astro-components'
 import { Icon } from 'astro-icon/components'
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
+import checkAuth from '~/utils/auth/CheckAuth';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+var isAuthorized = false;
+if(!Astro.cookies.has('token')) {
+    isAuthorized = false
+} else {
+    var token = Astro.cookies.get('token');
+    var auth = await checkAuth(token);
+    if(auth === false) {
+        console.log('User not authorized');
+        isAuthorized = false
+    } else {
+        isAuthorized = true
+    }
+}
 ---
 
 <header>
   <SkipLinks />
   <Navigation>
+    {isAuthorized && (<li class="menu-item">
+      <a href={`/${lang}/dashboard`}>{t('dashboard')}</a>
+    </li>
     <li class="menu-item">
       <a href={`/${lang}/settings`}>{t('nav.settings')}</a>
     </li>
+    )}
     <li class="menu-item has-dropdown">
       <button aria-haspopup="true" aria-expanded="false">{t('nav.help')}</button>
       <ul class="dropdown-menu">

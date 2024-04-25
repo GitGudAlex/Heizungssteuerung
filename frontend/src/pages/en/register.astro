@@ -1,0 +1,24 @@
+---
+import DefaultLayout from "~/layouts/DefaultLayout.astro";
+import AuthRegister from "~/components/auth/AuthRegister.svelte";
+
+import { getLangFromUrl, useTranslations } from '~/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const translations: Record<string, string> =  await {
+    "username": t('username'),
+    "password": t('password'),
+    "register": t('register'),
+};
+
+---
+<DefaultLayout title={t('register')}>
+    <section class="mb-12 mt-12">
+        <div class="container">
+        <h2 class="mb-16 text-6xl">{t('register')}</h2>
+        <AuthRegister client:load translations={translations} />
+        </div>
+    </section>
+</DefaultLayout>
