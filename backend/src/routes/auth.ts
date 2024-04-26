@@ -1,3 +1,6 @@
+// need to use async in the callback function to use await, this rule does not work with express
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 import * as dotenv from 'dotenv'
 import express, { type Request, type Response } from 'express'
 import bcrypt from 'bcrypt'
@@ -7,18 +10,21 @@ dotenv.config()
 
 const authRouter = express.Router()
 
-const jwtWebTokenSecret: string = process.env.JWT_WEB_TOKEN_SECRET
+const jwtWebTokenSecret: string | undefined = process.env.JWT_WEB_TOKEN_SECRET
 
-authRouter.post('/register', async (req: Request, res: Response): void => {
+if (jwtWebTokenSecret == null) {
+  throw new Error('JWT_WEB_TOKEN_SECRET is not set')
+}
+
+authRouter.post('/register', async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password }: { username: string, password: string } = req.body
 
     // check if username already exists
     const existing = await User.findOne({ username })
-    if (existing) {
+    if (existing != null) {
       console.log(existing)
       res.status(400).json({ message: 'Username already exists' })
-      return
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -33,20 +39,18 @@ authRouter.post('/register', async (req: Request, res: Response): void => {
   }
 })
 
-authRouter.post('/login', async (req: Request, res: Response): void => {
+authRouter.post('/login', async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password }: { username: string, password: string } = req.body
 
     const user = await User.findOne({ username })
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if ((user == null) || !(await bcrypt.compare(password, user.password))) {
       res.status(401).json({ message: 'Invalid username or password' })
-      return
     }
 
     if (!user.isApproved) {
       res.status(403).json({ message: 'User not approved by admin' })
-      return
     }
 
     // Generate JWT token

@@ -10,15 +10,28 @@ dotenv.config()
 const app = express()
 
 const port = (process.env.PORT != null) ? parseInt(process.env.PORT, 10) : 3000
-const secretKey: string = process.env.SECRET_KEY
-const jwtWebTokenSecret: string = process.env.JWT_WEB_TOKEN_SECRET
+
+const secretKey = process.env.SECRET_KEY
+if (secretKey == null) {
+  throw new Error('SECRET_KEY is not set')
+}
+
+const jwtWebTokenSecret = process.env.JWT_WEB_TOKEN_SECRET
+if (jwtWebTokenSecret == null) {
+  throw new Error('JWT_WEB_TOKEN_SECRET is not set')
+}
+
 const dbUrl = process.env.DATABASE_URL
+if (dbUrl == null) {
+  throw new Error('DATABASE_URL is not set')
+}
 
-// MongoDB connection
-mongoose.connect(dbUrl)
-
-const db = mongoose.connection
-db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+// connect to MongoDB
+async function connectToDb (dbUrl: string): Promise<mongoose.Connection> {
+  await mongoose.connect(dbUrl)
+  return mongoose.connection
+}
+connectToDb(dbUrl).catch((e) => { console.error(e) })
 
 app.use(session({
   secret: secretKey, // session encryption key
@@ -38,13 +51,19 @@ app.get('/', (_, res) => {
 })
 
 // Middleware to verify JWT token
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers.authorization
-  const token = authHeader?.split(' ')[1]
-  if (token == null) return res.sendStatus(401)
+type RequestWithUser = express.Request & { user: any }
 
-  jwt.verify(token, jwtWebTokenSecret, (err, user) => {
-    if (err) return res.sendStatus(403)
+const authenticateToken = (req: RequestWithUser, res: express.Response, next: express.NextFunction): express.Response<any, Record<string, any>> => {
+  const authHeader = req.headers.authorization
+  const token: string = authHeader?.split(' ')[1]
+  if (token == null) {
+    return res.sendStatus(401)
+  }
+
+  jwt.verify(token, jwtWebTokenSecret, (err: jwt.VerifyErrors | null, user: any) => {
+    if (err != null) {
+      return res.sendStatus(403)
+    }
     req.user = user
     next()
   })
