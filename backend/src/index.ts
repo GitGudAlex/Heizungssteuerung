@@ -5,10 +5,10 @@ import session from 'express-session'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
 import authRouter from './routes/auth'
+import { FritzController } from './domain/fritz/fritz'
 dotenv.config()
 
 const app = express()
-
 const port = (process.env.PORT != null) ? parseInt(process.env.PORT, 10) : 3000
 
 const secretKey = process.env.SECRET_KEY
@@ -33,6 +33,13 @@ async function connectToDb (dbUrl: string): Promise<mongoose.Connection> {
 }
 connectToDb(dbUrl).catch((e) => { console.error(e) })
 
+// connect to Fritz!Box
+// const fritz = new FritzController()
+// fritz.getDeviceListInfos().then((deviceListInfos) => { console.log(JSON.stringify(deviceListInfos, undefined, 2)) }).catch((e) => { console.error(e) })
+// fritz.setTempTarget('09995 0688917', 32).then((response) => { console.log(JSON.stringify(response, undefined, 2)) }).catch((e) => { console.error(e) })
+// fritz.getTempTarget('09995 0688917').then((response) => { console.log(JSON.stringify(response, undefined, 2)) }).catch((e) => { console.error(e) })
+// fritz.getTemperature('09995 0688917').then((response) => { console.log(JSON.stringify(response, undefined, 2)) }).catch((e) => { console.error(e) })
+
 app.use(session({
   secret: secretKey, // session encryption key
   resave: false,
@@ -51,11 +58,9 @@ app.get('/', (_, res) => {
 })
 
 // Middleware to verify JWT token
-type RequestWithUser = express.Request & { user: any }
-
-const authenticateToken = (req: RequestWithUser, res: express.Response, next: express.NextFunction): express.Response<any, Record<string, any>> => {
+const authenticateToken = (req: any, res: any, next: any): any => {
   const authHeader = req.headers.authorization
-  const token: string = authHeader?.split(' ')[1]
+  const token: string | undefined = authHeader?.split(' ')[1]
   if (token == null) {
     return res.sendStatus(401)
   }

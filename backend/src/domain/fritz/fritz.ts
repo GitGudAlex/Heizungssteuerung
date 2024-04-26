@@ -1,0 +1,100 @@
+import { Fritz } from 'fritzdect-aha-nodejs'
+import { XmlParser } from './xml-parser'
+import { type FritzDeviceList } from '../../model/fritz/fritz-device.type'
+
+export class FritzController {
+  public readonly fritz: Fritz
+  private readonly xmlParser = new XmlParser()
+
+  constructor () {
+    const fritzUsername = process.env.FRITZ_USERNAME
+    if (fritzUsername == null) {
+      throw new Error('FRITZ_USERNAME is not set')
+    }
+    const fritzPassword = process.env.FRITZ_PASSWORD
+    if (fritzPassword == null) {
+      throw new Error('FRITZ_PASSWORD is not set')
+    }
+    this.fritz = new Fritz(fritzUsername, fritzPassword)
+    console.log('FritzController initialized')
+  }
+
+  /**
+   * Gets the device list infos.
+   */
+  public async getDeviceListInfos (): Promise<FritzDeviceList> {
+    try {
+      const xml = await this.fritz.getDeviceListInfos()
+      const json = await this.xmlParser.parseXmlToJson(xml)
+      return json
+    } catch (error) {
+      console.error('Error getting device list infos:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Gets basic device stats.
+   * @param identifier The identifier of the device. (e.g "09995 0688917")
+   */
+  public async getBasicDeviceStats (identifier: string): Promise<any> {
+    try {
+      const xml = await this.fritz.getBasicDeviceStats(identifier)
+      return await this.xmlParser.parseXmlToJson(xml)
+    } catch (error) {
+      console.error('Error getting basic device stats:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Sets the temperature target for a device.
+   * @param identifier The identifier of the device. (e.g "09995 0688917")
+   * @param temp The temperature to set.
+   *    Temperature value in 0.5 °C, value range:
+   *    16 – 56
+   *    8 to 28°C, 16 <= 8°C, 17 = 8.5°C...... 56 >= 28°C
+   *    254 = ON, 253 = OFF
+   */
+  public async setTempTarget (identifier: string, temp: number): Promise<number> {
+    try {
+      const tempTarget = await this.fritz.setTempTarget(identifier, temp)
+      return Number(tempTarget)
+    } catch (error) {
+      console.error('Error setting temperature target:', error)
+      throw error
+    }
+  }
+
+  /**
+   *
+   * @param identifier The identifier of the device. (e.g "09995 0688917")
+   * @returns The current temperature target of a device.
+   *    Temperature value in 0.5 °C, value range:
+   *    16 – 56
+   *    8 to 28°C, 16 <= 8°C, 17 = 8.5°C...... 56 >= 28°C
+   *    254 = ON, 253 = OFF
+   */
+  public async getTempTarget (identifier: string): Promise<number> {
+    try {
+      return Number(await this.fritz.getHkrTsoll(identifier))
+    } catch (error) {
+      console.error('Error getting temperature target:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Gets the last temperature information of a device.
+   * @param identifier The identifier of the device. (e.g "09995 0688917")
+   * @returns The last temperature information of a device, in 0,1 °C steps (e.g. 200 is 20°C).
+   */
+  public async getTemperature (identifier: string): Promise<number> {
+    try {
+      return Number(await this.fritz.getTemperature(identifier))
+    } catch (error) {
+      console.error('Error getting temperature:', error)
+      throw error
+    }
+  }
+}

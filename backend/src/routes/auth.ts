@@ -47,10 +47,12 @@ authRouter.post('/login', async (req: Request, res: Response): Promise<void> => 
 
     if ((user == null) || !(await bcrypt.compare(password, user.password))) {
       res.status(401).json({ message: 'Invalid username or password' })
+      return
     }
 
     if (!user.isApproved) {
       res.status(403).json({ message: 'User not approved by admin' })
+      return
     }
 
     // Generate JWT token
