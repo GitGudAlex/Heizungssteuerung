@@ -7,13 +7,13 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 if(!Astro.cookies.has('token')) {
-    return Astro.redirect('/401');
+    return Astro.redirect(lang + '/401');
 } else {
     var token = Astro.cookies.get('token');
     var auth = await checkAuth(token);
     if(auth === false) {
         console.log('User not authorized');
-        return Astro.redirect('/401');
+        return Astro.redirect(lang + '/401');
     } else {
         console.log('User authorized');
     }
