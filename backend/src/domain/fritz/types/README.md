@@ -1,0 +1,1 @@
+The types in this folder are types for the package `fritzdect-aha-nodejs` we need to maintain ourselfs.
