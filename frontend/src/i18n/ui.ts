@@ -24,6 +24,8 @@ export const ui = {
     password: 'Password',
     createAccount: 'Create an account',
     logout: 'Logout',
+    notAuthorized: 'You are not authorized to access this page. Please log in.',
+    thisPageDoesNotExist: 'This page does not exist.',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -43,5 +45,7 @@ export const ui = {
     password: 'Passwort',
     createAccount: 'Account erstellen',
     logout: 'Ausloggen',
+    notAuthorized: 'Sie sind nicht autorisiert, auf diese Seite zuzugreifen. Bitte loggen Sie sich ein.',
+    thisPageDoesNotExist: 'Diese Seite existiert nicht.',
   },
 } as const
