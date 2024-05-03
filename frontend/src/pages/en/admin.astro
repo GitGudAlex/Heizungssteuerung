@@ -1,0 +1,48 @@
+---
+import DefaultLayout from "~/layouts/DefaultLayout.astro";
+
+import { getLangFromUrl, useTranslations } from '~/i18n/utils';
+import checkAuth from "~/utils/auth/CheckAdmin";
+import checkAdmin from "~/utils/auth/CheckAdmin";
+import AdminSettings from "~/components/admin/AdminSettings.svelte";
+
+if(!Astro.cookies.has('token')) {
+    return Astro.redirect('/401');
+} else {
+    const token = Astro.cookies.get('token');
+    const auth = await checkAuth(token);
+    const isAdmin = await checkAdmin(token);
+
+    if(auth === false || isAdmin === false) {
+        console.log('User not authorized to access this page');
+        return Astro.redirect('/401');
+    } else {
+        console.log('User authorized');
+    }
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const translations: Record<string, string> =  await {
+    "adminArea": t('adminArea'),
+    "invitationCode": t('invitationCode'),
+    "invitationCodeDescription": t('invitationCodeDescription'),
+    "calendarRegex": t('calendarRegex'),
+    "calendarRegexDescription": t('calendarRegexDescription'),
+    "save": t('save'),
+    "linkCopied": t('linkCopied'),
+    "copyLink": t('copyLink'),
+    "settingsSaved": t('settingsSaved'),
+    "failedToSaveSettings": t('failedToSaveSettings'),
+};
+
+---
+<DefaultLayout title={t('adminArea')}>
+    <section class="mb-12 mt-12">
+        <div class="container">
+        <h2 class="mb-16 text-6xl">{t('adminArea')}</h2>
+        <AdminSettings client:load translations={translations} lang={lang} />
+        </div>
+    </section>
+</DefaultLayout>

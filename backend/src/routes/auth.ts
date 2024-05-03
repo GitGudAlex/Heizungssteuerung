@@ -15,13 +15,19 @@ if (jwtWebTokenSecret == null) {
 
 authRouter.post('/register', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, password }: { username: string, password: string } = req.body
+    const { username, password, invitationCode }: { username: string, password: string, invitationCode: string } = req.body
 
     // check if username already exists
     const existing = await User.findOne({ username })
     if (existing != null) {
       console.log(existing)
       res.status(400).json({ message: 'Username already exists' })
+    }
+
+    // check if invitation code is correct
+    if (invitationCode !== process.env.INVITATION_CODE) {
+      res.status(400).json({ message: 'Invalid invitation code' })
+      return
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -44,11 +50,6 @@ authRouter.post('/login', async (req: Request, res: Response): Promise<void> => 
 
     if ((user == null) || !(await bcrypt.compare(password, user.password))) {
       res.status(401).json({ message: 'Invalid username or password' })
-      return
-    }
-
-    if (!user.isApproved) {
-      res.status(403).json({ message: 'User not approved by admin' })
       return
     }
 
