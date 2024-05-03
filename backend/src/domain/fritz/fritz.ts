@@ -2,7 +2,7 @@ import { Fritz } from 'fritzdect-aha-nodejs'
 import { XmlParser } from './xml-parser'
 import { type FritzDeviceList } from '../../model/fritz/fritz-device.type'
 
-export class FritzController {
+class FritzController {
   public readonly fritz: Fritz
   private readonly xmlParser = new XmlParser()
 
@@ -98,3 +98,5 @@ export class FritzController {
     }
   }
 }
+
+export const FRITZ_SINGLETON = new FritzController()

@@ -1,6 +1,3 @@
-// need to use async in the callback function to use await, this rule does not work with express
-/* eslint-disable @typescript-eslint/no-misused-promises */
-
 import * as dotenv from 'dotenv'
 import express, { type Request, type Response } from 'express'
 import bcrypt from 'bcrypt'
