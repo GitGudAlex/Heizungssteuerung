@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import * as dotenv from 'dotenv'
 import cors from 'cors'
 import express from 'express'
@@ -5,7 +6,10 @@ import session from 'express-session'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
 import authRouter from './routes/auth'
+import { FritzController } from './domain/fritz/fritz'
+import bodyParser from 'body-parser'
 import { deviceRouter } from './routes/devices/device.router'
+import calenderRouter from './routes/calendar.router'
 import { User } from './model/user'
 import adminRouter from './routes/admin'
 dotenv.config()
@@ -47,6 +51,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // routes
 app.use('/', authRouter)
+app.use('/calendar', calenderRouter)
 app.use('/admin-settings', adminRouter)
 app.use('/device', deviceRouter)
 
@@ -96,6 +101,8 @@ app.get('/verifyAdmin', authenticateToken, async (req: Request, res: Response): 
     res.status(500).json({ message: 'Internal server error' })
   }
 })
+
+app.use(bodyParser.json())
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)
