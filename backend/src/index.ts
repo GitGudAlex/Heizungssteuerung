@@ -6,6 +6,8 @@ import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
 import authRouter from './routes/auth'
 import { deviceRouter } from './routes/devices/device.router'
+import { User } from './model/user'
+import adminRouter from './routes/admin'
 dotenv.config()
 
 const app = express()
@@ -45,6 +47,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // routes
 app.use('/', authRouter)
+app.use('/admin-settings', adminRouter)
 app.use('/device', deviceRouter)
 
 app.get('/', (_, res) => {
@@ -71,6 +74,27 @@ const authenticateToken = (req: any, res: any, next: any): any => {
 // Protected route
 app.get('/verifyAuth', authenticateToken, (req, res) => {
   res.json({ message: 'Access granted' })
+})
+
+app.get('/verifyAdmin', authenticateToken, async (req: Request, res: Response): void => {
+  try {
+    // Fetch the user from the database
+    const user = await User.findOne({ _id: req.user.userId })
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Check if the user is an admin
+    const isAdmin = user.isAdmin
+    if (!isAdmin) {
+      return res.status(401).json({ message: 'User is no admin' })
+    }
+    res.json({ isAdmin })
+  } catch (err) {
+    console.error('Error checking admin status:', err)
+    res.status(500).json({ message: 'Internal server error' })
+  }
 })
 
 app.listen(port, () => {

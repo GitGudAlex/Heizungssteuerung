@@ -11,6 +11,7 @@ const translations: Record<string, string> =  await {
     "username": t('username'),
     "password": t('password'),
     "register": t('register'),
+    "invitationCode": t('invitationCode'),
 };
 
 ---
@@ -18,7 +19,7 @@ const translations: Record<string, string> =  await {
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('register')}</h2>
-        <AuthRegister client:load translations={translations} />
+        <AuthRegister client:only translations={translations} />
         </div>
     </section>
 </DefaultLayout>

@@ -4,22 +4,24 @@ import { SkipLinks } from 'accessible-astro-components'
 import { Icon } from 'astro-icon/components'
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from '~/utils/auth/CheckAuth';
+import checkAdmin from '~/utils/auth/CheckAdmin';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 var isAuthorized = false;
+var isAdmin = false;
 if(!Astro.cookies.has('token')) {
     isAuthorized = false
 } else {
     var token = Astro.cookies.get('token');
     var auth = await checkAuth(token);
     if(auth === false) {
-        console.log('User not authorized');
         isAuthorized = false
     } else {
         isAuthorized = true
     }
+    isAdmin = await checkAdmin(token);
 }
 ---
 
@@ -31,6 +33,10 @@ if(!Astro.cookies.has('token')) {
     </li>
     <li class="menu-item">
       <a href={`/${lang}/settings`}>{t('nav.settings')}</a>
+    </li>
+    )}
+    {isAuthorized && isAdmin && (<li class="menu-item">
+      <a href={`/${lang}/admin`}>{t('adminArea')}</a>
     </li>
     )}
     <li class="menu-item has-dropdown">
