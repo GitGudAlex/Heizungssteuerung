@@ -2,9 +2,18 @@
 import DefaultLayout from "~/layouts/DefaultLayout.astro";
 
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
+import checkAuth from "~/utils/auth/CheckAuth";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+if (Astro.cookies.has('token')) {
+    var token = Astro.cookies.get('token');
+    var auth = await checkAuth(token);
+    if(auth === true) {
+        return Astro.redirect('/' + lang + '/dashboard');
+    }
+}
 ---
 <DefaultLayout title={t('nav.home')}>
     <section class="mb-12 mt-12">
