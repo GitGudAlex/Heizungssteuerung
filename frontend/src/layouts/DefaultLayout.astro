@@ -32,6 +32,19 @@ const {
       description={description.substring(0, 100)}
       author={author}
     />
+    <script>
+      // toggle sepia mode
+      document.addEventListener('astro:page-load', () => {
+        let sepiaMode = localStorage.getItem('sepiaMode') === 'enabled';
+        if (localStorage.getItem('sepiaMode') === null) {
+          localStorage.setItem('sepiaMode', 'disabled');
+        } else {
+          if (sepiaMode){
+            document.body.style.filter = 'sepia()';
+          }
+        }
+      });
+    </script>
   </head>
   <body>
     <Header />

@@ -4,6 +4,8 @@ import DefaultLayout from "~/layouts/DefaultLayout.astro";
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from "~/utils/auth/CheckAuth";
 import AuthLogout from "~/components/auth/AuthLogout.svelte";
+import SepiaToggle from "~/components/settings/SepiaToggle.svelte";
+import getUserId from "~/utils/auth/GetUserId";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -20,6 +22,14 @@ if(!Astro.cookies.has('token')) {
         console.log('User authorized');
     }
 }
+const userId = await getUserId(token);
+
+const sepiaTranslations: Record<string, string> =  await {
+    "sepiaMode": t('sepiaMode'),
+    "sepiaModeOn": t('sepiaModeOn'),
+    "sepiaModeOff": t('sepiaModeOff'),
+    "sepiaModeDesc": t('sepiaModeDescription'),
+};
 
 const logoutTranslations: Record<string, string> =  await {
     "logout": t('logout'),
@@ -29,7 +39,7 @@ const logoutTranslations: Record<string, string> =  await {
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
-        <p>{t('workInProgress')}</p>
+        <SepiaToggle client:load translations={sepiaTranslations} lang={lang} userId={userId} />
         <AuthLogout client:load translations={logoutTranslations} lang={lang}  />   
         </div>
     </section>

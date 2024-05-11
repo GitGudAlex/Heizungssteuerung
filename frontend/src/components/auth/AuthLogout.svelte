@@ -8,6 +8,10 @@
     document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
     // Redirect
     window.location.href = `/${lang}/login`
+
+    // clear local storage
+    localStorage.removeItem('sepiaMode')
+    localStorage.removeItem('settingsLoaded')
   }
 </script>
 

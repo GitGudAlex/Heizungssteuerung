@@ -36,6 +36,10 @@ export const ui = {
     failedToSaveSettings: 'Failed to save settings',
     notAuthorized: 'You are not authorized to access this page. Please log in.',
     thisPageDoesNotExist: 'This page does not exist.',
+    sepiaMode: 'Sepia mode',
+    sepiaModeOn: 'Sepia mode on',
+    sepiaModeOff: 'Sepia mode off',
+    sepiaModeDescription: 'Sepia mode is a color scheme that reduces the amount of blue light emitted by the screen. This can help reduce eye strain and improve sleep quality.',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -67,5 +71,9 @@ export const ui = {
     failedToSaveSettings: 'Einstellungen konnten nicht gespeichert werden',
     notAuthorized: 'Sie sind nicht autorisiert, auf diese Seite zuzugreifen. Bitte loggen Sie sich ein.',
     thisPageDoesNotExist: 'Diese Seite existiert nicht.',
+    sepiaMode: 'Sepia Modus',
+    sepiaModeOn: 'Sepia Modus an',
+    sepiaModeOff: 'Sepia Modus aus',
+    sepiaModeDescription: 'Der Sepia Modus ist ein Farbschema, das die Menge an blauem Licht reduziert, das vom Bildschirm abgegeben wird. Dies kann helfen, die Augenbelastung zu reduzieren und die Schlafqualität zu verbessern.',
   },
 } as const

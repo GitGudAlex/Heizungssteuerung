@@ -12,6 +12,7 @@ import { deviceRouter } from './routes/devices/device.router'
 import calenderRouter from './routes/calendar.router'
 import { User } from './model/user'
 import adminRouter from './routes/admin'
+import userRouter from './routes/user.router'
 dotenv.config()
 
 const app = express()
@@ -54,6 +55,7 @@ app.use('/', authRouter)
 app.use('/calendar', calenderRouter)
 app.use('/admin-settings', adminRouter)
 app.use('/device', deviceRouter)
+app.use('/user-settings', userRouter)
 
 app.get('/', (_, res) => {
   res.send('Hello World!')
@@ -79,6 +81,11 @@ const authenticateToken = (req: any, res: any, next: any): any => {
 // Protected route
 app.get('/verifyAuth', authenticateToken, (req, res) => {
   res.json({ message: 'Access granted' })
+})
+
+// Get the user ID from the token
+app.get('/userId', authenticateToken, (req, res) => {
+  res.json({ userId: req.user.userId })
 })
 
 app.get('/verifyAdmin', authenticateToken, async (req: Request, res: Response): void => {
