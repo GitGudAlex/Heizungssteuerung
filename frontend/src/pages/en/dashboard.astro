@@ -2,6 +2,7 @@
 import DefaultLayout from "~/layouts/DefaultLayout.astro";
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from "~/utils/auth/CheckAuth";
+import InteractiveSVG from "~/components/InteractiveSVG.svelte";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -24,6 +25,7 @@ if(!Astro.cookies.has('token')) {
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
         <p>{t('workInProgress')}</p>
+        <InteractiveSVG />
         </div>
     </section>
 </DefaultLayout>
