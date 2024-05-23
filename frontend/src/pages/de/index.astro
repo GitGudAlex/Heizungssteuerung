@@ -16,10 +16,16 @@ if (Astro.cookies.has('token')) {
 }
 ---
 <DefaultLayout title={t('nav.home')}>
-    <section class="mb-12 mt-12">
+    <section class="mb-12 mt-12 text-center">
         <div class="container">
-        <h2 class="mb-16 text-6xl">{t('workInProgress')}</h2>
-        <a href="/de/login" class="text-blue-500">Zum Login</a>
+            <h1 class="text-4xl sm:text-5xl lg:text-7xl mb-4">{t('heroTitle')}</h1>
+            <div class="max-w-lg mx-auto">
+                <h2 class="text-sm lg:text-lg text-gray-600 dark:text-white dark:opacity-70 mb-8">{t('heroSubtitle')}</h2>
+            </div>
+            <div class="flex flex-col sm:flex-row justify-center">
+                <a href={`/${lang}/login`} class=" rounded-full px-4 py-2 border-2 text-white border-gray-400 dark:border-gray-200 hover:bg-blue-600 transition duration-300  font-bold mb-2 sm:mb-0 sm:mr-4">{t('login')}</a>
+                <a href={`/${lang}/register`} class="no-underline rounded-full px-4 py-2 border-2 border-gray-400 dark:border-gray-200 text-white hover:bg-blue-600 transition duration-300 font-bold mb-2 sm:mb-0 sm:mr-4">{t('register')}</a>
+            </div>
         </div>
     </section>
 </DefaultLayout>

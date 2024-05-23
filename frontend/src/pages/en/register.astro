@@ -8,11 +8,17 @@ import checkAuth from "~/utils/auth/CheckAuth";
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const translations: Record<string, string> =  await {
-    "username": t('username'),
-    "password": t('password'),
-    "register": t('register'),
-    "invitationCode": t('invitationCode'),
+const translations: Record<string, string> =  {
+"username": t('username'),
+"password": t('password'),
+"register": t('register'),
+"loginNow": t('loginNow'),
+"invitationCode": t('invitationCode'),
+"invalidInviteCode": t('invalidInviteCode'),
+"usernameTakenError": t('usernameTakenError'),
+"genericError": t('genericError'),
+"internalError": t('internalError'),
+"passwordLengthError": t('passwordLengthError'),
 };
 
 if (Astro.cookies.has('token')) {
@@ -28,7 +34,7 @@ if (Astro.cookies.has('token')) {
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('register')}</h2>
-        <AuthRegister client:only translations={translations} />
+        <AuthRegister client:only translations={translations} lang={lang} />
         </div>
     </section>
 </DefaultLayout>
