@@ -143,6 +143,13 @@ declare module 'astro:content' {
   collection: "help";
   data: InferEntrySchema<"help">
 } & { render(): Render[".md"] };
+"de/source-code.md": {
+	id: "de/source-code.md";
+  slug: "de/source-code";
+  body: string;
+  collection: "help";
+  data: InferEntrySchema<"help">
+} & { render(): Render[".md"] };
 "de/user-manual.md": {
 	id: "de/user-manual.md";
   slug: "de/user-manual";
@@ -153,6 +160,13 @@ declare module 'astro:content' {
 "en/installation-guide.md": {
 	id: "en/installation-guide.md";
   slug: "en/installation-guide";
+  body: string;
+  collection: "help";
+  data: InferEntrySchema<"help">
+} & { render(): Render[".md"] };
+"en/source-code.md": {
+	id: "en/source-code.md";
+  slug: "en/source-code";
   body: string;
   collection: "help";
   data: InferEntrySchema<"help">
