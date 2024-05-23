@@ -13,6 +13,9 @@ const loginTranslations: Record<string, string> =  await {
     "password": t('password'),
     "login": t('login'),
     "createAccount": t('createAccount'),
+    "loginFailed": t('loginFailed'),
+    "genericError": t('genericError'),
+    "internalError": t('internalError'),
 };
 
 if (Astro.cookies.has('token')) {
