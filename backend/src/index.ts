@@ -48,6 +48,7 @@ app.use(session({
 
 app.use(cors())
 app.use(express.json())
+app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
 
 // routes
@@ -108,8 +109,6 @@ app.get('/verifyAdmin', authenticateToken, async (req: Request, res: Response): 
     res.status(500).json({ message: 'Internal server error' })
   }
 })
-
-app.use(bodyParser.json())
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)
