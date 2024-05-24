@@ -24,7 +24,7 @@ export class CalendarController {
     }
     const calendarName = process.env.CALENDAR_NAME_HEIZUNGSSTEUERUNG ?? ''
     if (calendarName === '') {
-      throw new Error('CALENDER_NAME_HEIZUNGSSTEUERUNG is not set')
+      throw new Error('CALENDAR_NAME_HEIZUNGSSTEUERUNG is not set')
     }
 
     this.calendars = {
@@ -83,6 +83,27 @@ export class CalendarController {
     })
 
     return foundEvents
+  }
+
+  async getHeatingControlData (cachedEvents: { calendars: any[] }): Promise<any[]> {
+    const heatingData: any[] = []
+    cachedEvents.calendars.forEach(calendar => {
+      if (calendar.name === 'Heizungssteuerung') {
+        calendar.events.forEach((event: { summary: any, start: any, description: any }) => {
+          try {
+            heatingData.push({
+              title: event.summary,
+              date: event.start,
+              device: event.description
+            })
+          } catch (error) {
+            console.error('Error while parsing heating data:', error)
+          }
+        })
+      }
+    })
+
+    return heatingData
   }
 
   async createDavAccount (): Promise<dav.Account | undefined> {
