@@ -6,14 +6,15 @@ import session from 'express-session'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
 import authRouter from './routes/auth'
-import { FritzController } from './domain/fritz/fritz'
 import bodyParser from 'body-parser'
 import { deviceRouter } from './routes/devices/device.router'
 import calenderRouter from './routes/calendar.router'
 import { User } from './model/user'
 import adminRouter from './routes/admin'
 import userRouter from './routes/user.router'
+import { CALENDAR_FRITZ_SYNC_SINGLETON } from './domain/calendar-fritz-sync/calendar-fritz-sync'
 dotenv.config()
+CALENDAR_FRITZ_SYNC_SINGLETON.scheduleSyncCron()
 
 const app = express()
 const port = (process.env.PORT != null) ? parseInt(process.env.PORT, 10) : 3000
@@ -54,12 +55,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/', authRouter)
 app.use('/calendar', calenderRouter)
 app.use('/admin-settings', adminRouter)
-app.use('/device', deviceRouter)
+app.use('/devices', deviceRouter)
 app.use('/user-settings', userRouter)
-
-app.get('/', (_, res) => {
-  res.send('Hello World!')
-})
 
 // Middleware to verify JWT token
 const authenticateToken = (req: any, res: any, next: any): any => {
@@ -78,29 +75,39 @@ const authenticateToken = (req: any, res: any, next: any): any => {
   })
 }
 
+app.get('/', (_, res) => {
+  res.send('Hello World!')
+})
+
 // Protected route
 app.get('/verifyAuth', authenticateToken, (req, res) => {
   res.json({ message: 'Access granted' })
 })
 
 // Get the user ID from the token
-app.get('/userId', authenticateToken, (req, res) => {
+app.get('/userId', authenticateToken, (req: any, res) => {
   res.json({ userId: req.user.userId })
 })
 
-app.get('/verifyAdmin', authenticateToken, async (req: Request, res: Response): void => {
+app.get('/verifyAdmin', authenticateToken, async (req: any, res): Promise<void> => {
   try {
+    if (req.user === undefined) {
+      res.status(401).json({ message: 'No user' })
+      return
+    }
     // Fetch the user from the database
     const user = await User.findOne({ _id: req.user.userId })
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' })
+    if (user == null) {
+      res.status(404).json({ message: 'User not found' })
+      return
     }
 
     // Check if the user is an admin
     const isAdmin = user.isAdmin
     if (!isAdmin) {
-      return res.status(401).json({ message: 'User is no admin' })
+      res.status(401).json({ message: 'User is no admin' })
+      return
     }
     res.json({ isAdmin })
   } catch (err) {

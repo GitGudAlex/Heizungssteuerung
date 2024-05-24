@@ -22,13 +22,11 @@ declare module 'fritzdect-aha-nodejs' {
      * Sets the temperature target for a device.
      * @param ain The AIN of the device. (e.g "09995 0688917")
      * @param temp The temperature to set.
-     *    Temperature value in 0.5 °C, range:
-     *    16 – 56
-     *    8 to 28°C, 16 <= 8°C, 17 = 8.5°C...... 56 >= 28°C
-     *    254 = ON, 253 = OFF
+     *    Temperature value as numbers in 1 °C, range: 8 to 28°C
+     *    Or the strings "on" & "off"
      * @returns The response is the temperate setting as number.
     */
-    setTempTarget (ain: string, temp: number): Promise<number>
+    setTempTarget (ain: string, temp: number | 'on' | 'off'): Promise<number>
     /**
      * Gets the last temperature information of a device.
      * @param ain The AIN of the device. (e.g "09995 0688917")
