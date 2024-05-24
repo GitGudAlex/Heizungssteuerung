@@ -98,7 +98,6 @@
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
     font-size: 16px;
-    color: #666;
   }
 
   .switch {

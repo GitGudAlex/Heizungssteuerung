@@ -6,6 +6,7 @@ import checkAuth from "~/utils/auth/CheckAuth";
 import AuthLogout from "~/components/auth/AuthLogout.svelte";
 import SepiaToggle from "~/components/settings/SepiaToggle.svelte";
 import getUserId from "~/utils/auth/GetUserId";
+import Temperature from "~/components/settings/Temperature.svelte";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -24,14 +25,21 @@ if(!Astro.cookies.has('token')) {
 }
 const userId = await getUserId(token);
 
-const sepiaTranslations: Record<string, string> =  await {
+const sepiaTranslations: Record<string, string> =  {
     "sepiaMode": t('sepiaMode'),
     "sepiaModeOn": t('sepiaModeOn'),
     "sepiaModeOff": t('sepiaModeOff'),
     "sepiaModeDesc": t('sepiaModeDescription'),
 };
 
-const logoutTranslations: Record<string, string> =  await {
+const temperatureTranslations: Record<string, string> =  {
+    "temperature": t('temperature'),
+    "temperatureDescription": t('temperatureDescription'),
+    "setTemperature": t('setTemperature'),
+    "saveTemperature": t('saveTemperature'),
+};
+
+const logoutTranslations: Record<string, string> =  {
     "logout": t('logout'),
 };
 ---
@@ -39,6 +47,7 @@ const logoutTranslations: Record<string, string> =  await {
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
+        <Temperature client:load translations={temperatureTranslations} lang={lang} userId={userId} />
         <SepiaToggle client:load translations={sepiaTranslations} lang={lang} userId={userId} />
         <AuthLogout client:load translations={logoutTranslations} lang={lang}  />   
         </div>

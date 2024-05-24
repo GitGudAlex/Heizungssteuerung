@@ -6,16 +6,28 @@ const userRouter = express.Router()
 // endpoint to update sepiaMode setting
 userRouter.post('/sepiaMode', async (req, res) => {
   try {
-    // Retrieve sepiaMode value from the request body
     const { userId, sepiaMode } = req.body
 
-    // Update the sepiaMode setting for the user
     await User.findByIdAndUpdate(userId, { sepiaMode })
 
     res.status(200).json({ message: 'Sepia mode setting updated successfully' })
   } catch (error) {
     console.error('Error updating sepia mode setting:', error)
-    res.status(500).json({ message: 'Internal server error' })
+    res.status(500).json({ message: 'Could not update sepia mode setting' })
+  }
+})
+
+// endpoint to update temperature setting
+userRouter.post('/temperature', async (req, res) => {
+  try {
+    const { userId, temperature } = req.body
+
+    await User.findByIdAndUpdate(userId, { temperature })
+
+    res.status(200).json({ message: 'Temperature setting updated successfully' })
+  } catch (error) {
+    console.error('Error updating temperature setting:', error)
+    res.status(500).json({ message: 'Could not update temperature setting' })
   }
 })
 
