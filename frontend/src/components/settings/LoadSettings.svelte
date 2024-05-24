@@ -19,7 +19,6 @@
         throw new Error('Failed to load settings')
       } else {
         const settings = await response.json()
-        localStorage.setItem('hoogieBoogie', 'boogieHoogie')
         localStorage.setItem('sepiaMode', settings.sepiaMode ? 'enabled' : 'disabled')
         // TODO: Add remaining settings as needed
         // Keep track of whether settings have been loaded
