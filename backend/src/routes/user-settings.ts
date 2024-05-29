@@ -37,7 +37,8 @@ userRouter.get('/', async (req, res) => {
     // Retrieve the userId from the request query
     const { userId } = req.query
 
-    if (userId == null) {
+    if (!userId || userId === 'undefined') {
+      console.error('userId is required')
       return res.status(400).json({ message: 'userId is required' })
     }
 
