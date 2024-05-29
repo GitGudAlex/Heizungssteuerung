@@ -34,7 +34,7 @@ if (Astro.cookies.has('token')) {
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('register')}</h2>
-        <AuthRegister client:only translations={translations} lang={lang} />
+        <AuthRegister client:only="svelte" translations={translations} lang={lang} />
         </div>
     </section>
 </DefaultLayout>

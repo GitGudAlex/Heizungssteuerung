@@ -3,15 +3,17 @@ import express, { type Request, type Response } from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { User, type UserDocument } from '../model/user'
-import { AdminSettings } from '../model/adminSettings'
 dotenv.config()
 
 const authRouter = express.Router()
 
-const jwtWebTokenSecret: string | undefined = process.env.JWT_WEB_TOKEN_SECRET
-
+const jwtWebTokenSecret = process.env.JWT_WEB_TOKEN_SECRET
 if (jwtWebTokenSecret == null) {
   throw new Error('JWT_WEB_TOKEN_SECRET is not set')
+}
+const port = process.env.PORT
+if (port == null) {
+  throw new Error('PORT is not set')
 }
 
 authRouter.post('/register', async (req: Request, res: Response): Promise<void> => {
@@ -27,12 +29,8 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
     }
 
     // check if invitation code is correct
-    const existingSettings = await AdminSettings.findOne({})
-    if (existingSettings == null) {
-      res.status(500).json({ message: 'Could not load admin settings' })
-      return
-    }
-    if (invitationCode !== existingSettings?.invitationCode) {
+    const adminSettings = await (await fetch(`http://localhost:${port}/admin-settings`)).json()
+    if (invitationCode !== adminSettings.invitationCode) {
       res.status(400).json({ message: 'Invalid invitation code' })
       return
     }

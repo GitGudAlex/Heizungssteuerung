@@ -17,7 +17,10 @@ dotenv.config()
 CALENDAR_FRITZ_SYNC_SINGLETON.scheduleSyncCron()
 
 const app = express()
-const port = process.env.PORT != null ? parseInt(process.env.PORT, 10) : 3000
+const port = process.env.PORT
+if (port == null) {
+  throw new Error('PORT is not set')
+}
 
 const secretKey = process.env.SECRET_KEY
 if (secretKey == null) {

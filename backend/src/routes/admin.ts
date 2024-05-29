@@ -5,6 +5,11 @@ dotenv.config()
 
 const adminRouter = express.Router()
 
+/**
+ * Route to get the admin settings
+ * returns the invitation code and the calendar regex
+ * if there is no admin settings document, it creates one with the default values
+ */
 adminRouter.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     // check if there is an admin settings document
@@ -13,8 +18,8 @@ adminRouter.get('/', async (req: Request, res: Response): Promise<void> => {
       res.json({ invitationCode: existingSettings.invitationCode, calendarRegex: existingSettings.calendarRegex })
     } else {
       // create default settings
-      const invitationCode = process.env.INVITATION_CODE
-      const calendarRegex = process.env.CALENDAR_REGEX
+      const invitationCode = 'default'
+      const calendarRegex = '.*' // TODO change to default regex
       const newSettings: AdminSettingsDocument = new AdminSettings({ invitationCode, calendarRegex })
       await newSettings.save()
       res.json({ invitationCode, calendarRegex })

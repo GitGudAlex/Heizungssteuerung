@@ -49,6 +49,7 @@ calendarRouter.get('/heaters', async (req, res) => {
   if (checkLastGetRequest(res)) { /* empty */ } else {
     try {
       cachedEvents = await CALENDAR_SINGLETON.getCalendarEvents()
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const heaterData = await CALENDAR_SINGLETON.getHeatingControlData(cachedEvents)
       res.json(heaterData)
     } catch (error) {
