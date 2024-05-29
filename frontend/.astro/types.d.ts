@@ -141,42 +141,42 @@ declare module 'astro:content' {
   slug: "de/installation-guide";
   body: string;
   collection: "help";
-  data: InferEntrySchema<"help">
+  data: any
 } & { render(): Render[".md"] };
 "de/source-code.md": {
 	id: "de/source-code.md";
   slug: "de/source-code";
   body: string;
   collection: "help";
-  data: InferEntrySchema<"help">
+  data: any
 } & { render(): Render[".md"] };
 "de/user-manual.md": {
 	id: "de/user-manual.md";
   slug: "de/user-manual";
   body: string;
   collection: "help";
-  data: InferEntrySchema<"help">
+  data: any
 } & { render(): Render[".md"] };
 "en/installation-guide.md": {
 	id: "en/installation-guide.md";
   slug: "en/installation-guide";
   body: string;
   collection: "help";
-  data: InferEntrySchema<"help">
+  data: any
 } & { render(): Render[".md"] };
 "en/source-code.md": {
 	id: "en/source-code.md";
   slug: "en/source-code";
   body: string;
   collection: "help";
-  data: InferEntrySchema<"help">
+  data: any
 } & { render(): Render[".md"] };
 "en/user-manual.md": {
 	id: "en/user-manual.md";
   slug: "en/user-manual";
   body: string;
   collection: "help";
-  data: InferEntrySchema<"help">
+  data: any
 } & { render(): Render[".md"] };
 };
 
@@ -188,5 +188,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	export type ContentConfig = typeof import("./../src/content/config.js");
+	export type ContentConfig = never;
 }
