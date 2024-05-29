@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import Button from '../general/Button.svelte'
 
   // Props for the component
   export let translations: { [key: string]: string }
@@ -82,7 +81,7 @@
 <div class="admin-settings-container">
   <form on:submit|preventDefault={handleSaveSettings}>
     <h2 class="text-2xl font-semibold mb-4">{translations['invitationCode']}</h2>
-    <p class="text-gray-600 mb-4">
+    <p class="mb-4">
       {translations['invitationCodeDescription']}
     </p>
     <label class="input input-bordered flex items-center gap-2 mb-4">
@@ -102,7 +101,7 @@
       </button>
     </label>
     <h2 class="text-2xl font-semibold mb-4">{translations['calendarRegex']}</h2>
-    <p class="text-gray-600 mb-4">
+    <p class="mb-4">
       {translations['calendarRegexDescription']}
     </p>
     <label class="input input-bordered flex items-center gap-2 mb-4">

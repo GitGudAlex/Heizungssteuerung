@@ -1,16 +1,7 @@
 import * as ical from 'ical'
-import { type CalendarComponent } from 'ical'
 import * as dav from 'dav'
 import { subMilliseconds, startOfToday, endOfToday } from 'date-fns'
-
-interface Results {
-  calendars: any[]
-}
-
-interface CalendarJSON {
-  name: string
-  events: CalendarComponent[]
-}
+import { type Calendar, type CalendarResults } from '../../model/calendar/calendar-results.type'
 
 export class CalendarController {
   private readonly domain: string
@@ -33,7 +24,7 @@ export class CalendarController {
     }
     const calendarName = process.env.CALENDAR_NAME_HEIZUNGSSTEUERUNG ?? ''
     if (calendarName === '') {
-      throw new Error('CALENDER_NAME_HEIZUNGSSTEUERUNG is not set')
+      throw new Error('CALENDAR_NAME_HEIZUNGSSTEUERUNG is not set')
     }
 
     this.calendars = {
@@ -44,29 +35,21 @@ export class CalendarController {
     }
   }
 
-  public async getCalendarEvents (): Promise<Results | undefined> {
+  public async getCalendarEvents (): Promise<CalendarResults | undefined> {
     const userCalendars = this.calendars
-    const foundEvents: Results = { calendars: [] }
-    const davServerURL = `${this.domain}/remote.php/dav/`
-    const auth = new dav.transport.Basic(
-      new dav.Credentials({
-        username: this.username,
-        password: this.password
-      })
-    )
+    const foundEvents: CalendarResults = { calendars: [] }
 
-    const account = await dav.createAccount({
-      server: davServerURL,
-      xhr: auth,
-      loadObjects: true
-    })
+    const account = await this.createDavAccount()
+    if (account === undefined) {
+      return undefined
+    }
 
     account.calendars.forEach((calendar) => {
       if (!Object.keys(userCalendars).includes(calendar.displayName)) {
         return
       }
 
-      const calendarJSON: CalendarJSON = {
+      const calendarJSON: Calendar = {
         name: calendar.displayName,
         events: []
       }
@@ -80,7 +63,7 @@ export class CalendarController {
           const eventDetails = eventData[key]
           if (
             eventDetails.end === undefined ||
-              eventDetails.start === undefined
+            eventDetails.start === undefined
           ) {
             throw new Error('Event start or end is undefined')
           }
@@ -101,4 +84,48 @@ export class CalendarController {
 
     return foundEvents
   }
+
+  async getHeatingControlData (cachedEvents: { calendars: any[] }): Promise<any[]> {
+    const heatingData: any[] = []
+    cachedEvents.calendars.forEach(calendar => {
+      if (calendar.name === 'Heizungssteuerung') {
+        calendar.events.forEach((event: { summary: any, start: any, description: any }) => {
+          try {
+            heatingData.push({
+              title: event.summary,
+              date: event.start,
+              device: event.description
+            })
+          } catch (error) {
+            console.error('Error while parsing heating data:', error)
+          }
+        })
+      }
+    })
+
+    return heatingData
+  }
+
+  async createDavAccount (): Promise<dav.Account | undefined> {
+    try {
+      const davServerURL = `${this.domain}/remote.php/dav/`
+      const auth = new dav.transport.Basic(
+        new dav.Credentials({
+          username: this.username,
+          password: this.password
+        })
+      )
+
+      return await dav.createAccount({
+        server: davServerURL,
+        xhr: auth,
+        loadObjects: true
+      })
+    } catch (error) {
+      console.error('Error creating dav account:', error)
+      return undefined
+    }
+  }
 }
+
+export const CALENDAR_SINGLETON = new CalendarController()

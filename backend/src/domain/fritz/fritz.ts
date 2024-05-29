@@ -16,7 +16,6 @@ class FritzController {
       throw new Error('FRITZ_PASSWORD is not set')
     }
     this.fritz = new Fritz(fritzUsername, fritzPassword)
-    console.log('FritzController initialized')
   }
 
   /**
@@ -26,7 +25,7 @@ class FritzController {
     try {
       const xml = await this.fritz.getDeviceListInfos()
       const json = await this.xmlParser.parseXmlToJson(xml)
-      return json
+      return json.devicelist
     } catch (error) {
       console.error('Error getting device list infos:', error)
       throw error
@@ -50,16 +49,17 @@ class FritzController {
   /**
    * Sets the temperature target for a device.
    * @param identifier The identifier of the device. (e.g "09995 0688917")
-   * @param temp The temperature to set.
-   *    Temperature value in 0.5 °C, value range:
-   *    16 – 56
-   *    8 to 28°C, 16 <= 8°C, 17 = 8.5°C...... 56 >= 28°C
-   *    254 = ON, 253 = OFF
+   * @param temp
+   *      Temperature value as numbers in 1 °C, range: 8 to 28°C
+   *      Or the strings "on" & "off"
    */
-  public async setTempTarget (identifier: string, temp: number): Promise<number> {
+  public async setTempTarget (
+    identifier: string,
+    temp: number | 'on' | 'off'
+  ): Promise<number> {
     try {
       const tempTarget = await this.fritz.setTempTarget(identifier, temp)
-      return Number(tempTarget)
+      return tempTarget
     } catch (error) {
       console.error('Error setting temperature target:', error)
       throw error

@@ -3,6 +3,7 @@ import express, { type Request, type Response } from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { User, type UserDocument } from '../model/user'
+import { AdminSettings } from '../model/adminSettings'
 dotenv.config()
 
 const authRouter = express.Router()
@@ -21,11 +22,17 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
     const existing = await User.findOne({ username })
     if (existing != null) {
       console.log(existing)
-      res.status(400).json({ message: 'Username already exists' })
+      res.status(409).json({ message: 'Username already exists' })
+      return
     }
 
     // check if invitation code is correct
-    if (invitationCode !== process.env.INVITATION_CODE) {
+    const existingSettings = await AdminSettings.findOne({})
+    if (existingSettings == null) {
+      res.status(500).json({ message: 'Could not load admin settings' })
+      return
+    }
+    if (invitationCode !== existingSettings?.invitationCode) {
       res.status(400).json({ message: 'Invalid invitation code' })
       return
     }
