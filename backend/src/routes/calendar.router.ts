@@ -11,7 +11,7 @@ let lastFetchTime = 0
 const fetchInterval = 15 * 60 * 1000 // 15 mins
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function checkLastGetRequest (res) {
+function checkLastGetRequest (res: any) {
   const currentTime = Date.now()
   const timeSinceLastFetch = currentTime - lastFetchTime
 

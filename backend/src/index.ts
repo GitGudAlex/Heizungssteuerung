@@ -17,7 +17,7 @@ dotenv.config()
 CALENDAR_FRITZ_SYNC_SINGLETON.scheduleSyncCron()
 
 const app = express()
-const port = (process.env.PORT != null) ? parseInt(process.env.PORT, 10) : 3000
+const port = process.env.PORT != null ? parseInt(process.env.PORT, 10) : 3000
 
 const secretKey = process.env.SECRET_KEY
 if (secretKey == null) {
@@ -34,18 +34,32 @@ if (dbUrl == null) {
   throw new Error('DATABASE_URL is not set')
 }
 
-// connect to MongoDB
+const dbName = process.env.DATABASE_NAME
+if (dbName == null) {
+  throw new Error('DATABASE_NAME is not set')
+}
+
 async function connectToDb (dbUrl: string): Promise<mongoose.Connection> {
+  console.info('🛫 Connecting to database...')
   await mongoose.connect(dbUrl)
   return mongoose.connection
 }
-connectToDb(dbUrl).catch((e) => { console.error(e) })
+connectToDb(dbUrl)
+  .then((connection: mongoose.Connection) => {
+    connection.useDb(dbName)
+    console.info('🛬 Connected to database')
+  })
+  .catch((e) => {
+    console.warn(e)
+  })
 
-app.use(session({
-  secret: secretKey, // session encryption key
-  resave: false,
-  saveUninitialized: true
-}))
+app.use(
+  session({
+    secret: secretKey, // session encryption key
+    resave: false,
+    saveUninitialized: true
+  })
+)
 
 app.use(cors())
 app.use(express.json())
@@ -67,13 +81,17 @@ const authenticateToken = (req: any, res: any, next: any): any => {
     return res.sendStatus(401)
   }
 
-  jwt.verify(token, jwtWebTokenSecret, (err: jwt.VerifyErrors | null, user: any) => {
-    if (err != null) {
-      return res.sendStatus(403)
+  jwt.verify(
+    token,
+    jwtWebTokenSecret,
+    (err: jwt.VerifyErrors | null, user: any) => {
+      if (err != null) {
+        return res.sendStatus(403)
+      }
+      req.user = user
+      next()
     }
-    req.user = user
-    next()
-  })
+  )
 }
 
 app.get('/', (_, res) => {
@@ -90,32 +108,36 @@ app.get('/userId', authenticateToken, (req: any, res) => {
   res.json({ userId: req.user.userId })
 })
 
-app.get('/verifyAdmin', authenticateToken, async (req: any, res): Promise<void> => {
-  try {
-    if (req.user === undefined) {
-      res.status(401).json({ message: 'No user' })
-      return
-    }
-    // Fetch the user from the database
-    const user = await User.findOne({ _id: req.user.userId })
+app.get(
+  '/verifyAdmin',
+  authenticateToken,
+  async (req: any, res): Promise<void> => {
+    try {
+      if (req.user === undefined) {
+        res.status(401).json({ message: 'No user' })
+        return
+      }
+      // Fetch the user from the database
+      const user = await User.findOne({ _id: req.user.userId })
 
-    if (user == null) {
-      res.status(404).json({ message: 'User not found' })
-      return
-    }
+      if (user == null) {
+        res.status(404).json({ message: 'User not found' })
+        return
+      }
 
-    // Check if the user is an admin
-    const isAdmin = user.isAdmin
-    if (!isAdmin) {
-      res.status(401).json({ message: 'User is no admin' })
-      return
+      // Check if the user is an admin
+      const isAdmin = user.isAdmin
+      if (!isAdmin) {
+        res.status(401).json({ message: 'User is no admin' })
+        return
+      }
+      res.json({ isAdmin })
+    } catch (err) {
+      console.error('Error checking admin status:', err)
+      res.status(500).json({ message: 'Internal server error' })
     }
-    res.json({ isAdmin })
-  } catch (err) {
-    console.error('Error checking admin status:', err)
-    res.status(500).json({ message: 'Internal server error' })
   }
-})
+)
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)

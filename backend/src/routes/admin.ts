@@ -5,7 +5,7 @@ dotenv.config()
 
 const adminRouter = express.Router()
 
-adminRouter.get('/', async (req: Request, res: Response): void => {
+adminRouter.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     // check if there is an admin settings document
     const existingSettings = await AdminSettings.findOne({})
@@ -25,7 +25,7 @@ adminRouter.get('/', async (req: Request, res: Response): void => {
   }
 })
 
-adminRouter.post('/', async (req: Request, res: Response): void => {
+adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const { invitationCode, calendarRegex }: { invitationCode: string, calendarRegex: string } = req.body
     if (invitationCode === null || calendarRegex === null) {
