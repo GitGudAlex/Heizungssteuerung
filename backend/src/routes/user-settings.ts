@@ -37,10 +37,14 @@ userRouter.get('/', async (req, res) => {
     // Retrieve the userId from the request query
     const { userId } = req.query
 
+    if (userId == null) {
+      return res.status(400).json({ message: 'userId is required' })
+    }
+
     // Fetch the user from the database
     const user = await User.findOne({ _id: userId })
 
-    if (!user) {
+    if (user == null) {
       return res.status(404).json({ message: 'User not found' })
     }
 

@@ -3,6 +3,7 @@ import express, { type Request, type Response } from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { User, type UserDocument } from '../model/user'
+import { getAdminSettings } from './admin-settings'
 dotenv.config()
 
 const authRouter = express.Router()
@@ -29,7 +30,7 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
     }
 
     // check if invitation code is correct
-    const adminSettings = await (await fetch(`http://localhost:${port}/admin-settings`)).json()
+    const adminSettings = await getAdminSettings()
     if (invitationCode !== adminSettings.invitationCode) {
       res.status(400).json({ message: 'Invalid invitation code' })
       return

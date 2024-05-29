@@ -10,8 +10,8 @@ import bodyParser from 'body-parser'
 import { deviceRouter } from './routes/devices/device.router'
 import calenderRouter from './routes/calendar.router'
 import { User } from './model/user'
-import adminRouter from './routes/admin'
-import userRouter from './routes/user.router'
+import adminSettingsRouter from './routes/admin-settings'
+import userSettingsRouter from './routes/user-settings'
 import { CALENDAR_FRITZ_SYNC_SINGLETON } from './domain/calendar-fritz-sync/calendar-fritz-sync'
 dotenv.config()
 CALENDAR_FRITZ_SYNC_SINGLETON.scheduleSyncCron()
@@ -58,9 +58,9 @@ app.use(express.urlencoded({ extended: true }))
 // routes
 app.use('/', authRouter)
 app.use('/calendar', calenderRouter)
-app.use('/admin-settings', adminRouter)
+app.use('/admin-settings', adminSettingsRouter)
 app.use('/devices', deviceRouter)
-app.use('/user-settings', userRouter)
+app.use('/user-settings', userSettingsRouter)
 
 // Middleware to verify JWT token
 const authenticateToken = (req: any, res: any, next: any): any => {

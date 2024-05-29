@@ -5,6 +5,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 3000:3000
+      - 4321:4321
     env_file: ./backend/.env.docker
     depends_on:
       - mongo
@@ -14,6 +15,7 @@ services:
       context: ./frontend
       dockerfile: ./Dockerfile
     ports:
+      - 3000:3000
       - 4321:4321
     depends_on:
       - backend

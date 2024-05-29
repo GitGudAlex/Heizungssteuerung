@@ -7,7 +7,11 @@ const getUserId = async (token: any): Promise<string> => {
         if (typeof token !== 'string') {
           tokenFormatted = token.value;
         } 
-        const response = await fetch('http://localhost:3000/userId', {
+        if (import.meta.env.BACKEND_URL === undefined) {
+          console.error('BACKEND_URL is not set');
+          return "";
+        }
+        const response = await fetch(`http://${import.meta.env.BACKEND_URL}/verifyAdmin`, {
           headers: {
             'Authorization': `Bearer ${tokenFormatted}`
           }
