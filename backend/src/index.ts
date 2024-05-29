@@ -39,20 +39,6 @@ if (dbName == null) {
   throw new Error('DATABASE_NAME is not set')
 }
 
-async function connectToDb (dbUrl: string): Promise<mongoose.Connection> {
-  console.info('🛫 Connecting to database...')
-  await mongoose.connect(dbUrl)
-  return mongoose.connection
-}
-connectToDb(dbUrl)
-  .then((connection: mongoose.Connection) => {
-    connection.useDb(dbName)
-    console.info('🛬 Connected to database')
-  })
-  .catch((e) => {
-    console.warn(e)
-  })
-
 app.use(
   session({
     secret: secretKey, // session encryption key
@@ -139,6 +125,22 @@ app.get(
   }
 )
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`)
-})
+// connect to database, do not start server if connection fails
+async function connectToDb (dbUrl: string): Promise<mongoose.Connection> {
+  console.info('🛫 Connecting to database...')
+  await mongoose.connect(dbUrl)
+  return mongoose.connection
+}
+connectToDb(dbUrl)
+  .then((connection: mongoose.Connection) => {
+    connection.useDb(dbName)
+    console.info('🛬 Connected to database')
+    app.listen(port, () => {
+      console.info(`Server running at http://localhost:${port} 🚀`)
+    })
+  })
+  .catch((e) => {
+    console.warn(e)
+    console.error('❌ Failed to connect to database, exiting...')
+    process.exit(1)
+  })
