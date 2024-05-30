@@ -5,11 +5,10 @@
   export let lang: string;
 
   let rooms: string[] = [];
-  let defaultRoom: string = '';
+  let room: string = '';
 
   let username: string = '';
   let password: string = '';
-  let room: string = '';
   let invitationCode: string = '';
   let errorMessage: string = '';
   let signUpSuccess: boolean = false;
@@ -23,11 +22,13 @@
     const roomsHeaterMap: {room: string, heater: string}[] = maps.roomsHeatersMap;
     rooms = Array.from(new Set(roomsHeaterMap.map((roomHeater) => roomHeater.room)));
     if (rooms.length > 0) {
-      defaultRoom = rooms[0];
       room = rooms[0];
-    } else {
-      defaultRoom = 'NO ROOMS ERROR';
     }
+  };
+
+  const handleInputChange = (event: Event) => {
+    const value = (event.target as HTMLInputElement).value;
+    room = value;
   };
 
   const handleSignUp = async () => {
@@ -39,7 +40,7 @@
     }
 
     try {
-      const response = await fetch('http://localhost:3000/user/register', {
+      const response = await fetch('http://localhost:3000/user/login/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,6 +115,7 @@
         class="appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="room"
         bind:value={room}
+        on:input={handleInputChange}
       >
         {#each rooms as r}
           <option value={r}>{r}</option>

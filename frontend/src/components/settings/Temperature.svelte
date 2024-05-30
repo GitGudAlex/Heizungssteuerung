@@ -7,6 +7,8 @@
   export let lang
   export let userId
 
+  console.log(userId)
+
   const minTemp = 8
   const maxTemp = 28
   const temperature = writable<number>(18)
@@ -20,9 +22,11 @@
 
   const fetchInitialTemperatureFromDB = async (userId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/user-settings?userId=${userId}`, {
+      const response = await fetch(`http://localhost:3000/user/${userId}`, {
         method: 'GET',
       })
+
+      console.log(response)
 
       if (!response.ok) {
         throw new Error('Failed to load settings')
@@ -39,7 +43,7 @@
 
   const updateDbSettings = async (userId: string, temperature: Number) => {
     try {
-      const response = await fetch('http://localhost:3000/user-settings/temperature', {
+      const response = await fetch('http://localhost:3000/user/temperature', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -26,11 +26,13 @@ export const ui = {
     createAccount: 'Not registered yet? Create an account',
     logout: 'Logout',
     invitationCode: 'Invitation code',
-    invitationCodeDescription: 'The invitation code is required to create an account. Here you can find or change the code and export an invitation link.',
+    invitationCodeDescription:
+      'The invitation code is required to create an account. Here you can find or change the code and export an invitation link.',
     adminArea: 'Admin area',
     save: 'Save',
     calendarRegex: 'Calendar regex',
-    calendarRegexDescription: 'The regex is used to extract the heating events from the calendar. The default value is suitable for the PUX Lab calendar. If you want to use a different schema, you can adjust the regex here.',
+    calendarRegexDescription:
+      'The regex is used to extract the heating events from the calendar. The default value is suitable for the PUX Lab calendar. If you want to use a different schema, you can adjust the regex here.',
     linkCopied: 'Link copied to clipboard',
     copyLink: 'Copy link',
     settingsSaved: 'Settings saved successfully',
@@ -40,7 +42,8 @@ export const ui = {
     sepiaMode: 'Sepia mode',
     sepiaModeOn: 'Sepia mode on',
     sepiaModeOff: 'Sepia mode off',
-    sepiaModeDescription: 'Sepia mode is a color scheme that reduces the amount of blue light emitted by the screen. This can help reduce eye strain and improve sleep quality.',
+    sepiaModeDescription:
+      'Sepia mode is a color scheme that reduces the amount of blue light emitted by the screen. This can help reduce eye strain and improve sleep quality.',
     failedLoadDevices: 'Failed to load devices',
     failedSaveDevice: 'Failed to save device',
     failedDeleteDevice: 'Failed to delete device',
@@ -59,11 +62,13 @@ export const ui = {
     remove: 'Remove',
     action: 'Action',
     temperature: 'Temperature',
-    temperatureDescription: 'Change the temperature to your preference. This value will be used to regulate the heating. Adjust the temperature between 8°C and 28°C.',
+    temperatureDescription:
+      'Change the temperature to your preference. This value will be used to regulate the heating. Adjust the temperature between 8°C and 28°C.',
     setTemperature: 'Set temperature',
     saveTemperature: 'Save temperature',
     heroTitle: 'HdM PUX Lab Heating Control',
-    heroSubtitle: 'Keep an eye on the room temperature in the HdM PUX Lab, control it as needed, and schedule heating times using the Nextcloud calendar.',
+    heroSubtitle:
+      'Keep an eye on the room temperature in the HdM PUX Lab, control it as needed, and schedule heating times using the Nextcloud calendar.',
     loginFailed: 'Login failed. Please check your username and password.',
     genericError: 'An error occurred. Please try again later.',
     internalError: 'Internal server error. Please try again later.',
@@ -71,6 +76,8 @@ export const ui = {
     usernameTakenError: 'Username already exists. Please choose a different one.',
     passwordLengthError: 'Password must be at least 7 characters long.',
     loginNow: 'Already registered? Log in now',
+    roomName: 'Room Name',
+    saveRoomName: 'Save Room Name',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -92,11 +99,13 @@ export const ui = {
     createAccount: 'Noch nicht registriert? Account erstellen',
     logout: 'Ausloggen',
     invitationCode: 'Einladungscode',
-    invitationCodeDescription: 'Der Einladungscode wird benötigt, um einen Account zu erstellen. Hier können Sie den Code finden oder ändern und einen Einladungslink exportieren.',
+    invitationCodeDescription:
+      'Der Einladungscode wird benötigt, um einen Account zu erstellen. Hier können Sie den Code finden oder ändern und einen Einladungslink exportieren.',
     adminArea: 'Admin-Bereich',
     save: 'Speichern',
     calendarRegex: 'Kalender Regex',
-    calendarRegexDescription: 'Der Regex wird verwendet, um die Heizungsereignisse aus dem Kalender zu extrahieren. Der Standardwert eignet sich für den PUX Lab Kalender. Wenn Sie ein anderes Schema verwenden möchten, können Sie den Regex hier anpassen.',
+    calendarRegexDescription:
+      'Der Regex wird verwendet, um die Heizungsereignisse aus dem Kalender zu extrahieren. Der Standardwert eignet sich für den PUX Lab Kalender. Wenn Sie ein anderes Schema verwenden möchten, können Sie den Regex hier anpassen.',
     linkCopied: 'Link in die Zwischenablage kopiert',
     copyLink: 'Link kopieren',
     settingsSaved: 'Einstellungen erfolgreich gespeichert',
@@ -106,7 +115,8 @@ export const ui = {
     sepiaMode: 'Sepia Modus',
     sepiaModeOn: 'Sepia Modus an',
     sepiaModeOff: 'Sepia Modus aus',
-    sepiaModeDescription: 'Der Sepia Modus ist ein Farbschema, das die Menge an blauem Licht reduziert, das vom Bildschirm abgegeben wird. Dies kann helfen, die Augenbelastung zu reduzieren und die Schlafqualität zu verbessern.',
+    sepiaModeDescription:
+      'Der Sepia Modus ist ein Farbschema, das die Menge an blauem Licht reduziert, das vom Bildschirm abgegeben wird. Dies kann helfen, die Augenbelastung zu reduzieren und die Schlafqualität zu verbessern.',
     failedLoadDevices: 'Geräte konnten nicht geladen werden',
     failedSaveDevice: 'Gerät konnte nicht gespeichert werden',
     failedDeleteDevice: 'Gerät konnte nicht gelöscht werden',
@@ -125,11 +135,13 @@ export const ui = {
     remove: 'Entfernen',
     action: 'Aktion',
     temperature: 'Temperatur',
-    temperatureDescription: 'Ändern Sie die Temperatur nach Ihren Wünschen. Dieser Wert wird zur Regelung der Heizung verwendet. Passen Sie die Temperatur zwischen 8°C und 28°C an.',
+    temperatureDescription:
+      'Ändern Sie die Temperatur nach Ihren Wünschen. Dieser Wert wird zur Regelung der Heizung verwendet. Passen Sie die Temperatur zwischen 8°C und 28°C an.',
     setTemperature: 'Temperatur setzen',
     saveTemperature: 'Temperatur speichern',
     heroTitle: 'HdM PUX Lab Heizungssteuerung',
-    heroSubtitle: 'Behalte die Raumtemperatur im HdM PUX Lab im Blick, steuere sie nach Bedarf und plane Heizungszeiten mithilfe des Nextcloud-Kalenders.',
+    heroSubtitle:
+      'Behalte die Raumtemperatur im HdM PUX Lab im Blick, steuere sie nach Bedarf und plane Heizungszeiten mithilfe des Nextcloud-Kalenders.',
     loginFailed: 'Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort.',
     genericError: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
     internalError: 'Interner Serverfehler. Bitte versuchen Sie es später erneut.',
@@ -137,5 +149,7 @@ export const ui = {
     usernameTakenError: 'Benutzername existiert bereits. Bitte wählen Sie einen anderen.',
     passwordLengthError: 'Passwort muss mindestens 7 Zeichen lang sein.',
     loginNow: 'Schon registriert? Jetzt einloggen',
+    roomName: 'Raumname',
+    saveRoomName: 'Raumnamen speichern',
   },
 } as const

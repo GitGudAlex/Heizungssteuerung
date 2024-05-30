@@ -36,19 +36,33 @@ userRouter.post('/temperature', async (req, res) => {
   }
 })
 
-// get full user object with settings
-userRouter.get('/', async (req, res) => {
+// endpoint to update room setting
+userRouter.post('/room', async (req, res) => {
   try {
-    // Retrieve the userId from the request query
-    const { userId } = req.query
+    const { userId, room } = req.body
 
-    if (!userId || userId === 'undefined') {
+    await User.findByIdAndUpdate(userId, { room })
+
+    res.status(200).json({ message: 'Room setting updated successfully' })
+  } catch (error) {
+    console.error('Error updating room setting:', error)
+    res.status(500).json({ message: 'Could not update room setting' })
+  }
+})
+
+// get full user object with settings
+userRouter.get('/:id', async (req, res) => {
+  try {
+    // Retrieve the userId from the request params
+    const { id } = req.params
+
+    if (!id || id === 'undefined') {
       console.error('userId is required')
       return res.status(400).json({ message: 'userId is required' })
     }
 
     // Fetch the user from the database
-    const user = await User.findOne({ _id: userId })
+    const user = await User.findOne({ _id: id })
 
     if (user == null) {
       return res.status(404).json({ message: 'User not found' })

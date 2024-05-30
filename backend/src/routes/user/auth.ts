@@ -13,7 +13,6 @@ if (jwtWebTokenSecret == null) {
 
 // Middleware to verify JWT token
 export const authenticateToken = (req: any, res: any, next: any): any => {
-  console.log('authenticating token')
   const authHeader = req.headers.authorization
   const token: string | undefined = authHeader?.split(' ')[1]
   if (token == null) {
