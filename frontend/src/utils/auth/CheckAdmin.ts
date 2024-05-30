@@ -1,4 +1,4 @@
-const checkAuth = async (token: any): Promise<boolean> => {
+const checkAdmin = async (token: any): Promise<boolean> => {
   if (!token) {
     return false;
   } else {
@@ -7,22 +7,23 @@ const checkAuth = async (token: any): Promise<boolean> => {
         console.error('BACKEND_URL is not set');
         return false;
       }
-      const response = await fetch(`http://${import.meta.env.BACKEND_URL}/verifyAdmin`, {
+      const response = await fetch(`http://${import.meta.env.BACKEND_URL}/user/auth/verifyAdmin`, {
         headers: {
           'Authorization': `Bearer ${token.value}`
         }
       });
       if (!response.ok) {
-        console.error('Authentication failed:', response.statusText);
+        console.error(`checkAdmin() failed for ${response.status}, ${response.statusText}`);
         return false;
       } else {
         return true;
       }
     } catch (error) {
-      console.error('Authentication failed:', error);
+      console.error('checkAdmin() failed for error');
+      console.error(error);
       return false;
     }
   }
 };
 
-export default checkAuth;
+export default checkAdmin;

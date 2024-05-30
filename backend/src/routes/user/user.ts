@@ -1,7 +1,12 @@
 import express from 'express'
-import { User } from '../model/user'
+import { User } from '../../model/user'
+import authRouter from './auth'
+import loginRouter from './login'
 
 const userRouter = express.Router()
+
+userRouter.use('/auth', authRouter)
+userRouter.use('/login', loginRouter)
 
 // endpoint to update sepiaMode setting
 userRouter.post('/sepiaMode', async (req, res) => {

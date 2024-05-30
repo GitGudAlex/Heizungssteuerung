@@ -1,6 +1,8 @@
 import { Fritz } from 'fritzdect-aha-nodejs'
 import { XmlParser } from './xml-parser'
 import { type FritzDeviceList } from './fritz-device.type'
+import dotenv from 'dotenv'
+dotenv.config()
 
 class FritzController {
   public readonly fritz: Fritz

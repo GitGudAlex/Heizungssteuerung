@@ -11,13 +11,13 @@ const getUserId = async (token: any): Promise<string> => {
           console.error('BACKEND_URL is not set');
           return "";
         }
-        const response = await fetch(`http://${import.meta.env.BACKEND_URL}/userId`, {
+        const response = await fetch(`http://${import.meta.env.BACKEND_URL}/user/auth/userId`, {
           headers: {
             'Authorization': `Bearer ${tokenFormatted}`
           }
         });
         if (!response.ok) {
-          console.error('Authentication failed:', response.statusText);
+          console.error(`getUserId() failed for ${response.status}, ${response.statusText}`);
             return "";
         } else {
             // get userId from response
@@ -25,7 +25,8 @@ const getUserId = async (token: any): Promise<string> => {
             return res.userId;
         }
       } catch (error) {
-        console.error('Authentication failed:', error);
+        console.error('getUserId() failed for error');
+        console.error(error);
         return "";
       }
     }
