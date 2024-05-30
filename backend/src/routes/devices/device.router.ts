@@ -40,7 +40,7 @@ deviceRouter.get('/:identifier', async (req, res) => {
   }
 })
 
-deviceRouter.post('/db', async (req, res) => {
+deviceRouter.post('/db/devices', async (req, res) => {
   try {
     const { name, identifier, type, map } = req.body
     // TODO: Check if device with identifier is online in FritzBox

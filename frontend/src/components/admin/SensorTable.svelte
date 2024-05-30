@@ -27,7 +27,7 @@
   // load devices from db
   const loadDevicesFromDb = async () => {
     try {
-      const response = await fetch('http://localhost:3000/device/db/devices', {
+      const response = await fetch('http://localhost:3000/devices/db/devices', {
         method: 'GET',
       })
       if (response.ok) {
@@ -45,7 +45,7 @@
   // Save device in db
   const saveDeviceInDb = async () => {
     try {
-      const response = await fetch('http://localhost:3000/device/db', {
+      const response = await fetch('http://localhost:3000/devices/db/devices', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@
   // Delete device from db
   const deleteDeviceFromDb = async (identifier: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/device/db/${identifier}`, {
+      const response = await fetch(`http://localhost:3000/devices/db/${identifier}`, {
         method: 'DELETE',
       })
       if (!response.ok) {
