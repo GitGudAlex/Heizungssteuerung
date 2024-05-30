@@ -11,7 +11,7 @@ const getUserId = async (token: any): Promise<string> => {
           console.error('BACKEND_URL is not set');
           return "";
         }
-        const response = await fetch(`http://${import.meta.env.BACKEND_URL}/verifyAdmin`, {
+        const response = await fetch(`http://${import.meta.env.BACKEND_URL}/userId`, {
           headers: {
             'Authorization': `Bearer ${tokenFormatted}`
           }

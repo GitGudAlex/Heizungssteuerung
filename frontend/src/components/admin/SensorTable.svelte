@@ -9,23 +9,45 @@
     name: string
     type: string
     identifier: string
-    map: string
+    heaterMap: string
+    roomMap: string
+    enabled?: boolean
   }
 
-  // Sample device types
-  const deviceTypes = ['D301', 'D302']
-  const mapping = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10']
+  interface RoomsHeater {
+    heater: string
+    room: string
+  }
+
+  interface Maps {
+    roomsHeatersMap: RoomsHeater[]
+    heaterDeviceTypes: string[]
+  }
+
+  let deviceTypes: string[] = [] // ['type1', 'type2', 'type3', 'type4', 'type5']
+  let roomsHeaterMap: RoomsHeater[] = [] // [{ heater: 'heater1', room: 'room1' }, { heater: 'heater2', room: 'room2' }
 
   // Reactive variables
   let devices: Device[] = []
   let newDeviceName = ''
-  let newDeviceType = deviceTypes[0]
+  let newDeviceType: string = ''
   let newIdentifier = ''
-  let newMap = mapping[0]
+  let newMap: RoomsHeater = { heater: '', room: '' }
   let errorMessage = ''
 
   // load devices from db
   const loadDevicesFromDb = async () => {
+    const mapsResponse = await fetch('http://localhost:3000/device/device-map', {
+      method: 'GET',
+    })
+    const maps: Maps = await mapsResponse.json()
+
+    deviceTypes = maps.heaterDeviceTypes
+    roomsHeaterMap = maps.roomsHeatersMap
+
+    newDeviceType = deviceTypes[0]
+    newMap = roomsHeaterMap[0]
+
     try {
       const response = await fetch('http://localhost:3000/device/db/devices', {
         method: 'GET',
@@ -54,15 +76,25 @@
           name: newDeviceName,
           identifier: newIdentifier,
           type: newDeviceType,
-          map: newMap,
+          heaterMap: newMap.heater,
+          roomMap: newMap.room,
         }),
       })
       if (response.ok) {
-        devices = [...devices, { name: newDeviceName, type: newDeviceType, identifier: newIdentifier, map: newMap }]
+        devices = [
+          ...devices,
+          {
+            name: newDeviceName,
+            type: newDeviceType,
+            identifier: newIdentifier,
+            heaterMap: newMap.heater,
+            roomMap: newMap.room,
+          },
+        ]
         newDeviceName = ''
         newDeviceType = deviceTypes[0]
         newIdentifier = ''
-        newMap = mapping[0]
+        newMap = roomsHeaterMap[0]
       } else {
         deleteDevice(newIdentifier)
         errorMessage = translations['failedSaveDevice']
@@ -107,7 +139,7 @@
         errorMessage = translations['deviceNameExists']
         return
       }
-      if (devices.find((device) => device.map === newMap)) {
+      if (devices.find((device) => device.heaterMap === newMap.heater && device.roomMap === newMap.room)) {
         errorMessage = translations['deviceMapExists']
         return
       }
@@ -152,8 +184,10 @@
       {/each}
     </select>
     <select bind:value={newMap} class="border rounded p-2 mr-2 bg-transparent">
-      {#each mapping as mapOption}
-        <option value={mapOption}>{mapOption}</option>
+      {#each roomsHeaterMap as roomerHeaterOption}
+        <option value={roomerHeaterOption}
+          >{roomerHeaterOption.heater.toLocaleUpperCase() + ' in ' + roomerHeaterOption.room.toLocaleUpperCase()}</option
+        >
       {/each}
     </select>
     <button
@@ -174,7 +208,8 @@
           <th class="border px-4 py-2 left-align">{translations['name']}</th>
           <th class="border px-4 py-2 left-align">{translations['identifier']}</th>
           <th class="border px-4 py-2 left-align">{translations['type']}</th>
-          <th class="border px-4 py-2 left-align">{translations['map']}</th>
+          <th class="border px-4 py-2 left-align">{translations['heaterMap']}</th>
+          <th class="border px-4 py-2 left-align">{translations['roomMap']}</th>
           <th class="border px-4 py-2 left-align">{translations['action']}</th>
         </tr>
       </thead>
@@ -184,7 +219,8 @@
             <td class="border px-4 py-2">{device.name}</td>
             <td class="border px-4 py-2">{device.identifier}</td>
             <td class="border px-4 py-2">{device.type}</td>
-            <td class="border px-4 py-2">{device.map}</td>
+            <td class="border px-4 py-2">{device.heaterMap}</td>
+            <td class="border px-4 py-2">{device.roomMap}</td>
             <td class="border px-4 py-2">
               <button on:click={() => deleteDevice(device.identifier)} class="bg-red-500 text-white p-2 rounded">
                 {translations['remove']}

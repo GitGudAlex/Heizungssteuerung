@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { User, type UserDocument } from '../model/user'
 import { getAdminSettings } from './admin-settings'
+import { ROOMS_HEATERS_MAP } from '../domain/devices/rooms-heaters-map'
 dotenv.config()
 
 const authRouter = express.Router()
@@ -19,7 +20,17 @@ if (port == null) {
 
 authRouter.post('/register', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, password, invitationCode }: { username: string, password: string, invitationCode: string } = req.body
+    const { username, password, invitationCode, room }: { username: string, password: string, invitationCode: string, room: string } = req.body
+
+    const rooms = ROOMS_HEATERS_MAP.map((room) => room.room)
+    if (!rooms.includes(room)) {
+      res.status(400).json({ message: 'Room is not valid' })
+      return
+    }
+    if (!room) {
+      res.status(400).json({ message: 'Room is required' })
+      return
+    }
 
     // check if username already exists
     const existing = await User.findOne({ username })
@@ -38,7 +49,7 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user: UserDocument = new User({ username, password: hashedPassword })
+    const user: UserDocument = new User({ username, password: hashedPassword, room })
     await user.save()
 
     res.json({ message: 'User created successfully' })

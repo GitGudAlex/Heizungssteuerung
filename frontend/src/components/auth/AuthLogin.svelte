@@ -31,7 +31,7 @@
           errorMessage = translations['genericError']
         }
       }
-    } catch (error: Error) {
+    } catch (error: any) {
       errorMessage = translations['internalError']
     }
   }

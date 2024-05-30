@@ -3,6 +3,7 @@ import { type Document, Schema, type Model, model } from 'mongoose'
 export interface UserDocument extends Document {
   username: string
   password: string
+  room: string
   isAdmin: boolean
   sepiaMode: boolean
   temperature: number
@@ -11,6 +12,7 @@ export interface UserDocument extends Document {
 const userSchema = new Schema<UserDocument>({
   username: String,
   password: String,
+  room: String,
   isAdmin: { type: Boolean, default: false },
   sepiaMode: { type: Boolean, default: false },
   temperature: { type: Number, default: 18 }

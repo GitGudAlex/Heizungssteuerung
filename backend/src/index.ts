@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import * as dotenv from 'dotenv'
 import cors from 'cors'
 import express from 'express'
@@ -8,7 +7,6 @@ import jwt from 'jsonwebtoken'
 import authRouter from './routes/auth'
 import bodyParser from 'body-parser'
 import { deviceRouter } from './routes/devices/device.router'
-import calenderRouter from './routes/calendar.router'
 import { User } from './model/user'
 import adminSettingsRouter from './routes/admin-settings'
 import userSettingsRouter from './routes/user-settings'
@@ -57,9 +55,8 @@ app.use(express.urlencoded({ extended: true }))
 
 // routes
 app.use('/', authRouter)
-app.use('/calendar', calenderRouter)
 app.use('/admin-settings', adminSettingsRouter)
-app.use('/devices', deviceRouter)
+app.use('/device', deviceRouter)
 app.use('/user-settings', userSettingsRouter)
 
 // Middleware to verify JWT token

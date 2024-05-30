@@ -1,6 +1,6 @@
 import { Fritz } from 'fritzdect-aha-nodejs'
 import { XmlParser } from './xml-parser'
-import { type FritzDeviceList } from '../../model/fritz/fritz-device.type'
+import { type FritzDeviceList } from './fritz-device.type'
 
 class FritzController {
   public readonly fritz: Fritz
