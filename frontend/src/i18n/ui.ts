@@ -8,6 +8,7 @@ export const defaultLang = 'de'
 export const ui = {
   en: {
     title: 'Heating Control',
+    disclaimerSign: 'Warning Sign',
     description: 'Tool for controling the heating in the PUX Lab',
     'nav.home': 'Home',
     'nav.settings': 'Settings',
@@ -76,11 +77,13 @@ export const ui = {
     usernameTakenError: 'Username already exists. Please choose a different one.',
     passwordLengthError: 'Password must be at least 7 characters long.',
     loginNow: 'Already registered? Log in now',
+    registerDisclaimer: 'Please use your HdM abbreviation as username otherwise the heating controls will not work.',
     roomName: 'Room Name',
     saveRoomName: 'Save Room Name',
   },
   de: {
     title: 'Heizungssteuerung',
+    disclaimerSign: 'Warnschild',
     description: 'Heizungssteuerung Tool für die Steuerung von Heizungen im PUX Lab',
     'nav.home': 'Start',
     'nav.settings': 'Einstellungen',
@@ -149,6 +152,7 @@ export const ui = {
     usernameTakenError: 'Benutzername existiert bereits. Bitte wählen Sie einen anderen.',
     passwordLengthError: 'Passwort muss mindestens 7 Zeichen lang sein.',
     loginNow: 'Schon registriert? Jetzt einloggen',
+    registerDisclaimer: 'Bitte benutzte deinen HdM-Kürzel, sonst funktioniert die Heizungssteuerung nicht!',
     roomName: 'Raumname',
     saveRoomName: 'Raumnamen speichern',
   },
