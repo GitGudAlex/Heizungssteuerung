@@ -2,17 +2,19 @@ import { type Model, Schema, model, type Document } from 'mongoose'
 
 export interface DeviceDocument extends Document {
   name: string
-  type: 'D301' | 'D302'
+  type: string
   identifier: string
-  map: string
+  heaterMap: string
+  roomMap: string
   enabled: boolean
 }
 
 const deviceSchema: Schema = new Schema<DeviceDocument>({
   name: { type: String, required: true },
-  type: { type: String, enum: ['D301', 'D302'], required: true },
+  type: { type: String, required: true },
   identifier: { type: String, required: true },
-  map: { type: String, required: true },
+  heaterMap: { type: String, required: true },
+  roomMap: { type: String, required: true },
   enabled: { type: Boolean, default: true, required: false }
 })
 

@@ -11,7 +11,7 @@
 
   const initLocalStorageFromDb = async (userId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/user-settings?userId=${userId}`, {
+      const response = await fetch(`http://localhost:3000/user/${userId}`, {
         method: 'GET',
       })
 

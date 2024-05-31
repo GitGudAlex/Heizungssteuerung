@@ -1,0 +1,1 @@
+export const HEATER_DEVICE_TYPES = ['FRITZ!DECT 301']
