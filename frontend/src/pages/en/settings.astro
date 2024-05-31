@@ -7,6 +7,7 @@ import AuthLogout from "~/components/auth/AuthLogout.svelte";
 import SepiaToggle from "~/components/settings/SepiaToggle.svelte";
 import getUserId from "~/utils/auth/GetUserId";
 import Temperature from "~/components/settings/Temperature.svelte";
+import RoomSettings from "~/components/settings/RoomSettings.svelte";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -42,6 +43,13 @@ const temperatureTranslations: Record<string, string> =  {
 const logoutTranslations: Record<string, string> =  {
     "logout": t('logout'),
 };
+
+const roomSettingsTranslations: Record<string, string> =  {
+    "roomName": t('roomName'),
+    "roomNameDescription": t('roomNameDescription'),
+    "setRoomName": t('setRoomName'),
+    "saveRoomName": t('saveRoomName'),
+};
 ---
 <DefaultLayout title={t('nav.settings')}>
     <section class="mb-12 mt-12">
@@ -49,6 +57,7 @@ const logoutTranslations: Record<string, string> =  {
         <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
         <Temperature client:load translations={temperatureTranslations} lang={lang} userId={userId} />
         <SepiaToggle client:load translations={sepiaTranslations} lang={lang} userId={userId} />
+        <RoomSettings client:load translations={roomSettingsTranslations} lang={lang} userId={userId} />
         <AuthLogout client:load translations={logoutTranslations} lang={lang}  />   
         </div>
     </section>
