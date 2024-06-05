@@ -3,11 +3,12 @@
 
   // Define the structure of a device
   interface Device {
-    name: string;
-    type: string;
-    identifier: string;
-    map: string;
-    status: string;
+    name: string
+    type: string
+    identifier: string
+    heaterMap: string
+    roomMap: string
+    enabled?: boolean
   }
 
   let deviceList: Device[] = [];
@@ -15,7 +16,7 @@
 
   const loadDevicesFromDb = async () => {
     try {
-      const response = await fetch('http://localhost:3000/devices/db/devices', {
+      const response = await fetch('http://localhost:3000/device/db/devices', {
         method: 'GET',
       });
       if (response.ok) {
@@ -49,10 +50,10 @@
           <div class="px-4 py-5">
             <div class="flex items-center justify-between">
               <h3 class="text-lg leading-6 font-medium text-gray-900">{device.name}</h3>
-              <p class="mt-1 max-w-2xl text-sm text-gray-500">Raum {device.map}</p>
+              <p class="mt-1 max-w-2xl text-sm text-gray-500">Raum {device.roomMap}</p>
             </div>
             <div class="mt-4 flex items-center justify-between">
-              <p class="text-sm font-medium text-gray-500">Status: <span class="text-teal-600">{device.status}</span></p>
+              <p class="text-sm font-medium text-gray-500">Status: <span class="text-teal-600">{device.enabled}</span></p>
               <input type="number" aria-describedby="helper-text-explanation" class="w-20 mr-2 ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="23°C" />
               <button class="rounded-lg text-sm font-medium text-white bg-teal-600" on:click={handleConfirm}>Bestätigen</button>
             </div>
