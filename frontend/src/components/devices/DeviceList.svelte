@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { writable } from 'svelte/store';
 
   // Define the structure of a device
   interface Device {
@@ -11,7 +12,7 @@
     enabled?: boolean
   }
 
-  let deviceList: Device[] = [];
+  export const deviceList = writable<Device[]>([]);
   let errorMessage = '';
 
   const loadDevicesFromDb = async () => {
@@ -20,7 +21,8 @@
         method: 'GET',
       });
       if (response.ok) {
-        deviceList = await response.json();
+        const devices = await response.json();
+        deviceList.set(devices);
         console.log('Devices fetched successfully:', deviceList);
       } else {
         errorMessage = 'Failed to load devices';
@@ -36,14 +38,13 @@
   }
   
   onMount(() => {
-    //getDevices()
     loadDevicesFromDb();
   })
 </script>
 
 <h1>Device List</h1>
 <div class="grid grid-cols-4 gap-4">
-  {#each deviceList as device (device.identifier)}
+  {#each $deviceList as device (device.identifier)}
     <div>
       <ul class="bg-white shadow overflow-hidden sm:rounded-md max-w-sm mx-auto mt-16">
         <li>
