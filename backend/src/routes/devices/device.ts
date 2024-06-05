@@ -1,8 +1,10 @@
 import { Router } from 'express'
 import { FRITZ_SINGLETON } from '../../domain/fritz/fritz'
 import { heatingControlRouter } from './heating-control-device.router'
-import { type FritzDeviceList } from '../../model/fritz/fritz-device.type'
+import { type FritzDeviceList } from '../../domain/fritz/fritz-device.type'
 import { Device, type DeviceDocument } from '../../model/device'
+import { ROOMS_HEATERS_MAP } from '../../domain/devices/rooms-heaters-map'
+import { HEATER_DEVICE_TYPES } from '../../domain/devices/heater-device-types'
 
 export const deviceRouter = Router()
 
@@ -26,6 +28,19 @@ deviceRouter.get('/', async (req, res) => {
   }
 })
 
+deviceRouter.get('/device-map', async (req, res) => {
+  try {
+    const map = {
+      roomsHeatersMap: ROOMS_HEATERS_MAP,
+      heaterDeviceTypes: HEATER_DEVICE_TYPES
+    }
+    res.status(200).send(map)
+  } catch (error: any) {
+    console.error('Device Router Error: /device-map', error)
+    res.status(500).send('Device Router Error: /device-map' + error.message)
+  }
+})
+
 /**
  * @param identifier The identifier of the device. (e.g "09995 0688917")
  * @returns the basic information of a device.
@@ -42,13 +57,13 @@ deviceRouter.get('/:identifier', async (req, res) => {
 
 deviceRouter.post('/db/devices', async (req, res) => {
   try {
-    const { name, identifier, type, map } = req.body
+    const { name, identifier, type, heaterMap, roomMap } = req.body
     // TODO: Check if device with identifier is online in FritzBox
     // e.g. with the logic from the route above
     // then, add additional info to the device in the db (check what is needed in dashboard)
     // also check if device identifier / map / name are unique. Those should not be in DB already
 
-    const device: DeviceDocument = new Device({ name, identifier, type, map })
+    const device: DeviceDocument = new Device({ name, identifier, type, heaterMap, roomMap })
     await device.save()
     res.status(200).json({ message: 'Device saved successfully' })
   } catch (error) {

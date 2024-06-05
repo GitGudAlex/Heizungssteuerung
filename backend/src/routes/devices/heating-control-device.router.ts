@@ -1,8 +1,7 @@
 import { Router } from 'express'
 import { FRITZ_SINGLETON } from '../../domain/fritz/fritz'
-import { type FritzDevice } from '../../model/fritz/fritz-device.type'
-
-const HEATING_CONTROL_DEVICE_NAMES = ['FRITZ!DECT 301']
+import { type FritzDevice } from '../../domain/fritz/fritz-device.type'
+import { HEATER_DEVICE_TYPES } from '../../domain/devices/heater-device-types'
 
 export const heatingControlRouter = Router()
 
@@ -14,7 +13,7 @@ heatingControlRouter.get('/', async (req, res) => {
     const deviceList = await FRITZ_SINGLETON.getDeviceListInfos()
     const devices: FritzDevice[] = []
     for (const device of deviceList.device) {
-      if (HEATING_CONTROL_DEVICE_NAMES.includes(device.productname)) {
+      if (HEATER_DEVICE_TYPES.includes(device.productname)) {
         devices.push(device)
       }
     }

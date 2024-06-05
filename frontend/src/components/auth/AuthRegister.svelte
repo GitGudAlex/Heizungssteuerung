@@ -1,60 +1,86 @@
 <script lang="ts">
-  export let translations: { [key: string]: string }
-  export let lang: string
+  import { onMount } from "svelte";
 
-  let username: string = ''
-  let password: string = ''
-  let invitationCode: string = ''
-  let errorMessage: string = ''
-  let signUpSuccess: boolean = false
+  export let translations: { [key: string]: string };
+  export let lang: string;
+
+  let rooms: string[] = [];
+  let room: string = '';
+
+  let username: string = '';
+  let password: string = '';
+  let invitationCode: string = '';
+  let errorMessage: string = '';
+  let signUpSuccess: boolean = false;
+
+  const load = async () => {
+    const mapsResponse = await fetch('http://localhost:3000/device/device-map', {
+      method: 'GET',
+    });
+    const maps = await mapsResponse.json();
+
+    const roomsHeaterMap: {room: string, heater: string}[] = maps.roomsHeatersMap;
+    rooms = Array.from(new Set(roomsHeaterMap.map((roomHeater) => roomHeater.room)));
+    if (rooms.length > 0) {
+      room = rooms[0];
+    }
+  };
+
+  const handleInputChange = (event: Event) => {
+    const value = (event.target as HTMLInputElement).value;
+    room = value;
+  };
 
   const handleSignUp = async () => {
-    errorMessage = ''
+    errorMessage = '';
     if (password.length < 7) {
-      console.log('Password too short')
-      errorMessage = translations['passwordLengthError']
-      return
+      console.log('Password too short');
+      errorMessage = translations['passwordLengthError'];
+      return;
     }
 
     try {
-      const response = await fetch('http://localhost:3000/register', {
+      const response = await fetch('http://localhost:3000/user/login/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, invitationCode }),
-      })
+        body: JSON.stringify({ username, password, room, invitationCode }),
+      });
 
       if (response.ok) {
-        signUpSuccess = true
-        window.location.href = `/${lang}/login`
+        signUpSuccess = true;
+        window.location.href = `/${lang}/login`;
       } else {
-        console.log('Sign up failed: ', response.status)
+        console.log('Sign up failed: ', response.status);
         if (response.status === 400) {
-          errorMessage = translations['invalidInviteCode']
+          errorMessage = translations['invalidInviteCode'];
         } else if (response.status === 409) {
-          errorMessage = translations['usernameTakenError']
+          errorMessage = translations['usernameTakenError'];
         } else {
-          errorMessage = translations['genericError']
+          errorMessage = translations['genericError'];
         }
       }
     } catch (error: any) {
-      errorMessage = translations['internalError']
+      errorMessage = translations['internalError'];
     }
-  }
+  };
 
   const getUrlParameter = (name: string): string | null => {
-    name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]')
-    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)')
-    const results = regex.exec(window.location.search)
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '))
-  }
+    name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    const results = regex.exec(window.location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+  };
 
   // Check URL parameters when the script is executed
-  const codeFromURL = getUrlParameter('invitationCode')
+  const codeFromURL = getUrlParameter('invitationCode');
   if (codeFromURL) {
-    invitationCode = codeFromURL
+    invitationCode = codeFromURL;
   }
+  onMount(() => {
+    load();
+  });
 </script>
 
 <div class="flex h-screen">
@@ -82,6 +108,21 @@
         bind:value={password}
       />
     </div>
+    
+    <div class="mb-4">
+      <label class="block text-sm font-bold mb-2" for="room">{translations['roomMap']}</label>
+      <select
+        class="appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="room"
+        bind:value={room}
+        on:input={handleInputChange}
+      >
+        {#each rooms as r}
+          <option value={r}>{r}</option>
+        {/each}
+      </select>
+    </div>
+
     <div class="mb-6">
       <label class="block text-sm font-bold mb-2" for="invitationCode">{translations['invitationCode']}</label>
       <input

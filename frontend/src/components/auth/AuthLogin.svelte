@@ -12,7 +12,7 @@
   const handleLogin = async () => {
     errorMessage = ''
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch('http://localhost:3000/user/login/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,7 @@
           errorMessage = translations['genericError']
         }
       }
-    } catch (error: Error) {
+    } catch (error: any) {
       errorMessage = translations['internalError']
     }
   }

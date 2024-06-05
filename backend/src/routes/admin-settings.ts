@@ -5,27 +5,37 @@ dotenv.config()
 
 const adminRouter = express.Router()
 
-adminRouter.get('/', async (req: Request, res: Response): void => {
+export async function getAdminSettings (): Promise<{ invitationCode: string, calendarRegex: string }> {
+  // check if there is an admin settings document
+  const existingSettings = await AdminSettings.findOne({})
+  if (existingSettings !== null) {
+    return { invitationCode: existingSettings.invitationCode, calendarRegex: existingSettings.calendarRegex }
+  } else {
+    // create default settings
+    const invitationCode = 'default'
+    const calendarRegex = '.*' // TODO change to default regex
+    const newSettings: AdminSettingsDocument = new AdminSettings({ invitationCode, calendarRegex })
+    await newSettings.save()
+    return { invitationCode, calendarRegex }
+  }
+}
+
+/**
+ * Route to get the admin settings
+ * returns the invitation code and the calendar regex
+ * if there is no admin settings document, it creates one with the default values
+ */
+adminRouter.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    // check if there is an admin settings document
-    const existingSettings = await AdminSettings.findOne({})
-    if (existingSettings !== null) {
-      res.json({ invitationCode: existingSettings.invitationCode, calendarRegex: existingSettings.calendarRegex })
-    } else {
-      // create default settings
-      const invitationCode = process.env.INVITATION_CODE
-      const calendarRegex = process.env.CALENDAR_REGEX
-      const newSettings: AdminSettingsDocument = new AdminSettings({ invitationCode, calendarRegex })
-      await newSettings.save()
-      res.json({ invitationCode, calendarRegex })
-    }
+    const settings = getAdminSettings()
+    res.status(200).json(settings)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Internal server error' })
   }
 })
 
-adminRouter.post('/', async (req: Request, res: Response): void => {
+adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const { invitationCode, calendarRegex }: { invitationCode: string, calendarRegex: string } = req.body
     if (invitationCode === null || calendarRegex === null) {

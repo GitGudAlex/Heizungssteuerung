@@ -14,7 +14,7 @@
 
   const updateDbSettings = async () => {
     try {
-      const response = await fetch('http://localhost:3000/user-settings/sepiaMode', {
+      const response = await fetch('http://localhost:3000/user/sepiaMode', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

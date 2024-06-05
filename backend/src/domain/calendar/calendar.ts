@@ -1,13 +1,20 @@
 import * as ical from 'ical'
 import * as dav from 'dav'
 import { subMilliseconds, startOfToday, endOfToday } from 'date-fns'
-import { type Calendar, type CalendarResults } from '../../model/calendar/calendar-results.type'
+import { type Calendar, type CalendarResults } from './calendar-results.type'
+import { type ICalendarController } from './calendar.interface'
 
-export class CalendarController {
+export class CalendarController implements ICalendarController {
   private readonly domain: string
   private readonly username: string
   private readonly password: string
   private readonly calendars: Record<string, { start: Date, end: Date }>
+
+  // As we do not want to fetch the calendar data to often, to avoid blocks by Nextcloud,
+  // we defined an interval for fetching the calendar data.
+  private readonly fetchInterval: number = 15 * 60 * 1000 // 15 mins
+  private lastFetchTime: number = 0
+  private cachedEvents: ical.CalendarComponent[] = []
 
   constructor () {
     this.domain = process.env.CALENDAR_DOMAIN ?? ''
@@ -35,7 +42,14 @@ export class CalendarController {
     }
   }
 
-  public async getCalendarEvents (): Promise<CalendarResults | undefined> {
+  /**
+   * Get the events of the calendar for today for the given calendar name in the environment variables.
+   * env: CALENDAR_NAME_HEIZUNGSSTEUERUNG
+   * @returns CalendarResults
+   */
+  private async getTodaysCalendarEvents (): Promise<
+  CalendarResults | undefined
+  > {
     const userCalendars = this.calendars
     const foundEvents: CalendarResults = { calendars: [] }
 
@@ -85,28 +99,7 @@ export class CalendarController {
     return foundEvents
   }
 
-  async getHeatingControlData (cachedEvents: { calendars: any[] }): Promise<any[]> {
-    const heatingData: any[] = []
-    cachedEvents.calendars.forEach(calendar => {
-      if (calendar.name === 'Heizungssteuerung') {
-        calendar.events.forEach((event: { summary: any, start: any, description: any }) => {
-          try {
-            heatingData.push({
-              title: event.summary,
-              date: event.start,
-              device: event.description
-            })
-          } catch (error) {
-            console.error('Error while parsing heating data:', error)
-          }
-        })
-      }
-    })
-
-    return heatingData
-  }
-
-  async createDavAccount (): Promise<dav.Account | undefined> {
+  private async createDavAccount (): Promise<dav.Account | undefined> {
     try {
       const davServerURL = `${this.domain}/remote.php/dav/`
       const auth = new dav.transport.Basic(
@@ -125,6 +118,67 @@ export class CalendarController {
       console.error('Error creating dav account:', error)
       return undefined
     }
+  }
+
+  /**
+   * Parses the calendar results to an array of ical.CalendarComponent objects,
+   * this does not check the date range or calendar name,
+   * getCalendarEvents does that.
+   * @param calendarResults Object containing the calendar results
+   * @returns Array of ical.CalendarComponent objects
+   */
+  private parseCalendarResultsToEvents (
+    calendarResults: CalendarResults
+  ): ical.CalendarComponent[] {
+    const events: ical.CalendarComponent[] = []
+    calendarResults.calendars.forEach((calendar) => {
+      calendar.events.forEach((event) => {
+        events.push(event)
+      })
+    })
+
+    return events
+  }
+
+  /**
+   * @returns true if the time since the last calendar fetch is more than the fetch interval, false otherwise
+   */
+  private isFetchIntervalOver (): boolean {
+    const currentTime = Date.now()
+    const timeSinceLastFetch = currentTime - this.lastFetchTime
+
+    if (timeSinceLastFetch < this.fetchInterval) {
+      // const remainingTime = this.fetchInterval - timeSinceLastFetch
+      // const remainingMinutes = Math.floor(remainingTime / 60000)
+      // const remainingSeconds = Math.floor((remainingTime % 60000) / 1000)
+      // console.debug(
+      //   `Calendar fetch interval is over in ${remainingMinutes} minutes and ${remainingSeconds} seconds.`
+      // )
+      return true
+    }
+
+    this.lastFetchTime = currentTime
+    return false
+  }
+
+  /**
+   * Checks whether the time since the last fetch is more than the fetch interval,
+   * if it is, it fetches the calendar events for today and returns them.
+   * If it is not, it returns the cached events.
+   */
+  public async getTodaysEvents (): Promise<ical.CalendarComponent[]> {
+    if (!this.isFetchIntervalOver()) {
+      return this.cachedEvents
+    }
+    const newEvents = await this.getTodaysCalendarEvents()
+    if (!newEvents) {
+      console.error('getTodaysEvents(): Error fetching new events')
+      return []
+    }
+    const parsedEvents = this.parseCalendarResultsToEvents(newEvents)
+    this.cachedEvents = parsedEvents
+    console.info("successfully fetched today's events: \n", parsedEvents)
+    return this.cachedEvents
   }
 }
 
