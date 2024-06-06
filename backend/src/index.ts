@@ -6,10 +6,9 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import { deviceRouter } from './routes/devices/device'
 import adminSettingsRouter from './routes/admin-settings'
-import { CALENDAR_FRITZ_SYNC_SINGLETON } from './domain/calendar-fritz-sync/calendar-fritz-sync'
 import userRouter from './routes/user/user'
+import heatingRouter from './routes/heating'
 dotenv.config()
-CALENDAR_FRITZ_SYNC_SINGLETON.scheduleSyncCron()
 
 const app = express()
 const port = process.env.PORT
@@ -48,6 +47,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/admin-settings', adminSettingsRouter)
 app.use('/device', deviceRouter)
 app.use('/user', userRouter)
+app.use('/heating', heatingRouter)
 
 app.get('/', (_, res) => {
   res.send('Hello World!')
