@@ -67,7 +67,7 @@
   // Save device in db
   const saveDeviceInDb = async () => {
     try {
-      const response = await fetch('http://localhost:3000/device/db', {
+      const response = await fetch('http://localhost:3000/device/db/devices', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

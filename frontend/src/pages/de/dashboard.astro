@@ -5,6 +5,7 @@ import checkAuth from "~/utils/auth/CheckAuth";
 import InteractiveSVG from "~/components/InteractiveSVG.svelte";
 import LoadSettings from "~/components/settings/LoadSettings.svelte";
 import getUserId from "~/utils/auth/GetUserId";
+import DeviceList from "~/components/devices/DeviceList.svelte";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -30,6 +31,7 @@ const userId = await getUserId(token);
             <LoadSettings client:load userId={userId} />
             <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
             <InteractiveSVG client:load />
+            <DeviceList client:load />
         </div>
     </section>
 </DefaultLayout>
