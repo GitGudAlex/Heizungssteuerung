@@ -1,18 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { writable } from 'svelte/store';
+  import { deviceList } from '~/stores/deviceStore.ts';
 
-  // Define the structure of a device
-  interface Device {
-    name: string
-    type: string
-    identifier: string
-    heaterMap: string
-    roomMap: string
-    enabled?: boolean
-  }
-
-  export const deviceList = writable<Device[]>([]);
   let errorMessage = '';
 
   const loadDevicesFromDb = async () => {
@@ -36,16 +25,24 @@
   function handleConfirm() {
     // Temperatur ändern
   }
-  
+
+  function handleInput(event) {
+        const value = event.target.value;
+        if (value < 8 || value > 26) {
+          event.target.value = Math.min(Math.max(parseInt(value), 8), 26);
+        }
+    }
+    
   onMount(() => {
     loadDevicesFromDb();
   })
+
 </script>
 
 <h1>Device List</h1>
 <div class="grid grid-cols-4 gap-4">
   {#each $deviceList as device (device.identifier)}
-    <div>
+    <div id={`device-${device.heaterMap}`}>
       <ul class="bg-white shadow overflow-hidden sm:rounded-md max-w-sm mx-auto mt-16">
         <li>
           <div class="px-4 py-5">
@@ -54,8 +51,12 @@
               <p class="mt-1 max-w-2xl text-sm text-gray-500">Raum {device.roomMap}</p>
             </div>
             <div class="mt-4 flex items-center justify-between">
-              <p class="text-sm font-medium text-gray-500">Status: <span class="text-teal-600">{device.enabled}</span></p>
-              <input type="number" aria-describedby="helper-text-explanation" class="w-20 mr-2 ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="23°C" />
+              <p class="text-sm font-medium text-gray-500">Status: 
+                <span class="{device.enabled ? 'text-teal-600' : 'text-red-600'}">
+                    {device.enabled ? 'Aktiv' : 'Inaktiv'}
+                </span>
+              </p>            
+              <input id={`temperature-${device.heaterMap}`} type="number" aria-describedby="helper-text-explanation" class="w-20 mr-2 ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="23°C" on:blur={handleInput}/>
               <button class="rounded-lg text-sm font-medium text-white bg-teal-600" on:click={handleConfirm}>Bestätigen</button>
             </div>
           </div>
