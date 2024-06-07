@@ -60,6 +60,7 @@ class FritzController {
     temp: number | 'on' | 'off'
   ): Promise<number> {
     try {
+      console.debug(`Setting temperature target of ${identifier} to ${temp}`)
       const tempTarget = await this.fritz.setTempTarget(identifier, temp)
       return tempTarget
     } catch (error) {

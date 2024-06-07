@@ -72,7 +72,9 @@ export class HeatingController {
     heatingOrders: HeatingOrder[] = this._heatingOrders
   ): Promise<void> {
     const rooms = await this.deviceController.getRooms()
-    for (const room of rooms) {
+    // remove duplicates
+    const uniqueRooms = [...new Set(rooms)]
+    for (const room of uniqueRooms) {
       if (!room || room === '' || typeof room !== 'string') {
         console.warn(
           'HeatingController setHeatersAccordingToHeatingOrders(): Room is undefined'
@@ -105,6 +107,13 @@ export class HeatingController {
     heatingOrders: HeatingOrder[],
     room: string
   ): Promise<void> {
+    const allHeaterIds = await this.deviceController.getHeaterIdsByRoom(room)
+    if (allHeaterIds.length === 0) {
+      console.warn(
+        `No heaters found for room ${room}, cannot temperature`
+      )
+      return
+    }
     // Set the heaters according to the manual heating orders, as they are prioritized
     const manualHeatingOrders = heatingOrders.filter(
       (order) => {
@@ -121,8 +130,7 @@ export class HeatingController {
         averageTemp += order.getParameters().temperature
       }
       averageTemp /= manualHeatingOrders.length
-      const heaterIds = await this.deviceController.getHeaterIdsByRoom(room)
-      for (const heaterId of heaterIds) {
+      for (const heaterId of allHeaterIds) {
         await FRITZ_SINGLETON.setTempTarget(heaterId, averageTemp)
       }
       return
@@ -144,8 +152,7 @@ export class HeatingController {
         averageTemp += order.getParameters().temperature
       }
       averageTemp /= calendarHeatingOrders.length
-      const heaterIds = await this.deviceController.getHeaterIdsByRoom(room)
-      for (const heaterId of heaterIds) {
+      for (const heaterId of allHeaterIds) {
         await this.fritzController.setTempTarget(heaterId, averageTemp)
       }
       return
@@ -154,7 +161,6 @@ export class HeatingController {
     console.debug(
       `No manual or calendar heating orders relevant for the moment in room ${room}, setting heaters to default admin temperature`
     )
-    const allHeaterIds = await this.deviceController.getHeaterIdsByRoom(room)
     for (const heaterId of allHeaterIds) {
       await this.fritzController.setTempTarget(heaterId, this.defaultTemp)
     }
@@ -184,10 +190,10 @@ export class HeatingController {
     ]
 
     if (events.length === 0) {
-      console.debug('No events found, skipping calendar fritz sync')
+      console.debug('No events found, skipping calendar heating order sync')
       return
     }
-    console.debug(`${events.length} found, starting calendar fritz sync`)
+    console.debug(`${events.length} found, starting heating order sync`)
     for (const event of events) {
       const userHeatingOrder = await this.parseCalendarEvent(
         event as unknown as CalendarComponent
