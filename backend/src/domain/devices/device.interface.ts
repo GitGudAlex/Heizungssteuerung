@@ -11,4 +11,10 @@ export interface IDeviceController {
      * @returns A promise that resolves with an array of all heater IDs.
      */
   getHeaterIds: () => Promise<string[]>
+
+  /**
+       * Retrieves all rooms.
+       * @returns A promise that resolves with an array of all rooms.
+       */
+  getRooms: () => Promise<string[]>
 }

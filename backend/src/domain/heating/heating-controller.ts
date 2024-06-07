@@ -22,15 +22,23 @@ const DEFAULT_TEMP = 20
  * - Set the heaters to default temperature if no heating order is active.
  *
  */
-class HeatingController {
-  private readonly deviceController: IDeviceController = DEVICE_CONTROLLER_SINGLETON
-  private readonly heatingOrders: HeatingOrder[] = []
+export class HeatingController {
+  readonly deviceController: IDeviceController =
+    DEVICE_CONTROLLER_SINGLETON
+
+  readonly fritzController = FRITZ_SINGLETON
+  readonly _heatingOrders: HeatingOrder[] = []
+  readonly defaultTemp = DEFAULT_TEMP
 
   constructor () {
     cron.schedule('* * * * *', async () => {
       await this.syncCalendarHeatingOrders()
       await this.setHeatersAccordingToHeatingOrders()
     })
+  }
+
+  get heatingOrders (): HeatingOrder[] {
+    return this._heatingOrders
   }
 
   /**
@@ -40,7 +48,7 @@ class HeatingController {
    */
   public addHeatingOrder (heatingOrder: HeatingOrder): void {
     const heatingOrderParameters = heatingOrder.getParameters()
-    const isAlreadyInList = this.heatingOrders.some((order) => {
+    const isAlreadyInList = this._heatingOrders.some((order) => {
       return (
         JSON.stringify(order.getParameters()) ===
         JSON.stringify(heatingOrderParameters)
@@ -48,72 +56,107 @@ class HeatingController {
     })
     if (isAlreadyInList) {
       console.warn(
-        `HeatingController addHeatingOrder(): Heating order ${JSON.stringify(heatingOrderParameters)} is already in the list.`
+        `HeatingController addHeatingOrder(): Heating order ${JSON.stringify(
+          heatingOrderParameters
+        )} is already in the list.`
       )
       return
     }
-    this.heatingOrders.push(heatingOrder)
+    this._heatingOrders.push(heatingOrder)
   }
 
   /**
    * Sets the heaters for the moment according to the existing heating orders.
    */
-  private async setHeatersAccordingToHeatingOrders () {
-    const defaultTemp = DEFAULT_TEMP
-
-    const roomsThatHaveBeenSet: string[] = []
-
-    const heatingOrdersForTheMoment = this.heatingOrders.filter((order) => {
-      const parameters = order.getParameters()
-      return (
-        parameters.startDateTime < new Date() &&
-        parameters.endDataTime > new Date()
-      )
-    })
-
-    // Used DefaultTemp for all rooms, if no heating order is active
-    if (heatingOrdersForTheMoment.length === 0) {
-      console.debug('No heating orders relevant for the moment, setting heaters to default temperature')
-      const allHeaterIds = await this.deviceController.getHeaterIds()
-      for (const heaterId of allHeaterIds) {
-        await FRITZ_SINGLETON.setTempTarget(heaterId, defaultTemp)
-      }
-    }
-
-    // Set the heaters according to the manual heating orders, as they are prioritized
-    const manualHeatingOrders = heatingOrdersForTheMoment.filter((order) => {
-      return order.getParameters().origin === 'manual'
-    })
-    if (manualHeatingOrders.length > 0) {
-      console.debug('Setting heaters according to manual heating orders')
-      for (const order of manualHeatingOrders) {
-        const parameters = order.getParameters()
-        const heaterIds = await this.deviceController.getHeaterIdsByRoom(
-          parameters.room
+  async setHeatersAccordingToHeatingOrders (
+    heatingOrders: HeatingOrder[] = this._heatingOrders
+  ): Promise<void> {
+    const rooms = await this.deviceController.getRooms()
+    for (const room of rooms) {
+      if (!room || room === '' || typeof room !== 'string') {
+        console.warn(
+          'HeatingController setHeatersAccordingToHeatingOrders(): Room is undefined'
         )
-        roomsThatHaveBeenSet.push(parameters.room)
-        for (const heaterId of heaterIds) {
-          await FRITZ_SINGLETON.setTempTarget(heaterId, parameters.temperature)
-        }
+        continue
       }
+      const roomHeatingOrdersForTheMoment = heatingOrders.filter(
+        (order) => {
+          const parameters = order.getParameters()
+          return (
+            parameters.startDateTime < new Date() &&
+            parameters.endDataTime > new Date() &&
+            parameters.room === room
+          )
+        }
+      )
+      await this.setHeatersOfRoom(roomHeatingOrdersForTheMoment, room)
+    }
+  }
+
+  /**
+   * Set the heaters of a room according to the current heating orders.
+   * Prio1: If there are manual heating orders, the heaters will be set to the average temperature of the manual orders.
+   * Prio2: If there are calendar heating orders, the heaters will be set to the average temperature of the calendar orders.
+   * Prio3: If there are no heating orders, the heaters will be set to the default temperature.
+   * @param heatingOrders - The heating orders that affect the room for the moment.
+   * @param room - The room for which to set the heaters.
+   */
+  private async setHeatersOfRoom (
+    heatingOrders: HeatingOrder[],
+    room: string
+  ): Promise<void> {
+    // Set the heaters according to the manual heating orders, as they are prioritized
+    const manualHeatingOrders = heatingOrders.filter(
+      (order) => {
+        return order.getParameters().origin === 'manual'
+      }
+    )
+    if (manualHeatingOrders.length > 0) {
+      console.debug(
+        `Setting heaters according to manual heating orders for room ${room}`
+      )
+      // find the average temperature of all manual heating orders
+      let averageTemp = 0
+      for (const order of manualHeatingOrders) {
+        averageTemp += order.getParameters().temperature
+      }
+      averageTemp /= manualHeatingOrders.length
+      const heaterIds = await this.deviceController.getHeaterIdsByRoom(room)
+      for (const heaterId of heaterIds) {
+        await FRITZ_SINGLETON.setTempTarget(heaterId, averageTemp)
+      }
+      return
     }
 
     // Set the heaters according to the calendar heating orders
-    const calendarHeatingOrders = heatingOrdersForTheMoment.filter((order) => {
-      return order.getParameters().origin === 'calendar'
-    })
-    if (calendarHeatingOrders.length > 0) {
-      console.debug('Setting heaters according to calendar heating orders')
-      for (const order of calendarHeatingOrders) {
-        const parameters = order.getParameters()
-        const heaterIds = await this.deviceController.getHeaterIdsByRoom(
-          parameters.room
-        )
-        roomsThatHaveBeenSet.push(parameters.room)
-        for (const heaterId of heaterIds) {
-          await FRITZ_SINGLETON.setTempTarget(heaterId, parameters.temperature)
-        }
+    const calendarHeatingOrders = heatingOrders.filter(
+      (order) => {
+        return order.getParameters().origin === 'calendar'
       }
+    )
+    if (calendarHeatingOrders.length > 0) {
+      console.debug(
+        `Setting heaters according to calendar heating orders for room ${room}`
+      )
+      // find the average temperature of all calendar heating orders
+      let averageTemp = 0
+      for (const order of calendarHeatingOrders) {
+        averageTemp += order.getParameters().temperature
+      }
+      averageTemp /= calendarHeatingOrders.length
+      const heaterIds = await this.deviceController.getHeaterIdsByRoom(room)
+      for (const heaterId of heaterIds) {
+        await this.fritzController.setTempTarget(heaterId, averageTemp)
+      }
+      return
+    }
+
+    console.debug(
+      `No manual or calendar heating orders relevant for the moment in room ${room}, setting heaters to default admin temperature`
+    )
+    const allHeaterIds = await this.deviceController.getHeaterIdsByRoom(room)
+    for (const heaterId of allHeaterIds) {
+      await this.fritzController.setTempTarget(heaterId, this.defaultTemp)
     }
   }
 

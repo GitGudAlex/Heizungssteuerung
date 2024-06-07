@@ -42,6 +42,10 @@ class DeviceController implements IDeviceController {
     await this.getRoomHeaterIdMap()
     return this.RoomHeaterIdMap.map((map) => map.id)
   }
+
+  public async getRooms (): Promise<string[]> {
+    return ROOMS_HEATERS_MAP.map((map) => map.room)
+  }
 }
 
 export const DEVICE_CONTROLLER_SINGLETON = new DeviceController()
