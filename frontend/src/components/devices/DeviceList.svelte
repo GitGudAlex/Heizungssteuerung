@@ -4,6 +4,9 @@
 
   let errorMessage = '';
 
+  export let translations: { [key: string]: string }
+  export let lang: string
+
   const loadDevicesFromDb = async () => {
     try {
       const response = await fetch('http://localhost:3000/device/db/devices', {
@@ -39,7 +42,7 @@
 
 </script>
 
-<h1>Device List</h1>
+
 <div class="grid grid-cols-4 gap-4">
   {#each $deviceList as device (device.identifier)}
     <div id={`device-${device.heaterMap}`}>
@@ -48,16 +51,16 @@
           <div class="px-4 py-5">
             <div class="flex items-center justify-between">
               <h3 class="text-lg leading-6 font-medium text-gray-900">{device.name}</h3>
-              <p class="mt-1 max-w-2xl text-sm text-gray-500">Raum {device.roomMap}</p>
+              <p class="mt-1 max-w-2xl text-sm text-gray-500">{translations['roomMap']} {device.roomMap}</p>
             </div>
             <div class="mt-4 flex items-center justify-between">
               <p class="text-sm font-medium text-gray-500">Status: 
                 <span class="{device.enabled ? 'text-teal-600' : 'text-red-600'}">
-                    {device.enabled ? 'Aktiv' : 'Inaktiv'}
+                  {device.enabled ? translations['active'] : translations['inactive']}
                 </span>
               </p>            
               <input id={`temperature-${device.heaterMap}`} type="number" aria-describedby="helper-text-explanation" class="w-20 mr-2 ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="23°C" on:blur={handleInput}/>
-              <button class="rounded-lg text-sm font-medium text-white bg-teal-600" on:click={handleConfirm}>Bestätigen</button>
+              <button class="rounded-lg text-sm font-medium text-white bg-teal-600" on:click={handleConfirm}>{translations['confirm']}</button>
             </div>
           </div>
         </li>
