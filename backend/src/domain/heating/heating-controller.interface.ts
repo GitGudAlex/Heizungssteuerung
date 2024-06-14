@@ -9,6 +9,15 @@ export interface IHeatingController {
   addHeatingOrder: (heatingOrder: HeatingOrder) => Promise<void>
 
   /**
+   * In case the heater is manually set to a certain temperature, this function is called.
+   * This avoids that the heater is turned off by the heating controller.
+   * It will add a due date to the heating order, so the heater will be automated again on the next day.
+   * @param heaterId
+   * @returns
+   */
+  addManuallySetHeater: (heaterId: string) => void
+
+  /**
    * Returns the list of heating orders.
    * @returns The list of heating orders.
    */
