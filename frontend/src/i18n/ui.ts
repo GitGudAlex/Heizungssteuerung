@@ -84,6 +84,8 @@ export const ui = {
     active: 'Active',
     inactive: 'Inactive',
     failedVerifyDevice: 'Failed to verify device. Please check identifier of device in the router, and try again.',
+    temperatureUpdated: 'Temperature updated successfully',
+    failedUpdateTemperature: 'Failed to update temperature',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -163,5 +165,7 @@ export const ui = {
     active: 'Aktiv',
     inactive: 'Inaktiv',
     failedVerifyDevice: 'Gerät konnte nicht verifiziert werden. Bitte überprüfen Sie die ID des Geräts im Router und versuchen Sie es erneut.',
+    temperatureUpdated: 'Temperatur erfolgreich aktualisiert',
+    failedUpdateTemperature: 'Fehler beim Aktualisieren der Temperatur',
   },
 } as const

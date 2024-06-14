@@ -7,6 +7,7 @@ interface Device {
   heaterMap: string;
   roomMap: string;
   enabled?: boolean;
+  inputRef: HTMLInputElement
 }
 
 export const deviceList = writable<Device[]>([]);

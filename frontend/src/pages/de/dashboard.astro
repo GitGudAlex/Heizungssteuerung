@@ -35,7 +35,7 @@ const translations = ui[lang];
             <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
             <InteractiveSVG client:load />
             <h1>Geräteliste</h1>
-            <DeviceList client:load translations={translations} lang={lang} />
+            <DeviceList client:load translations={translations} lang={lang} userId={userId} />
         </div>
     </section>
 </DefaultLayout>
