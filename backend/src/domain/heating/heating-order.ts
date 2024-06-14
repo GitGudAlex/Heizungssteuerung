@@ -11,6 +11,7 @@ export class HeatingOrder {
   private readonly _temperature: number
   private readonly _startDateTime: Date
   private readonly _endDataTime: Date
+  private readonly _username: string
   private readonly _origin: 'calendar' | 'manual'
 
   /**
@@ -26,6 +27,7 @@ export class HeatingOrder {
     temperature: number,
     startDateTime: Date,
     endDataTime: Date,
+    username: string,
     origin: string = 'calendar'
   ) {
     // Check if the room is valid
@@ -60,6 +62,7 @@ export class HeatingOrder {
       )
     }
     this._origin = origin
+    this._username = username
   }
 
   getParameters (): {
@@ -67,6 +70,7 @@ export class HeatingOrder {
     temperature: number
     startDateTime: Date
     endDataTime: Date
+    username: string
     origin: 'calendar' | 'manual'
   } {
     return {
@@ -74,6 +78,7 @@ export class HeatingOrder {
       temperature: this._temperature,
       startDateTime: this._startDateTime,
       endDataTime: this._endDataTime,
+      username: this._username,
       origin: this._origin
     }
   }

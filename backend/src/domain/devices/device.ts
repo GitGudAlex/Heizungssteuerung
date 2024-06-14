@@ -12,30 +12,43 @@ class DeviceController implements IDeviceController {
    */
   private async getRoomHeaterIdMap (): Promise<void> {
     this.RoomHeaterIdMap = []
+    const heatingDevices: RoomHeaterIdMap = []
+    const uniqueDeviceIds = new Set()
+
     for (const roomHeater of ROOMS_HEATERS_MAP) {
       try {
-        const device = await Device.findOne({
-          type: 'heater',
-          name: roomHeater.heater
+        const devices = await Device.find({
+          roomMap: roomHeater.room
         }).exec()
-        if (device) {
-          this.RoomHeaterIdMap.push({
-            heater: roomHeater.heater,
-            room: roomHeater.room,
-            id: device.id
-          })
+
+        if (!devices || devices.length === 0) {
+          continue
+        }
+
+        for (const device of devices) {
+          if (!uniqueDeviceIds.has(device.identifier)) {
+            uniqueDeviceIds.add(device.identifier)
+            heatingDevices.push({
+              heater: device.heaterMap,
+              room: device.roomMap,
+              id: device.identifier
+            })
+          }
         }
       } catch (error) {
-        console.error('getRoomHeaterIdMap (): Error finding device:', error)
+        console.error('getRoomHeaterIdMap(): Error finding device:', error)
       }
     }
+
+    console.info('DeviceController: RoomHeaterIdMap', heatingDevices)
+    this.RoomHeaterIdMap = heatingDevices
   }
 
   public async getHeaterIdsByRoom (room: string): Promise<string[]> {
     await this.getRoomHeaterIdMap()
-    return this.RoomHeaterIdMap
-      .filter((map) => map.room === room)
-      .map((map) => map.id)
+    return this.RoomHeaterIdMap.filter((map) => map.room === room).map(
+      (map) => map.id
+    )
   }
 
   public async getHeaterIds (): Promise<string[]> {

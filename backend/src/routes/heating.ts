@@ -8,13 +8,14 @@ const heatingRouter = express.Router()
  * Receives a heating order and creates a new HeatingOrder object in the heatingController with the given parameters.
  */
 heatingRouter.post('/', (req: Request, res: Response) => {
-  const { room, temperature, startDateTimeAsString, endDataTimeAsString } =
+  const { room, temperature, startDateTimeAsString, endDataTimeAsString, user } =
     req.body
   console.info('Heating order received:', {
     room,
     temperature,
     startDateTimeAsString,
-    endDataTimeAsString
+    endDataTimeAsString,
+    user
   })
 
   if (!room || !temperature || !startDateTimeAsString || !endDataTimeAsString) {
@@ -43,13 +44,18 @@ heatingRouter.post('/', (req: Request, res: Response) => {
     return
   }
   const startDateTime = new Date(startDateTimeAsString)
+  if (typeof user !== 'string') {
+    res.status(400).send('User must be a string')
+    return
+  }
 
   try {
     const heatingOrder = new HeatingOrder(
       room,
       temperature,
       startDateTime,
-      endDataTime
+      endDataTime,
+      user
     )
     HEATING_CONTROLLER_SINGLETON.addHeatingOrder(heatingOrder)
     res.status(200).send('Heating order received')

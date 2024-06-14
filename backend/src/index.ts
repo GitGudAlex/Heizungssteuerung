@@ -8,6 +8,7 @@ import { deviceRouter } from './routes/devices/device'
 import adminSettingsRouter from './routes/admin-settings'
 import userRouter from './routes/user/user'
 import heatingRouter from './routes/heating'
+import { HEATING_CONTROLLER_SINGLETON } from './domain/heating/heating-controller'
 dotenv.config()
 
 const app = express()
@@ -62,6 +63,8 @@ connectToDb(dbUrl)
   .then((connection: mongoose.Connection) => {
     connection.useDb(dbName)
     console.info('🛬 Connected to database')
+    HEATING_CONTROLLER_SINGLETON.startSync()
+    console.info('🔥 Heating controller sync started')
     app.listen(port, () => {
       console.info(`Server running at http://localhost:${port} 🚀`)
     })

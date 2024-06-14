@@ -5,6 +5,7 @@ import { User } from '../../model/user'
 import { FRITZ_SINGLETON } from '../fritz/fritz'
 import { type IDeviceController } from '../devices/device.interface'
 import { DEVICE_CONTROLLER_SINGLETON } from '../devices/device'
+import { CALENDAR_SINGLETON } from '../calendar/calendar'
 
 // The calendar events include the building name and the user name in the summary.
 // This is the building name we are interested in.
@@ -23,14 +24,13 @@ const DEFAULT_TEMP = 20
  *
  */
 export class HeatingController {
-  readonly deviceController: IDeviceController =
-    DEVICE_CONTROLLER_SINGLETON
+  readonly deviceController: IDeviceController = DEVICE_CONTROLLER_SINGLETON
 
   readonly fritzController = FRITZ_SINGLETON
   readonly _heatingOrders: HeatingOrder[] = []
   readonly defaultTemp = DEFAULT_TEMP
 
-  constructor () {
+  startSync (): void {
     cron.schedule('* * * * *', async () => {
       await this.syncCalendarHeatingOrders()
       await this.setHeatersAccordingToHeatingOrders()
@@ -54,6 +54,29 @@ export class HeatingController {
         JSON.stringify(heatingOrderParameters)
       )
     })
+    const isOrderWithSameUserAndTime = this._heatingOrders.some((order) => {
+      return (
+        order.getParameters().startDateTime === heatingOrderParameters.startDateTime &&
+        order.getParameters().endDataTime === heatingOrderParameters.endDataTime &&
+        order.getParameters().username === heatingOrderParameters.username
+      )
+    })
+    if (isOrderWithSameUserAndTime) {
+      console.warn(
+        `HeatingController addHeatingOrder(): Heating order ${JSON.stringify(
+          heatingOrderParameters
+        )} has matching user and time with another order. Replace the existing order.`
+      )
+      this._heatingOrders.forEach((order, index) => {
+        if (
+          order.getParameters().startDateTime === heatingOrderParameters.startDateTime &&
+          order.getParameters().endDataTime === heatingOrderParameters.endDataTime &&
+          order.getParameters().username === heatingOrderParameters.username
+        ) {
+          this._heatingOrders.splice(index, 1)
+        }
+      })
+    }
     if (isAlreadyInList) {
       console.warn(
         `HeatingController addHeatingOrder(): Heating order ${JSON.stringify(
@@ -74,6 +97,14 @@ export class HeatingController {
     const rooms = await this.deviceController.getRooms()
     // remove duplicates
     const uniqueRooms = [...new Set(rooms)]
+    console.info(
+      'HeatingController: Setting heaters according to heating orders, for rooms:',
+      uniqueRooms
+    )
+    console.debug(
+      'HeatingController: Heating orders:',
+      JSON.stringify(heatingOrders, null, 2)
+    )
     for (const room of uniqueRooms) {
       if (!room || room === '' || typeof room !== 'string') {
         console.warn(
@@ -81,16 +112,21 @@ export class HeatingController {
         )
         continue
       }
-      const roomHeatingOrdersForTheMoment = heatingOrders.filter(
-        (order) => {
-          const parameters = order.getParameters()
-          return (
-            parameters.startDateTime < new Date() &&
-            parameters.endDataTime > new Date() &&
-            parameters.room === room
-          )
+      const roomHeatingOrdersForTheMoment = heatingOrders.filter((order) => {
+        const parameters = order.getParameters()
+        const getCurrentTimeInBerlin = (): Date => {
+          const options = { timeZone: 'Europe/Berlin', hour12: false }
+          const berlinTimeString = new Date().toLocaleString('en-US', options)
+          return new Date(berlinTimeString)
         }
-      )
+        console.log('getCurrentTimeInBerlin', getCurrentTimeInBerlin())
+        console.log('parameters.startDateTime', parameters.startDateTime)
+        return (
+          parameters.startDateTime < getCurrentTimeInBerlin() &&
+          parameters.endDataTime > getCurrentTimeInBerlin() &&
+          parameters.room === room
+        )
+      })
       await this.setHeatersOfRoom(roomHeatingOrdersForTheMoment, room)
     }
   }
@@ -107,19 +143,26 @@ export class HeatingController {
     heatingOrders: HeatingOrder[],
     room: string
   ): Promise<void> {
+    console.info('HeatingController: Setting heaters for room:', room)
     const allHeaterIds = await this.deviceController.getHeaterIdsByRoom(room)
     if (allHeaterIds.length === 0) {
-      console.warn(
-        `No heaters found for room ${room}, cannot temperature`
-      )
+      console.warn(`No heaters found for room ${room}, cannot temperature`)
       return
     }
-    // Set the heaters according to the manual heating orders, as they are prioritized
-    const manualHeatingOrders = heatingOrders.filter(
-      (order) => {
-        return order.getParameters().origin === 'manual'
+    if (heatingOrders.length === 0) {
+      console.debug(
+        `No heating orders relevant for the moment in room ${room}, setting heaters to default admin temperature`
+      )
+      for (const heaterId of allHeaterIds) {
+        await FRITZ_SINGLETON.setTempTarget(heaterId, this.defaultTemp)
       }
-    )
+      return
+    }
+
+    // Set the heaters according to the manual heating orders, as they are prioritized
+    const manualHeatingOrders = heatingOrders.filter((order) => {
+      return order.getParameters().origin === 'manual'
+    })
     if (manualHeatingOrders.length > 0) {
       console.debug(
         `Setting heaters according to manual heating orders for room ${room}`
@@ -137,11 +180,10 @@ export class HeatingController {
     }
 
     // Set the heaters according to the calendar heating orders
-    const calendarHeatingOrders = heatingOrders.filter(
-      (order) => {
-        return order.getParameters().origin === 'calendar'
-      }
-    )
+    const calendarHeatingOrders = heatingOrders.filter((order) => {
+      return order.getParameters().origin === 'calendar'
+    })
+
     if (calendarHeatingOrders.length > 0) {
       console.debug(
         `Setting heaters according to calendar heating orders for room ${room}`
@@ -170,30 +212,34 @@ export class HeatingController {
    * Checks the calendar for events and sets heating orders accordingly.
    */
   private async syncCalendarHeatingOrders (): Promise<void> {
-    // const events = await CALENDAR_SINGLETON.getTodaysEvents()
+    const events = await CALENDAR_SINGLETON.getTodaysEvents()
 
-    // !!! use for Testing
-
-    const events = [
-      {
-        type: 'VEVENT',
-        summary: 'fd040@n5',
-        uid: '3a1783dd-ced7-4a07-b753-5256b418993d',
-        status: 'CONFIRMED',
-        start: new Date('2024-05-29T22:00:00.000Z'),
-        end: new Date('2024-05-30T22:00:00.000Z'),
-        created: new Date('2024-05-16T14:49:57.000Z'),
-        dtstamp: new Date('2024-05-30T08:21:50.000Z'),
-        lastmodified: new Date('2024-05-30T08:21:50.000Z'),
-        sequence: '4'
-      }
-    ]
+    // !!! use for Testing, Dates are always in UTC timezone
+    // const events = [
+    //   {
+    //     type: 'VEVENT',
+    //     summary: 'fd040@n5',
+    //     uid: '3a1783dd-ced7-4a07-b753-5256b418993d',
+    //     status: 'CONFIRMED',
+    //     start: new Date('2024-06-14T11:00:00.000Z'),
+    //     end: new Date('2024-06-14T22:00:00.000Z'),
+    //     created: new Date('2024-06-14T14:49:57.000Z'),
+    //     dtstamp: new Date('2024-06-14T08:21:50.000Z'),
+    //     lastmodified: new Date('2024-06-14T08:21:50.000Z'),
+    //     sequence: '4'
+    //   }
+    // ]
 
     if (events.length === 0) {
       console.debug('No events found, skipping calendar heating order sync')
       return
     }
-    console.debug(`${events.length} found, starting heating order sync`)
+    console.info(`HeatingController: ${events.length} Calendar Event found.`)
+    console.debug(
+      'HeatingController: Calendar Events:',
+      JSON.stringify(events, null, 2)
+    )
+
     for (const event of events) {
       const userHeatingOrder = await this.parseCalendarEvent(
         event as unknown as CalendarComponent
@@ -237,7 +283,7 @@ export class HeatingController {
       return undefined
     }
 
-    const userDb = await User.findOne({ user })
+    const userDb = await User.findOne({ username: user })
     if (!userDb) {
       console.warn(
         `CalendarFritzSyncController: Calendar entry ${event.summary} includes ${user}, which has not been found`
@@ -257,7 +303,8 @@ export class HeatingController {
         userDb.room,
         userDb.temperature,
         event.start,
-        event.end
+        event.end,
+        user
       )
     } catch (e) {
       console.warn(

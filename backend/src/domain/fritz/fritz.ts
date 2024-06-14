@@ -17,7 +17,8 @@ class FritzController {
     if (fritzPassword == null) {
       throw new Error('FRITZ_PASSWORD is not set')
     }
-    this.fritz = new Fritz(fritzUsername, fritzPassword)
+    // this is the fallback IP address of the FritzBox
+    this.fritz = new Fritz(fritzUsername, fritzPassword, 'http://169.254.1.1/')
   }
 
   /**
