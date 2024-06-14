@@ -110,7 +110,7 @@
 
   const verifyDeviceExistance = async (identifier: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/heating/${identifier}`, {
+      const response = await fetch(`http://localhost:3000/heating-control/${identifier}`, {
         method: 'GET',
       })
       if (!response.ok) {
