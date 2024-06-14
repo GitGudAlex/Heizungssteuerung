@@ -6,6 +6,7 @@ import InteractiveSVG from "~/components/InteractiveSVG.svelte";
 import LoadSettings from "~/components/settings/LoadSettings.svelte";
 import getUserId from "~/utils/auth/GetUserId";
 import DeviceList from "~/components/devices/DeviceList.svelte";
+import { ui } from '~/i18n/ui';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -23,6 +24,8 @@ if(!Astro.cookies.has('token')) {
     }
 }
 const userId = await getUserId(token);
+
+const translations = ui[lang];
 ---
 
 <DefaultLayout title={t('dashboard')}>
@@ -31,7 +34,8 @@ const userId = await getUserId(token);
             <LoadSettings client:load userId={userId} />
             <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
             <InteractiveSVG client:load />
-            <DeviceList client:load />
+            <h1>Geräteliste</h1>
+            <DeviceList client:load translations={translations} lang={lang} />
         </div>
     </section>
 </DefaultLayout>

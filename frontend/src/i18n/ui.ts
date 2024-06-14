@@ -80,6 +80,9 @@ export const ui = {
     registerDisclaimer: 'Please use your HdM abbreviation as username otherwise the heating controls will not work.',
     roomName: 'Room Name',
     saveRoomName: 'Save Room Name',
+    confirm: 'Confirm',
+    active: 'Active',
+    inactive: 'Inactive',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -155,5 +158,8 @@ export const ui = {
     registerDisclaimer: 'Bitte benutzte deinen HdM-Kürzel, sonst funktioniert die Heizungssteuerung nicht!',
     roomName: 'Raumname',
     saveRoomName: 'Raumnamen speichern',
+    confirm: 'Bestätigen',
+    active: 'Aktiv',
+    inactive: 'Inaktiv',
   },
 } as const

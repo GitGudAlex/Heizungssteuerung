@@ -148,13 +148,10 @@
          xml:space="preserve"
          transform="matrix(0.55226795,0.36953509,-0.36953509,0.55226795,-228.78078,-87.492932)"
          id="Texth9"
-         style="font-size:15.1339px;font-family:Arial;-inkscape-font-specification:Arial;white-space:pre;shape-inside:url(#rect38-6-5-5-6);display:inline;fill:#fcba03;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;pointer-events: none;"
-         inkscape:label="Texth09"><tspan
+         style="font-size:18.6667px;font-family:Arial;-inkscape-font-specification:Arial;white-space:pre;shape-inside:url(#rect38-6-5-5-6);display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;pointer-events: none;"><tspan
            x="586.5"
            y="185.63193"
-           id="tspan3"><tspan
-             style="shape-inside:url(#rect38-6-5-5-6);display:inline;fill:#000000"
-             id="tspan2">23°C</tspan></tspan></text>
+           id="tspan2">23°C</tspan></text>
       <path
          style="fill:#fcba03;fill-opacity:1;stroke:#000000;stroke-width:1.07747;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
          d="m 196.95168,301.90882 12.71846,-23.63124 13.17219,6.92545 -12.71244,23.4967 z"
@@ -271,14 +268,10 @@
          xml:space="preserve"
          transform="matrix(0.63109988,-0.20801196,0.20801196,0.63109988,-130.176,106.86986)"
          id="Texth1"
-         style="font-size:15.1339px;font-family:Arial;-inkscape-font-specification:Arial;white-space:pre;shape-inside:url(#rect38);display:inline;fill:#fcba03;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;pointer-events: none;"
-         inkscape:label="Texth01"
-         ><tspan
+         style="font-size:18.6667px;font-family:Arial;-inkscape-font-specification:Arial;white-space:pre;shape-inside:url(#rect39);display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;pointer-events: none;"><tspan
            x="586.5"
            y="185.63193"
-           id="tspan12"><tspan
-             style="display:inline;fill:#000000"
-             id="tspan11">23°C</tspan></tspan></text>
+           id="tspan12">23°C</tspan></text>
     </g>
   </g>
 </svg>
