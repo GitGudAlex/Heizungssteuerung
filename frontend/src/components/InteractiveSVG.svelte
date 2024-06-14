@@ -24,7 +24,7 @@
       paths.forEach(path => {
         const device = devices.find(d => d.heaterMap === path.id);
         if (device) {
-          path.style.display = '';
+          path.style.fill = '#fcba03';
           path.classList.remove('hidden');
           const textElement = svgElement.querySelector(`#Text${path.id}`);
           console.log("textElement", textElement);
@@ -37,10 +37,14 @@
             }
           }
         } else {
-          path.style.display = 'none';
+          path.style.fill = "white";
           const textElement = svgElement.querySelector(`#Text${path.id}`);
           if (textElement) {
-            textElement.style.display = 'none';
+            //textElement.style.display = 'none';
+            const tspanElement = textElement.querySelector('tspan');
+            if(tspanElement){
+              tspanElement.textContent = path.id;
+            }
           }
         }
       });
