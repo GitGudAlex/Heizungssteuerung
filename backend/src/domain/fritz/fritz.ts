@@ -17,8 +17,12 @@ class FritzController {
     if (fritzPassword == null) {
       throw new Error('FRITZ_PASSWORD is not set')
     }
+    const fritzIp = process.env.FRITZ_ADDRESS
+    if (fritzIp == null) {
+      throw new Error('FRITZ_ADDRESS is not set')
+    }
     // this is the fallback IP address of the FritzBox
-    this.fritz = new Fritz(fritzUsername, fritzPassword, 'http://169.254.1.1/')
+    this.fritz = new Fritz(fritzUsername, fritzPassword, fritzIp)
   }
 
   /**

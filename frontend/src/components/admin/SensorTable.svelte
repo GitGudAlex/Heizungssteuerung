@@ -67,6 +67,9 @@
   // Save device in db
   const saveDeviceInDb = async () => {
     try {
+      if (!(await verifyDeviceExistance(newIdentifier))) {
+        return
+      }
       const response = await fetch('http://localhost:3000/device/db/devices', {
         method: 'POST',
         headers: {
@@ -99,6 +102,23 @@
         deleteDevice(newIdentifier)
         errorMessage = translations['failedSaveDevice']
         console.error('Failed to save settings:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error)
+    }
+  }
+
+  const verifyDeviceExistance = async (identifier: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/heating-control/${identifier}`, {
+        method: 'GET',
+      })
+      if (!response.ok) {
+        errorMessage = translations['failedVerifyDevice']
+        return false
+      } else {
+        console.log('Device exists:', identifier)
+        return true
       }
     } catch (error) {
       console.error('Error saving settings:', error)
@@ -186,7 +206,9 @@
     <select bind:value={newMap} class="border rounded p-2 mr-2 bg-transparent">
       {#each roomsHeaterMap as roomerHeaterOption}
         <option value={roomerHeaterOption}
-          >{roomerHeaterOption.heater.toLocaleUpperCase() + ' in ' + roomerHeaterOption.room.toLocaleUpperCase()}</option
+          >{roomerHeaterOption.heater.toLocaleUpperCase() +
+            ' in ' +
+            roomerHeaterOption.room.toLocaleUpperCase()}</option
         >
       {/each}
     </select>

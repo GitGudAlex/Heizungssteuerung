@@ -6,6 +6,7 @@ import checkAuth from "~/utils/auth/CheckAuth";
 import checkAdmin from "~/utils/auth/CheckAdmin";
 import AdminSettings from "~/components/admin/AdminSettings.svelte";
 import SensorTable from "~/components/admin/SensorTable.svelte";
+import { ui } from "~/i18n/ui";
 
 if(!Astro.cookies.has('token')) {
     return Astro.redirect('/401');
@@ -25,46 +26,15 @@ if(!Astro.cookies.has('token')) {
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const settingsTranslations: Record<string, string> =  {
-"adminArea": t('adminArea'),
-"invitationCode": t('invitationCode'),
-"invitationCodeDescription": t('invitationCodeDescription'),
-"calendarRegex": t('calendarRegex'),
-"calendarRegexDescription": t('calendarRegexDescription'),
-"save": t('save'),
-"linkCopied": t('linkCopied'),
-"copyLink": t('copyLink'),
-"settingsSaved": t('settingsSaved'),
-"failedToSaveSettings": t('failedToSaveSettings'),
-};
-
-const deviceTranslations: Record<string, string> =  {
-    "failedLoadDevices": t('failedLoadDevices'),
-    "failedSaveDevice": t('failedSaveDevice'),
-    "failedDeleteDevice": t('failedDeleteDevice'),
-    "fillAllFields": t('fillAllFields'),
-    "deviceIdentifierExists": t('deviceIdentifierExists'),
-    "deviceNameExists": t('deviceNameExists'),
-    "deviceMapExists": t('deviceMapExists'),
-    "deviceManagement": t('deviceManagement'),
-    "identifier": t('identifier'),
-    "name": t('name'),
-    "addDevice": t('addDevice'),
-    "noDevicesYet": t('noDevicesYet'),
-    "type": t('type'),
-    "heaterMap": t('heaterMap'),
-    "roomMap": t('roomMap'),
-    "remove": t('remove'),
-    "action": t('action'),
-};
+const translations = ui[lang];
 
 ---
 <DefaultLayout title={t('adminArea')}>
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('adminArea')}</h2>
-        <SensorTable client:load translations={deviceTranslations} />
-        <AdminSettings client:load translations={settingsTranslations} lang={lang} />
+        <SensorTable client:load translations={translations} />
+        <AdminSettings client:load translations={translations} lang={lang} />
         </div>
     </section>
 </DefaultLayout>

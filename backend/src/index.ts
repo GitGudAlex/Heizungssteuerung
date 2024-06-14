@@ -9,6 +9,7 @@ import adminSettingsRouter from './routes/admin-settings'
 import userRouter from './routes/user/user'
 import heatingRouter from './routes/heating'
 import { HEATING_CONTROLLER_SINGLETON } from './domain/heating/heating-controller'
+import { heatingControlRouter } from './routes/devices/heating-control-device.router'
 dotenv.config()
 
 const app = express()
@@ -49,6 +50,7 @@ app.use('/admin-settings', adminSettingsRouter)
 app.use('/device', deviceRouter)
 app.use('/user', userRouter)
 app.use('/heating', heatingRouter)
+app.use('/heating-control', heatingControlRouter)
 
 app.get('/', (_, res) => {
   res.send('Hello World!')
