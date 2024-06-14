@@ -12,7 +12,7 @@ export async function getAdminSettings (): Promise<{ invitationCode: string, cal
     return { invitationCode: existingSettings.invitationCode, calendarRegex: existingSettings.calendarRegex }
   } else {
     // create default settings
-    const invitationCode = 'default'
+    const invitationCode = 'smarthome'
     const calendarRegex = '.*' // TODO change to default regex
     const newSettings: AdminSettingsDocument = new AdminSettings({ invitationCode, calendarRegex })
     await newSettings.save()
@@ -27,7 +27,7 @@ export async function getAdminSettings (): Promise<{ invitationCode: string, cal
  */
 adminRouter.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const settings = getAdminSettings()
+    const settings = await getAdminSettings()
     res.status(200).json(settings)
   } catch (error) {
     console.error(error)
