@@ -21,16 +21,18 @@ heatingRouter.post('/', async (req: Request, res: Response) => {
   }
   if (typeof id !== 'string') {
     res.status(400).send('Id must be a string')
+    return
   }
 
   try {
-    await FRITZ_SINGLETON.setTempTarget(id as string, temperature)
+    await FRITZ_SINGLETON.setTempTarget(id, temperature)
   } catch (error) {
     res.status(500).send('Error setting temperature target')
     return
   }
 
-  HEATING_CONTROLLER_SINGLETON.addManuallySetHeater(id as string)
+  HEATING_CONTROLLER_SINGLETON.addManuallySetHeater(id)
+  res.status(200).send('Heater set to ' + temperature + '°C')
 })
 
 export default heatingRouter

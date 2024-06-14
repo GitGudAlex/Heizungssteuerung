@@ -1,22 +1,40 @@
 import * as dotenv from 'dotenv'
 import express, { type Request, type Response } from 'express'
-import { AdminSettings, type AdminSettingsDocument } from '../model/adminSettings'
+import {
+  AdminSettings,
+  type AdminSettingsDocument
+} from '../model/adminSettings'
 dotenv.config()
 
 const adminRouter = express.Router()
 
-export async function getAdminSettings (): Promise<{ invitationCode: string, calendarRegex: string }> {
+interface AdminSettingsType {
+  invitationCode: string
+  defaultTemp: number
+  buildingOfInterest: string
+}
+
+export async function getAdminSettings (): Promise<AdminSettingsType> {
   // check if there is an admin settings document
   const existingSettings = await AdminSettings.findOne({})
   if (existingSettings !== null) {
-    return { invitationCode: existingSettings.invitationCode, calendarRegex: existingSettings.calendarRegex }
+    return {
+      invitationCode: existingSettings.invitationCode,
+      defaultTemp: existingSettings.defaultTemp,
+      buildingOfInterest: existingSettings.buildingOfInterest
+    }
   } else {
     // create default settings
     const invitationCode = 'smarthome'
-    const calendarRegex = '.*' // TODO change to default regex
-    const newSettings: AdminSettingsDocument = new AdminSettings({ invitationCode, calendarRegex })
+    const defaultTemp = 20
+    const buildingOfInterest = 'n5'
+    const newSettings: AdminSettingsDocument = new AdminSettings({
+      invitationCode,
+      defaultTemp,
+      buildingOfInterest
+    })
     await newSettings.save()
-    return { invitationCode, calendarRegex }
+    return { invitationCode, defaultTemp, buildingOfInterest }
   }
 }
 
@@ -37,21 +55,35 @@ adminRouter.get('/', async (req: Request, res: Response): Promise<void> => {
 
 adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { invitationCode, calendarRegex }: { invitationCode: string, calendarRegex: string } = req.body
-    if (invitationCode === null || calendarRegex === null) {
+    const {
+      invitationCode,
+      defaultTemp,
+      buildingOfInterest
+    }: AdminSettingsType = req.body
+    if (!invitationCode || !defaultTemp || !buildingOfInterest) {
       res.status(400).json({ message: 'Invalid request' })
       return
     }
+    console.debug('Admin settings received:', {
+      invitationCode,
+      defaultTemp,
+      buildingOfInterest
+    })
 
     // check if there is already an admin settings document
     const existingSettings = await AdminSettings.findOne({})
     if (existingSettings !== null) {
       existingSettings.invitationCode = invitationCode
-      existingSettings.calendarRegex = calendarRegex
+      existingSettings.defaultTemp = defaultTemp
+      existingSettings.buildingOfInterest = buildingOfInterest
       await existingSettings.save()
       res.json({ message: 'Settings saved successfully' })
     } else {
-      const newSettings: AdminSettingsDocument = new AdminSettings({ invitationCode, calendarRegex })
+      const newSettings: AdminSettingsDocument = new AdminSettings({
+        invitationCode,
+        defaultTemp,
+        buildingOfInterest
+      })
       await newSettings.save()
       res.json({ message: 'Settings saved successfully' })
     }

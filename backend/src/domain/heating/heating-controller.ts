@@ -6,12 +6,11 @@ import { FRITZ_SINGLETON } from '../fritz/fritz'
 import { type IDeviceController } from '../devices/device.interface'
 import { DEVICE_CONTROLLER_SINGLETON } from '../devices/device'
 import { CALENDAR_SINGLETON } from '../calendar/calendar'
+import { CALENDAR_PARSING_REGEX } from './calendar-parsing-regex'
+import { getAdminSettings } from '../../routes/admin-settings'
 
 // The calendar events include the building name and the user name in the summary.
 // This is the building name we are interested in.
-const BUILDING_OF_INTEREST = 'n5'
-
-const DEFAULT_TEMP = 20
 
 /**
  * Controlls the heating orders for the system.
@@ -28,12 +27,20 @@ export class HeatingController {
 
   readonly fritzController = FRITZ_SINGLETON
   readonly _heatingOrders: HeatingOrder[] = []
-  readonly defaultTemp = DEFAULT_TEMP
+  defaultTemp = 20
+  buildingOfInterest = 'n5'
 
   // array of manually set heaters
   readonly manuallySetHeaters: Array<{ heaterId: string, dueDate: Date }> = []
 
-  startSync (): void {
+  async startSync (): Promise<void> {
+    const adminSettings = await getAdminSettings()
+    this.defaultTemp = adminSettings.defaultTemp
+    this.buildingOfInterest = adminSettings.buildingOfInterest
+    console.info(
+      `📦 Admin Settings received:\n${JSON.stringify(adminSettings)}`
+    )
+
     cron.schedule('* * * * *', async () => {
       await this.syncCalendarHeatingOrders()
       await this.setHeatersAccordingToHeatingOrders()
@@ -48,9 +55,13 @@ export class HeatingController {
     const dueDate = new Date()
     dueDate.setDate(dueDate.getDate() + 1)
     dueDate.setHours(0, 1, 0, 0)
-    if (!this.manuallySetHeaters.some((heater) => heater.heaterId === heaterId)) {
+    if (
+      !this.manuallySetHeaters.some((heater) => heater.heaterId === heaterId)
+    ) {
       this.manuallySetHeaters.push({ heaterId, dueDate })
-      console.debug(`Heater ${heaterId} has been manually set, will be automated again on ${dueDate.toISOString()}`)
+      console.debug(
+        `Heater ${heaterId} has been manually set, will be automated again on ${dueDate.toISOString()}`
+      )
     }
   }
 
@@ -62,13 +73,22 @@ export class HeatingController {
    * @returns
    */
   private IsHeaterManuallySet (heaterId: string): boolean {
-    const manuallySetHeater = this.manuallySetHeaters.find((heater) => heater.heaterId === heaterId)
+    const manuallySetHeater = this.manuallySetHeaters.find(
+      (heater) => heater.heaterId === heaterId
+    )
+
     if (manuallySetHeater) {
-      if (manuallySetHeater.dueDate < new Date()) {
+      if (new Date() < manuallySetHeater.dueDate) {
+        console.debug(`Heater ${heaterId} has been manually set.`)
         return true
       } else {
-        this.manuallySetHeaters.splice(this.manuallySetHeaters.indexOf(manuallySetHeater), 1)
-        console.debug(`Heater ${heaterId} has been automated again, due date has been reached (${manuallySetHeater.dueDate.toISOString()}).`)
+        this.manuallySetHeaters.splice(
+          this.manuallySetHeaters.indexOf(manuallySetHeater),
+          1
+        )
+        console.debug(
+          `Heater ${heaterId} has been automated again, due date has been reached (${manuallySetHeater.dueDate.toISOString()}).`
+        )
       }
     }
     return false
@@ -284,7 +304,7 @@ export class HeatingController {
       return undefined
     }
 
-    if (building !== BUILDING_OF_INTEREST) {
+    if (building !== this.buildingOfInterest) {
       console.warn(
         `CalendarFritzSyncController: Calendar entry ${event.summary} does not include the building we are look for`
       )
@@ -333,12 +353,11 @@ export class HeatingController {
     user: string | undefined
     building: string | undefined
   } {
-    const regex = /^([^@]+)@([^@]+)$/
-    const match = str.match(regex)
+    const match = str.match(CALENDAR_PARSING_REGEX)
 
     if (!match || match.length < 3) {
       console.warn(
-        `Could not extract user and building from calendar entry ${str}, using RegEx ${regex.toString()}`
+        `Could not extract user and building from calendar entry ${str}, using RegEx ${CALENDAR_PARSING_REGEX.toString()}`
       )
       return { user: undefined, building: undefined }
     }

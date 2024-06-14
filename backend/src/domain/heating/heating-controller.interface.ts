@@ -1,6 +1,12 @@
 import { type HeatingOrder } from './heating-order'
 
 export interface IHeatingController {
+
+  /**
+   * Starts the heating controller.
+   */
+  startSync: () => Promise<void>
+
   /**
    * Adds a heating order to the heating controller.
    * @param heatingOrder The heating order to be added.
