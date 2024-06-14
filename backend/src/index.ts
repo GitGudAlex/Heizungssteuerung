@@ -6,10 +6,10 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import { deviceRouter } from './routes/devices/device'
 import adminSettingsRouter from './routes/admin-settings'
-import { CALENDAR_FRITZ_SYNC_SINGLETON } from './domain/calendar-fritz-sync/calendar-fritz-sync'
 import userRouter from './routes/user/user'
+import heatingRouter from './routes/heating'
+import { HEATING_CONTROLLER_SINGLETON } from './domain/heating/heating-controller'
 dotenv.config()
-CALENDAR_FRITZ_SYNC_SINGLETON.scheduleSyncCron()
 
 const app = express()
 const port = process.env.PORT
@@ -48,6 +48,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/admin-settings', adminSettingsRouter)
 app.use('/device', deviceRouter)
 app.use('/user', userRouter)
+app.use('/heating', heatingRouter)
 
 app.get('/', (_, res) => {
   res.send('Hello World!')
@@ -62,6 +63,8 @@ connectToDb(dbUrl)
   .then((connection: mongoose.Connection) => {
     connection.useDb(dbName)
     console.info('🛬 Connected to database')
+    HEATING_CONTROLLER_SINGLETON.startSync()
+    console.info('🔥 Heating controller sync started')
     app.listen(port, () => {
       console.info(`Server running at http://localhost:${port} 🚀`)
     })

@@ -148,12 +148,6 @@ export class CalendarController implements ICalendarController {
     const timeSinceLastFetch = currentTime - this.lastFetchTime
 
     if (timeSinceLastFetch < this.fetchInterval) {
-      // const remainingTime = this.fetchInterval - timeSinceLastFetch
-      // const remainingMinutes = Math.floor(remainingTime / 60000)
-      // const remainingSeconds = Math.floor((remainingTime % 60000) / 1000)
-      // console.debug(
-      //   `Calendar fetch interval is over in ${remainingMinutes} minutes and ${remainingSeconds} seconds.`
-      // )
       return true
     }
 
@@ -167,7 +161,7 @@ export class CalendarController implements ICalendarController {
    * If it is not, it returns the cached events.
    */
   public async getTodaysEvents (): Promise<ical.CalendarComponent[]> {
-    if (!this.isFetchIntervalOver()) {
+    if (this.isFetchIntervalOver()) {
       return this.cachedEvents
     }
     const newEvents = await this.getTodaysCalendarEvents()
