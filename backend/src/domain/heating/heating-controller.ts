@@ -30,6 +30,9 @@ export class HeatingController {
   readonly _heatingOrders: HeatingOrder[] = []
   readonly defaultTemp = DEFAULT_TEMP
 
+  // array of manually set heaters
+  readonly manuallySetHeaters: Array<{ heaterId: string, dueDate: Date }> = []
+
   startSync (): void {
     cron.schedule('* * * * *', async () => {
       await this.syncCalendarHeatingOrders()
@@ -39,6 +42,36 @@ export class HeatingController {
 
   get heatingOrders (): HeatingOrder[] {
     return this._heatingOrders
+  }
+
+  public addManuallySetHeater (heaterId: string): void {
+    const dueDate = new Date()
+    dueDate.setDate(dueDate.getDate() + 1)
+    dueDate.setHours(0, 1, 0, 0)
+    if (!this.manuallySetHeaters.some((heater) => heater.heaterId === heaterId)) {
+      this.manuallySetHeaters.push({ heaterId, dueDate })
+      console.debug(`Heater ${heaterId} has been manually set, will be automated again on ${dueDate.toISOString()}`)
+    }
+  }
+
+  /**
+   * Returns true if the heater is manually set to a certain temperature.
+   * This avoids that the heater is turned off by the heating controller.
+   * It will check the due date and delete the heater from the list if the due date is reached.
+   * @param heaterId
+   * @returns
+   */
+  private IsHeaterManuallySet (heaterId: string): boolean {
+    const manuallySetHeater = this.manuallySetHeaters.find((heater) => heater.heaterId === heaterId)
+    if (manuallySetHeater) {
+      if (manuallySetHeater.dueDate < new Date()) {
+        return true
+      } else {
+        this.manuallySetHeaters.splice(this.manuallySetHeaters.indexOf(manuallySetHeater), 1)
+        console.debug(`Heater ${heaterId} has been automated again, due date has been reached (${manuallySetHeater.dueDate.toISOString()}).`)
+      }
+    }
+    return false
   }
 
   /**
@@ -56,8 +89,10 @@ export class HeatingController {
     })
     const isOrderWithSameUserAndTime = this._heatingOrders.some((order) => {
       return (
-        order.getParameters().startDateTime === heatingOrderParameters.startDateTime &&
-        order.getParameters().endDataTime === heatingOrderParameters.endDataTime &&
+        order.getParameters().startDateTime ===
+          heatingOrderParameters.startDateTime &&
+        order.getParameters().endDataTime ===
+          heatingOrderParameters.endDataTime &&
         order.getParameters().username === heatingOrderParameters.username
       )
     })
@@ -69,8 +104,10 @@ export class HeatingController {
       )
       this._heatingOrders.forEach((order, index) => {
         if (
-          order.getParameters().startDateTime === heatingOrderParameters.startDateTime &&
-          order.getParameters().endDataTime === heatingOrderParameters.endDataTime &&
+          order.getParameters().startDateTime ===
+            heatingOrderParameters.startDateTime &&
+          order.getParameters().endDataTime ===
+            heatingOrderParameters.endDataTime &&
           order.getParameters().username === heatingOrderParameters.username
         ) {
           this._heatingOrders.splice(index, 1)
@@ -154,57 +191,28 @@ export class HeatingController {
         `No heating orders relevant for the moment in room ${room}, setting heaters to default admin temperature`
       )
       for (const heaterId of allHeaterIds) {
+        if (this.IsHeaterManuallySet(heaterId)) {
+          continue
+        }
         await FRITZ_SINGLETON.setTempTarget(heaterId, this.defaultTemp)
       }
       return
     }
 
-    // Set the heaters according to the manual heating orders, as they are prioritized
-    const manualHeatingOrders = heatingOrders.filter((order) => {
-      return order.getParameters().origin === 'manual'
-    })
-    if (manualHeatingOrders.length > 0) {
-      console.debug(
-        `Setting heaters according to manual heating orders for room ${room}`
-      )
-      // find the average temperature of all manual heating orders
-      let averageTemp = 0
-      for (const order of manualHeatingOrders) {
-        averageTemp += order.getParameters().temperature
-      }
-      averageTemp /= manualHeatingOrders.length
-      for (const heaterId of allHeaterIds) {
-        await FRITZ_SINGLETON.setTempTarget(heaterId, averageTemp)
-      }
-      return
-    }
-
-    // Set the heaters according to the calendar heating orders
-    const calendarHeatingOrders = heatingOrders.filter((order) => {
-      return order.getParameters().origin === 'calendar'
-    })
-
-    if (calendarHeatingOrders.length > 0) {
-      console.debug(
-        `Setting heaters according to calendar heating orders for room ${room}`
-      )
-      // find the average temperature of all calendar heating orders
-      let averageTemp = 0
-      for (const order of calendarHeatingOrders) {
-        averageTemp += order.getParameters().temperature
-      }
-      averageTemp /= calendarHeatingOrders.length
-      for (const heaterId of allHeaterIds) {
-        await this.fritzController.setTempTarget(heaterId, averageTemp)
-      }
-      return
-    }
-
     console.debug(
-      `No manual or calendar heating orders relevant for the moment in room ${room}, setting heaters to default admin temperature`
+      `Setting heaters according to manual heating orders for room ${room}`
     )
+    // find the average temperature of all manual heating orders
+    let averageTemp = 0
+    for (const order of heatingOrders) {
+      averageTemp += order.getParameters().temperature
+    }
+    averageTemp /= heatingOrders.length
     for (const heaterId of allHeaterIds) {
-      await this.fritzController.setTempTarget(heaterId, this.defaultTemp)
+      if (this.IsHeaterManuallySet(heaterId)) {
+        continue
+      }
+      await FRITZ_SINGLETON.setTempTarget(heaterId, averageTemp)
     }
   }
 
