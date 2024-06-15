@@ -1,15 +1,17 @@
 <script>
   import { onMount } from 'svelte';
-  import { deviceList } from '~/stores/deviceStore.ts';
+  import { deviceList, loadCombinedHeaters } from '~/stores/deviceStore.ts';
   import FloorplanLightMode from '../floorplans/FloorplanLightModeAllHeaters.svg?raw';
   import { get } from 'svelte/store';
 
   let svgContent = '';
   let focusedElement = null;
 
+  
+
   onMount(() => {
     loadSVG('FloorplanLightMode');
-    filterSVGElements();
+    loadCombinedHeaters();
     deviceList.subscribe(() => {
       filterSVGElements();
     });
@@ -17,6 +19,7 @@
 
   function filterSVGElements() {
     const devices = get(deviceList);
+    console.log(devices);
     const svgElement = document.querySelector('.interactive-svg svg');
     if (svgElement) {
       const paths = svgElement.querySelectorAll('path');
@@ -32,15 +35,15 @@
             textElement.style.display = '';
             const tspanElement = textElement.querySelector('tspan');
             if(tspanElement) {  
-              // Set the temperature value - only visual e.g. `${device.temperature}°C`
-              tspanElement.textContent = "16";
+              // Set the temperature value
+              const temperature = parseInt(device.temperature.celsius) / 10;
+              tspanElement.textContent = `${temperature}°C`;
             }
           }
         } else {
           path.style.fill = "white";
           const textElement = svgElement.querySelector(`#Text${path.id}`);
           if (textElement) {
-            //textElement.style.display = 'none';
             const tspanElement = textElement.querySelector('tspan');
             if(tspanElement){
               tspanElement.textContent = path.id;
