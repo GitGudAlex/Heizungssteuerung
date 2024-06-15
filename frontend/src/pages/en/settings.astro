@@ -8,9 +8,11 @@ import SepiaToggle from "~/components/settings/SepiaToggle.svelte";
 import getUserId from "~/utils/auth/GetUserId";
 import Temperature from "~/components/settings/Temperature.svelte";
 import RoomSettings from "~/components/settings/RoomSettings.svelte";
+import { ui } from "~/i18n/ui";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const translations = ui[lang];
 
 if(!Astro.cookies.has('token')) {
     return Astro.redirect('/401');
@@ -25,40 +27,15 @@ if(!Astro.cookies.has('token')) {
     }
 }
 const userId = await getUserId(token);
-
-const sepiaTranslations: Record<string, string> =  {
-    "sepiaMode": t('sepiaMode'),
-    "sepiaModeOn": t('sepiaModeOn'),
-    "sepiaModeOff": t('sepiaModeOff'),
-    "sepiaModeDesc": t('sepiaModeDescription'),
-};
-
-const temperatureTranslations: Record<string, string> =  {
-    "temperature": t('temperature'),
-    "temperatureDescription": t('temperatureDescription'),
-    "setTemperature": t('setTemperature'),
-    "saveTemperature": t('saveTemperature'),
-};
-
-const logoutTranslations: Record<string, string> =  {
-    "logout": t('logout'),
-};
-
-const roomSettingsTranslations: Record<string, string> =  {
-    "roomName": t('roomName'),
-    "roomNameDescription": t('roomNameDescription'),
-    "setRoomName": t('setRoomName'),
-    "saveRoomName": t('saveRoomName'),
-};
 ---
 <DefaultLayout title={t('nav.settings')}>
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
-        <Temperature client:load translations={temperatureTranslations} lang={lang} userId={userId} />
-        <SepiaToggle client:load translations={sepiaTranslations} lang={lang} userId={userId} />
-        <RoomSettings client:load translations={roomSettingsTranslations} lang={lang} userId={userId} />
-        <AuthLogout client:load translations={logoutTranslations} lang={lang}  />   
+        <Temperature client:load translations={translations} lang={lang} userId={userId} />
+        <SepiaToggle client:load translations={translations} lang={lang} userId={userId} />
+        <RoomSettings client:load translations={translations} lang={lang} userId={userId} />
+        <AuthLogout client:load translations={translations} lang={lang}  />   
         </div>
     </section>
 </DefaultLayout>
