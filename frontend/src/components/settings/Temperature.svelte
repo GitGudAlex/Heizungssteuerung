@@ -99,11 +99,11 @@
 <div class="settings-container">
   <div class="setting">
     <h1 class="setting-title mr">{translations['temperature']}</h1>
-    <p class="setting-description">
-      {translations['temperatureDescription']}
-    </p>
   </div>
-  <div class="setting">
+  <p class="setting-description">
+    {translations['temperatureDescription']}
+  </p>
+  <div class="setting mt-4">
     <input
       type="number"
       min={minTemp}
