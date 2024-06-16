@@ -179,7 +179,10 @@
 </script>
 
 <main class="mb-4">
-  <h1 class="text-2xl font-bold mb-4">{translations['deviceManagement']}</h1>
+  <h2 class="text-2xl font-bold mb-4">{translations['deviceManagement']}</h2>
+  <p class="mb-4">
+    {translations['deviceManagementDescription']}
+  </p>
 
   <!-- Device Form -->
   <div class="mb-4">

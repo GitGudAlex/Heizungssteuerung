@@ -15,9 +15,41 @@
   }
 </script>
 
-<button
-  class="rounded-full px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition duration-300 mt-2"
-  on:click={handleLogout}
->
-  {translations['logout']}
-</button>
+<div class="settings-container">
+  <div class="setting">
+    <h1 class="setting-title mr">{translations['logout']}</h1>
+  </div>
+  <p class="setting-description">{translations['logoutDescription']}</p>
+  <button
+    class="rounded-full px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition duration-300 mt-2"
+    on:click={handleLogout}
+  >
+    {translations['logout']}
+  </button>
+</div>
+
+<style>
+  .settings-container {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .setting {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .setting-title {
+    flex: 1;
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .setting-description {
+    flex: 2;
+    margin: 0 1.5em 0 0; /* top right bottom left */
+    font-size: 16px;
+  }
+</style>
