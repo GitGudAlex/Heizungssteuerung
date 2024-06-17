@@ -62,10 +62,10 @@ async function connectToDb (dbUrl: string): Promise<mongoose.Connection> {
   return mongoose.connection
 }
 connectToDb(dbUrl)
-  .then((connection: mongoose.Connection) => {
+  .then(async (connection: mongoose.Connection) => {
     connection.useDb(dbName)
     console.info('🛬 Connected to database')
-    HEATING_CONTROLLER_SINGLETON.startSync()
+    await HEATING_CONTROLLER_SINGLETON.startSync()
     console.info('🔥 Heating controller sync started')
     app.listen(port, () => {
       console.info(`Server running at http://localhost:${port} 🚀`)
