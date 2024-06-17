@@ -11,6 +11,10 @@ interface Device {
     celsius: string;
     offset: string;
   };
+  hkr?: {
+    tist: string;
+    tsoll: string;
+  };
 }
 
 export const deviceList = writable<Device[]>([]);
@@ -32,6 +36,7 @@ export async function loadCombinedHeaters() {
       const responseHeating = await fetch('http://localhost:3000/heating-control');
       if (responseHeating.ok) {
         heatingDevices = await responseHeating.json();
+        console.log("Using real Data: ", heatingDevices);
       } else {
         console.error('Failed to fetch heating-control data:', responseHeating.statusText);
       }
@@ -131,6 +136,7 @@ export async function loadCombinedHeaters() {
       return {
         ...device,
         temperature: heatingDevice ? heatingDevice.temperature : undefined,
+        hkr: heatingDevice ? heatingDevice.hkr : undefined,
       };
     });
 

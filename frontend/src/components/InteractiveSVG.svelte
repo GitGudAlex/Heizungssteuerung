@@ -72,6 +72,7 @@
 
     const devices = get(deviceList);
     const device = devices.find(d => d.heaterMap === e.target.id);
+    console.log("onClick device: ", device);
     if (device) {
       const deviceElement = document.getElementById(`device-${device.heaterMap}`);
       if (deviceElement) {
@@ -122,22 +123,36 @@
     loadSVG(svgName);
   }
 
-  function handleTooltip(e){
+  function handleTooltip(e) {
     const rect = e.target.getBoundingClientRect();
     const tooltip = document.querySelector('.tooltip');
-    if (tooltip.classList.contains('hidden')) {
-      tooltip.style.top = `${rect.top - 30}px`;
-      tooltip.style.left = `${rect.left}px`;
-      tooltip.textContent = e.target.id;
-      tooltip.classList.remove('hidden');
+    const devices = get(deviceList);
+    const device = devices.find(d => d.heaterMap === e.target.id);
+    let tooltipText = e.target.id;
+
+    if (device) {
+      const measuredTemperature = parseInt(device.temperature.celsius) / 10;
+      const setTemperature = device.hkr && device.hkr.tsoll ? parseInt(device.hkr.tsoll) / 2 : 'N/A';
+      tooltipText = `
+        <div>
+          <strong>${e.target.id}</strong><br>
+          Gemessene Temperatur:<br>${measuredTemperature}°C<br><br>
+          Eingestellte Temperatur:<br>${setTemperature}°C
+        </div>
+      `;
     }
+
+    tooltip.style.top = `${rect.top - 50}px`; // Adjust this to position the tooltip correctly
+    tooltip.style.left = `${rect.left}px`;
+    tooltip.innerHTML = tooltipText;
+    tooltip.classList.remove('hidden');
     focusedElement = e.target;
   }
 
 </script>
 
 <!-- Tooltip -->
-<div class="tooltip hidden absolute bg-black text-white rounded p-1">
+<div class="tooltip hidden absolute bg-black text-white rounded p-1 dark:bg-gray-700">
   Tooltip Text
 </div>
 
