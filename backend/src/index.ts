@@ -58,13 +58,12 @@ app.get('/', (_, res) => {
 
 async function connectToDb (dbUrl: string): Promise<mongoose.Connection> {
   console.info('🛫 Connecting to database...')
-  await mongoose.connect(dbUrl)
+  await mongoose.connect(dbUrl, { dbName })
   return mongoose.connection
 }
 connectToDb(dbUrl)
   .then(async (connection: mongoose.Connection) => {
-    connection.useDb(dbName)
-    console.info('🛬 Connected to database')
+    console.info('🛬 Connected to database, using database "' + dbName + '".')
     await HEATING_CONTROLLER_SINGLETON.startSync()
     console.info('🔥 Heating controller sync started')
     app.listen(port, () => {
