@@ -99,7 +99,12 @@ export class CalendarController implements ICalendarController {
     return foundEvents
   }
 
+  /**
+   * Does the initial setup for the dav account, retries 3 times if it fails, waiting for 20 seconds between each attempt.
+   * @returns dav.Account object if the account was created successfully, undefined otherwise
+   */
   private async createDavAccount (): Promise<dav.Account | undefined> {
+    let retry = 0
     try {
       const davServerURL = `${this.domain}/remote.php/dav/`
       const auth = new dav.transport.Basic(
@@ -116,6 +121,14 @@ export class CalendarController implements ICalendarController {
       })
     } catch (error) {
       console.error('Error creating dav account:', error)
+      if (retry < 3) {
+        retry++
+        console.info(`Retrying to create dav account, waiting for 20 seconds, attempt: ${retry}`)
+        // sleep for 20 seconds
+        await new Promise((resolve) => setTimeout(resolve, 20000))
+        return await this.createDavAccount()
+      }
+      console.info('Failed to create dav account after 3 attempts')
       return undefined
     }
   }
