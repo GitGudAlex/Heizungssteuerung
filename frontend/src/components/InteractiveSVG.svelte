@@ -144,3 +144,10 @@
 <div class="interactive-svg" on:click={onClick} on:mouseover={handleMouseOver} on:mouseout={handleMouseOut} on:focusin={onFocusIn} on:focusout={handleFocusOut} on:keydown={onKeyDown} >
   {@html svgContent}
 </div>
+
+<style>
+  :global(path:focus) {
+    outline: 3px solid rgb(252, 186, 3);
+    outline-style: dashed;
+  }
+</style>
