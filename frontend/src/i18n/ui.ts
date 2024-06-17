@@ -31,9 +31,12 @@ export const ui = {
       'The invitation code is required to create an account. Here you can find or change the code and export an invitation link.',
     adminArea: 'Admin area',
     save: 'Save',
-    calendarRegex: 'Calendar regex',
-    calendarRegexDescription:
-      'The regex is used to extract the heating events from the calendar. The default value is suitable for the PUX Lab calendar. If you want to use a different schema, you can adjust the regex here.',
+    defaultTemp: 'Default temperature',
+    defaultTempDescription:
+      'The default temperature is used when no other temperature is set. Adjust the temperature between 8°C and 28°C.',
+    buildingOfInterest: 'Building of interest',
+    buildingOfInterestDescription:
+      'The building of interest is used to filter the calendar events. Only events with this building in the title will be considered.',
     linkCopied: 'Link copied to clipboard',
     copyLink: 'Copy link',
     settingsSaved: 'Settings saved successfully',
@@ -53,7 +56,8 @@ export const ui = {
     deviceNameExists: 'Device with this name already exists',
     deviceMapExists: 'Device with this map already exists',
     deviceManagement: 'Device management',
-    deviceManagementDescription: 'Add, remove, and manage devices that are connected to the heating control system. Use the ID from the router to verify and add the device.',
+    deviceManagementDescription:
+      'Add, remove, and manage devices that are connected to the heating control system. Use the ID from the router to verify and add the device.',
     identifier: 'Identifier',
     name: 'Name',
     addDevice: 'Add device',
@@ -78,11 +82,13 @@ export const ui = {
     usernameTakenError: 'Username already exists. Please choose a different one.',
     passwordLengthError: 'Password must be at least 7 characters long.',
     loginNow: 'Already registered? Log in now',
-    registerDisclaimer: 'Use your HdM abbreviation to setup your account. It is used to connect your account to the Nextcloud calendar integration.',
+    registerDisclaimer:
+      'Use your HdM abbreviation to setup your account. It is used to connect your account to the Nextcloud calendar integration.',
     roomName: 'Room Name',
     saveRoomName: 'Save Room Name',
     roomSetting: 'Room Affiliation',
-    roomSettingDescription: 'Assign yourself to a room to control the heating in that room. You can only be assigned to one room at a time.',
+    roomSettingDescription:
+      'Assign yourself to a room to control the heating in that room. You can only be assigned to one room at a time.',
     confirm: 'Confirm',
     active: 'Active',
     inactive: 'Inactive',
@@ -116,9 +122,12 @@ export const ui = {
       'Der Einladungscode wird benötigt, um einen Account zu erstellen. Hier können Sie den Code finden oder ändern und einen Einladungslink exportieren.',
     adminArea: 'Admin-Bereich',
     save: 'Speichern',
-    calendarRegex: 'Kalender Regex',
-    calendarRegexDescription:
-      'Der Regex wird verwendet, um die Heizungsereignisse aus dem Kalender zu extrahieren. Der Standardwert eignet sich für den PUX Lab Kalender. Wenn Sie ein anderes Schema verwenden möchten, können Sie den Regex hier anpassen.',
+    defaultTemp: 'Standardtemperatur',
+    defaultTempDescription:
+      'Die Standardtemperatur wird verwendet, wenn keine andere Temperatur festgelegt ist. Passen Sie die Temperatur zwischen 8°C und 28°C an.',
+    buildingOfInterest: 'Gebäude',
+    buildingOfInterestDescription:
+      'Das Gebäude von Interesse wird verwendet, um die Kalenderereignisse zu filtern. Es werden nur Ereignisse mit diesem Gebäude im Titel berücksichtigt.',
     linkCopied: 'Link in die Zwischenablage kopiert',
     copyLink: 'Link kopieren',
     settingsSaved: 'Einstellungen erfolgreich gespeichert',
@@ -138,7 +147,8 @@ export const ui = {
     deviceNameExists: 'Gerät mit diesem Namen existiert bereits',
     deviceMapExists: 'Gerät mit diesem Mapping existiert bereits',
     deviceManagement: 'Geräteverwaltung',
-    deviceManagementDescription: 'Fügen Sie Geräte hinzu, entfernen Sie sie und verwalten Sie Geräte, die mit dem Heizungssteuerungssystem verbunden sind. Verwenden Sie die ID aus dem Router, um das Gerät zu überprüfen und hinzuzufügen.',
+    deviceManagementDescription:
+      'Fügen Sie Geräte hinzu, entfernen Sie sie und verwalten Sie Geräte, die mit dem Heizungssteuerungssystem verbunden sind. Verwenden Sie die ID aus dem Router, um das Gerät zu überprüfen und hinzuzufügen.',
     identifier: 'ID',
     name: 'Name',
     addDevice: 'Gerät hinzufügen',
@@ -146,7 +156,8 @@ export const ui = {
     type: 'Typ',
     roomMap: 'Raum',
     roomSetting: 'Raumzuordnung',
-    roomSettingDescription: 'Weisen Sie sich einem Raum zu, um die Heizung in diesem Raum zu steuern. Sie können immer nur einem Raum zugeordnet sein.',
+    roomSettingDescription:
+      'Weisen Sie sich einem Raum zu, um die Heizung in diesem Raum zu steuern. Sie können immer nur einem Raum zugeordnet sein.',
     heaterMap: 'Heizung',
     remove: 'Entfernen',
     action: 'Aktion',
@@ -165,13 +176,15 @@ export const ui = {
     usernameTakenError: 'Benutzername existiert bereits. Bitte wählen Sie einen anderen.',
     passwordLengthError: 'Passwort muss mindestens 7 Zeichen lang sein.',
     loginNow: 'Schon registriert? Jetzt einloggen',
-    registerDisclaimer: 'Verwenden Sie Ihr HdM Kürzel, um Ihren Account einzurichten. Es wird verwendet, um Ihren Account mit dem Nextcloud-Kalender zu verbinden.',
+    registerDisclaimer:
+      'Verwenden Sie Ihr HdM Kürzel, um Ihren Account einzurichten. Es wird verwendet, um Ihren Account mit dem Nextcloud-Kalender zu verbinden.',
     roomName: 'Raumname',
     saveRoomName: 'Raumnamen speichern',
     confirm: 'Bestätigen',
     active: 'Aktiv',
     inactive: 'Inaktiv',
-    failedVerifyDevice: 'Gerät konnte nicht verifiziert werden. Bitte überprüfen Sie die ID des Geräts im Router und versuchen Sie es erneut.',
+    failedVerifyDevice:
+      'Gerät konnte nicht verifiziert werden. Bitte überprüfen Sie die ID des Geräts im Router und versuchen Sie es erneut.',
     temperatureUpdated: 'Temperatur erfolgreich aktualisiert',
     failedUpdateTemperature: 'Fehler beim Aktualisieren der Temperatur',
     logoutDescription: 'Klicken Sie hier, um sich von der Anwendung abzumelden',
