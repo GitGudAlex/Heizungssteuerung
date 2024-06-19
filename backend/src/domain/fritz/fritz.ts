@@ -96,6 +96,11 @@ class FritzController {
    */
   public async getTempTarget (identifier: string): Promise<number | undefined> {
     try {
+      const stats = await this.getBasicDeviceStats(identifier)
+      if (stats == null) {
+        console.error('FritzController: Error getting basic device stats')
+        return undefined
+      }
       return Number(await this.fritz.getHkrTsoll(identifier))
     } catch (error) {
       console.error(
@@ -113,6 +118,11 @@ class FritzController {
    */
   public async getTemperature (identifier: string): Promise<number | undefined> {
     try {
+      const stats = await this.getBasicDeviceStats(identifier)
+      if (stats == null) {
+        console.error('FritzController: Error getting basic device stats')
+        return undefined
+      }
       return Number(await this.fritz.getTemperature(identifier))
     } catch (error) {
       console.error('FritzController: Error getting temperature:', error)
