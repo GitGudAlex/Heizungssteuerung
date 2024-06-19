@@ -50,6 +50,20 @@ userRouter.post('/room', async (req, res) => {
   }
 })
 
+// endpoint to update fontSize setting
+userRouter.post('/fontSize', async (req, res) => {
+  try {
+    const { userId, fontSize } = req.body
+
+    await User.findByIdAndUpdate(userId, { fontSize })
+
+    res.status(200).json({ message: 'Font size setting updated successfully' })
+  } catch (error) {
+    console.error('Error updating font size  setting:', error)
+    res.status(500).json({ message: 'Could not update font size  setting' })
+  }
+})
+
 // get full user object with settings
 userRouter.get('/:id', async (req, res) => {
   try {

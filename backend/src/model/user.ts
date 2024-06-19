@@ -6,6 +6,7 @@ export interface UserDocument extends Document {
   room: string
   isAdmin: boolean
   sepiaMode: boolean
+  fontSize: string
   temperature: number
 }
 
@@ -15,6 +16,7 @@ const userSchema = new Schema<UserDocument>({
   room: String,
   isAdmin: { type: Boolean, default: false },
   sepiaMode: { type: Boolean, default: false },
+  fontSize: { type: String, default: 'medium' },
   temperature: { type: Number, default: 18 }
 })
 

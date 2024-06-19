@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { deviceList } from '~/stores/deviceStore.ts'
-
+  import { addFontSize } from '~/components/settings/getTextSize.js';
+  
   export let translations: { [key: string]: string }
   export let lang: string
   export let userId: string
@@ -60,6 +61,13 @@
   onMount(() => {
     loadDevicesFromDb()
   })
+
+  $: {
+    if (typeof window !== 'undefined' && $addFontSize !== undefined) {
+      const cssVar = `${$addFontSize}px`;
+      document.documentElement.style.setProperty('--add-font-size', cssVar);
+    }
+  }
 </script>
 
 <div class="mt-8">
