@@ -110,7 +110,7 @@
       max={maxTemp}
       value={$temperature}
       on:input={handleInputChange}
-      class="w-24 p-2 mb-4 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+      class="w-24 p-2 mb-4 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center max-temp-size"
       aria-label={translations['setTemperature']}
     />
     <input
@@ -119,17 +119,17 @@
       max={maxTemp}
       bind:value={$temperature}
       on:input={handleSliderChange}
-      class="w-full h-2 ml-8 mr-8 mb-4 bg-transparent rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+      class="w-full h-2 ml-8 mr-8 mb-4 bg-transparent rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 max-temp-size"
       aria-label="Temperature slider"
     />
-    <div class="text-xl font-semibold mb-4">
+    <div class="text-xl font-semibold mb-4 max-temp-size">
       {$temperature}°C
     </div>
   </div>
   {#if hasChanged}
     <button
       on:click={saveTemperature}
-      class="px-4 py-2 font-medium text-white bg-blue-500 rounded-full hover:bg-blue-600 transition duration-300"
+      class="px-4 py-2 font-medium text-white bg-blue-500 rounded-full hover:bg-blue-600 transition duration-300 button-font-size"
       transition:fly={{ y: 20, duration: 300 }}
     >
       {translations['saveTemperature']}
@@ -138,6 +138,14 @@
 </div>
 
 <style>
+  .button-font-size {
+      font-size: calc(16px + var(--add-font-size));
+      transition: font-size 0.5s ease; 
+  }
+  .max-temp-size {
+      font-size: calc(22px + var(--add-font-size));
+      transition: font-size 0.5s ease; 
+  }
   .settings-container {
     max-width: 100%;
     margin: 0;
@@ -152,13 +160,15 @@
   .setting-title {
     flex: 1;
     margin: 0;
-    font-size: 24px;
+    font-size: calc(24px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
     font-weight: bold;
   }
 
   .setting-description {
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
-    font-size: 16px;
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
   }
 </style>

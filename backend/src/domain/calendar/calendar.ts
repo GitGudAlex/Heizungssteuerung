@@ -15,6 +15,7 @@ export class CalendarController implements ICalendarController {
   private readonly fetchInterval: number = 15 * 60 * 1000 // 15 mins
   private lastFetchTime: number = 0
   private cachedEvents: ical.CalendarComponent[] = []
+  private accountRetries: number = 0
 
   constructor () {
     this.domain = process.env.CALENDAR_DOMAIN ?? ''
@@ -99,6 +100,10 @@ export class CalendarController implements ICalendarController {
     return foundEvents
   }
 
+  /**
+   * Does the initial setup for the dav account, retries 3 times if it fails, waiting for 20 seconds between each attempt.
+   * @returns dav.Account object if the account was created successfully, undefined otherwise
+   */
   private async createDavAccount (): Promise<dav.Account | undefined> {
     try {
       const davServerURL = `${this.domain}/remote.php/dav/`
@@ -116,6 +121,15 @@ export class CalendarController implements ICalendarController {
       })
     } catch (error) {
       console.error('Error creating dav account:', error)
+      if (this.accountRetries < 3) {
+        this.accountRetries++
+        console.info(`Retrying to create dav account, waiting for 20 seconds, attempt: ${this.accountRetries}`)
+        // sleep for 20 seconds
+        await new Promise((resolve) => setTimeout(resolve, 20000))
+        return await this.createDavAccount()
+      }
+      this.accountRetries = 0
+      console.info('Failed to create dav account after 3 attempts')
       return undefined
     }
   }

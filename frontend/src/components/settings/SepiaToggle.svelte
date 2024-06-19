@@ -85,14 +85,16 @@
   .setting-title {
     flex: 1;
     margin: 0;
-    font-size: 24px;
+    font-size: calc(24px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
     font-weight: bold;
   }
 
   .setting-description {
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
-    font-size: 16px;
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
   }
 
   .switch {

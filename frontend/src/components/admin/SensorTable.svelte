@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fly } from 'svelte/transition'
   import { onMount } from 'svelte'
+  import { addFontSize } from '~/components/settings/getTextSize.js';
 
   export let translations: { [key: string]: string }
 
@@ -110,7 +111,7 @@
 
   const verifyDeviceExistance = async (identifier: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/heating-control/${identifier}`, {
+      const response = await fetch(`http://localhost:3000/device/heating-control/${identifier}`, {
         method: 'GET',
       })
       if (!response.ok) {
@@ -176,37 +177,45 @@
   onMount(() => {
     loadDevicesFromDb()
   })
+
+
+  $: {
+    if (typeof window !== 'undefined' && $addFontSize !== undefined) {
+      const cssVar = `${$addFontSize}px`;
+      document.documentElement.style.setProperty('--add-font-size', cssVar);
+    }
+  }
 </script>
 
 <main class="mb-4">
-  <h2 class="text-2xl font-bold mb-4">{translations['deviceManagement']}</h2>
-  <p class="mb-4">
+  <h2 class="setting-title">{translations['deviceManagement']}</h2>
+  <p class="setting-description">
     {translations['deviceManagementDescription']}
   </p>
 
   <!-- Device Form -->
   <div class="mb-4">
     {#if errorMessage.length > 0}
-      <p class="text-red-500 mb-4">{errorMessage}</p>
+      <p class="text-red-500 setting-description">{errorMessage}</p>
     {/if}
     <input
       type="text"
       bind:value={newDeviceName}
       placeholder={translations['name']}
-      class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60"
+      class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 setting-description"
     />
     <input
       type="text"
       bind:value={newIdentifier}
       placeholder={translations['identifier']}
-      class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60"
+      class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 setting-description"
     />
-    <select bind:value={newDeviceType} class="border rounded p-2 mr-2 bg-transparent">
+    <select bind:value={newDeviceType} class="border rounded p-2 mr-2 bg-transparent setting-description">
       {#each deviceTypes as type}
         <option value={type}>{type}</option>
       {/each}
     </select>
-    <select bind:value={newMap} class="border rounded p-2 mr-2 bg-transparent">
+    <select bind:value={newMap} class="border rounded p-2 mr-2 bg-transparent setting-description">
       {#each roomsHeaterMap as roomerHeaterOption}
         <option value={roomerHeaterOption}
           >{roomerHeaterOption.heater.toLocaleUpperCase() +
@@ -217,7 +226,7 @@
     </select>
     <button
       on:click={addDevice}
-      class="rounded-full px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 transition duration-300 mt-2"
+      class="rounded-full px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 transition duration-300 button-font-size"
     >
       {translations['addDevice']}
     </button>
@@ -225,7 +234,7 @@
 
   <!-- Device Table -->
   {#if devices.length === 0}
-    <p>{translations['noDevicesYet']}</p>
+    <p class="setting-description">{translations['noDevicesYet']}</p>
   {:else}
     <table class="min-w-full bg-transparent border rounded">
       <thead>
@@ -264,5 +273,23 @@
 
   .left-align {
     text-align: left !important;
+  }
+  .button-font-size {
+      font-size: calc(16px + var(--add-font-size));
+      transition: font-size 0.5s ease; 
+  }
+  .setting-title {
+    flex: 1;
+    margin: 0;
+    font-size: calc(24px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
+    font-weight: bold;
+  }
+
+  .setting-description {
+    flex: 2;
+    margin: 0 1.5em 0.5em 0; /* top right bottom left */
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
   }
 </style>

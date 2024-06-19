@@ -11,6 +11,10 @@ export const heatingControlRouter = Router()
 heatingControlRouter.get('/', async (req, res) => {
   try {
     const deviceList = await FRITZ_SINGLETON.getDeviceListInfos()
+    if (!deviceList) {
+      res.status(500).send('Error getting device list')
+      return
+    }
     const devices: FritzDevice[] = []
     for (const device of deviceList.device) {
       if (HEATER_DEVICE_TYPES.includes(device.productname)) {

@@ -28,14 +28,14 @@ class FritzController {
   /**
    * Gets the device list infos.
    */
-  public async getDeviceListInfos (): Promise<FritzDeviceList> {
+  public async getDeviceListInfos (): Promise<FritzDeviceList | undefined> {
     try {
       const xml = await this.fritz.getDeviceListInfos()
       const json = await this.xmlParser.parseXmlToJson(xml)
       return json.devicelist
     } catch (error) {
-      console.error('Error getting device list infos:', error)
-      throw error
+      console.error('FritzController: Error getting device list infos:', error)
+      return undefined
     }
   }
 
@@ -46,10 +46,17 @@ class FritzController {
   public async getBasicDeviceStats (identifier: string): Promise<any> {
     try {
       const xml = await this.fritz.getBasicDeviceStats(identifier)
+      if (xml == null) {
+        console.error('FritzController: Error getting basic device stats')
+        return undefined
+      }
       return await this.xmlParser.parseXmlToJson(xml)
     } catch (error) {
-      console.error('Error getting basic device stats:', error)
-      throw error
+      console.error(
+        'FritzController: Error getting basic device stats:',
+        error
+      )
+      return undefined
     }
   }
 
@@ -63,14 +70,22 @@ class FritzController {
   public async setTempTarget (
     identifier: string,
     temp: number | 'on' | 'off'
-  ): Promise<number> {
+  ): Promise<number | undefined> {
     try {
       console.debug(`Setting temperature target of ${identifier} to ${temp}`)
+      const stats = await this.getBasicDeviceStats(identifier)
+      if (stats == null) {
+        console.error('FritzController: Error getting basic device stats')
+        return undefined
+      }
       const tempTarget = await this.fritz.setTempTarget(identifier, temp)
       return tempTarget
-    } catch (error) {
-      console.error('Error setting temperature target:', error)
-      throw error
+    } catch (error: any) {
+      console.error(
+        'FritzController: Error setting temperature target:',
+        error
+      )
+      return undefined
     }
   }
 
@@ -83,12 +98,20 @@ class FritzController {
    *    8 to 28°C, 16 <= 8°C, 17 = 8.5°C...... 56 >= 28°C
    *    254 = ON, 253 = OFF
    */
-  public async getTempTarget (identifier: string): Promise<number> {
+  public async getTempTarget (identifier: string): Promise<number | undefined> {
     try {
+      const stats = await this.getBasicDeviceStats(identifier)
+      if (stats == null) {
+        console.error('FritzController: Error getting basic device stats')
+        return undefined
+      }
       return Number(await this.fritz.getHkrTsoll(identifier))
     } catch (error) {
-      console.error('Error getting temperature target:', error)
-      throw error
+      console.error(
+        'FritzController: Error getting temperature target:',
+        error
+      )
+      return undefined
     }
   }
 
@@ -97,12 +120,17 @@ class FritzController {
    * @param identifier The identifier of the device. (e.g "09995 0688917")
    * @returns The last temperature information of a device, in 0,1 °C steps (e.g. 200 is 20°C).
    */
-  public async getTemperature (identifier: string): Promise<number> {
+  public async getTemperature (identifier: string): Promise<number | undefined> {
     try {
+      const stats = await this.getBasicDeviceStats(identifier)
+      if (stats == null) {
+        console.error('FritzController: Error getting basic device stats')
+        return undefined
+      }
       return Number(await this.fritz.getTemperature(identifier))
     } catch (error) {
-      console.error('Error getting temperature:', error)
-      throw error
+      console.error('FritzController: Error getting temperature:', error)
+      return undefined
     }
   }
 }

@@ -6,11 +6,19 @@ const currentYear = new Date().getFullYear()
 
 <footer>
   <section class="py-8">
-    <div class="container flex items-center justify-between">
-      <p class="inline">
+    <div class="container flex items-center justify-between font-size">
+      <p class="inline ">
         &copy; {currentYear}
       </p>
       <LanguagePicker />
     </div>
   </section>
 </footer>
+
+<style>
+  .font-size {
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
+}
+</style>
+ 

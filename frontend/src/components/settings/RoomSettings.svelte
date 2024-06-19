@@ -82,7 +82,7 @@
   <p class="setting-description">{translations['roomSettingDescription']}</p>
   <div class="my-8">
     <select
-      class="appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-w-24 mr-2"
+      class="appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-w-24 mr-2 roomFontSize"
       id="room"
       bind:value={roomName}
       on:input={handleInputChange}
@@ -117,20 +117,22 @@
   .setting-title {
     flex: 1;
     margin: 0;
-    font-size: 24px;
+    font-size: calc(24px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
     font-weight: bold;
   }
 
   .setting-description {
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
-    font-size: 16px;
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
   }
 
   .save-button {
     align-self: flex-start;
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: calc(1rem + var(--add-font-size));
     font-weight: 500;
     color: #fff;
     background-color: #007bff;
@@ -138,6 +140,7 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    transition: font-size 0.5s ease; 
   }
 
   .save-button.disabled {
@@ -147,5 +150,9 @@
 
   .save-button:hover:not(.disabled) {
     background-color: #0056b3;
+  }
+  .roomFontSize{
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
   }
 </style>
