@@ -20,7 +20,8 @@ deviceRouter.use('/heating-control', heatingControlRouter)
  */
 deviceRouter.get('/', async (req, res) => {
   try {
-    const deviceList: FritzDeviceList = await FRITZ_SINGLETON.getDeviceListInfos()
+    const deviceList: FritzDeviceList | undefined =
+      await FRITZ_SINGLETON.getDeviceListInfos()
     res.status(200).send(deviceList)
   } catch (error) {
     console.error('Error getting device list:', error)
@@ -47,7 +48,9 @@ deviceRouter.get('/device-map', async (req, res) => {
  */
 deviceRouter.get('/:identifier', async (req, res) => {
   try {
-    const device: any = await FRITZ_SINGLETON.getBasicDeviceStats(req.params.identifier)
+    const device: any = await FRITZ_SINGLETON.getBasicDeviceStats(
+      req.params.identifier
+    )
     res.status(200).send(device)
   } catch (error) {
     console.error('Error getting device:', error)
@@ -63,7 +66,13 @@ deviceRouter.post('/db/devices', async (req, res) => {
     // then, add additional info to the device in the db (check what is needed in dashboard)
     // also check if device identifier / map / name are unique. Those should not be in DB already
 
-    const device: DeviceDocument = new Device({ name, identifier, type, heaterMap, roomMap })
+    const device: DeviceDocument = new Device({
+      name,
+      identifier,
+      type,
+      heaterMap,
+      roomMap
+    })
     await device.save()
     res.status(200).json({ message: 'Device saved successfully' })
   } catch (error) {

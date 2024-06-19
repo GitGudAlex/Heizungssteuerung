@@ -62,17 +62,12 @@
 <div class="settings-container">
   <div class="setting">
     <h1 class="setting-title mr">{translations['sepiaMode']}</h1>
-    <p class="setting-description">{translations['sepiaModeDesc']}</p>
-    <label class="switch">
-      <input
-        type="checkbox"
-        on:change={toggleSepiaMode}
-        on:keydown={handleKeyDown}
-        aria-pressed={sepiaMode.toString()}
-      />
-      <span class="slider round"></span>
-    </label>
   </div>
+  <p class="setting-description">{translations['sepiaModeDescription']}</p>
+  <label class="switch mt-4">
+    <input type="checkbox" on:change={toggleSepiaMode} on:keydown={handleKeyDown} aria-pressed={sepiaMode.toString()} />
+    <span class="slider round"></span>
+  </label>
 </div>
 
 <style>
@@ -90,14 +85,16 @@
   .setting-title {
     flex: 1;
     margin: 0;
-    font-size: 24px;
+    font-size: calc(24px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
     font-weight: bold;
   }
 
   .setting-description {
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
-    font-size: 16px;
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
   }
 
   .switch {

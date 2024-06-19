@@ -27,7 +27,7 @@ export class HeatingController {
 
   readonly fritzController = FRITZ_SINGLETON
   readonly _heatingOrders: HeatingOrder[] = []
-  defaultTemp = 20
+  defaultTemp = 16
   buildingOfInterest = 'n5'
 
   // array of manually set heaters

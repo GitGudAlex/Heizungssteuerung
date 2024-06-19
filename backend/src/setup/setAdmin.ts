@@ -1,4 +1,4 @@
-import { User } from './model/user'
+import { User } from '../model/user'
 import mongoose from 'mongoose'
 const username = process.argv[2]
 const mongoURL = 'mongodb://root:example@localhost:27017/'
