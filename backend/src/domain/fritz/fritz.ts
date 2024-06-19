@@ -69,9 +69,14 @@ class FritzController {
   ): Promise<number | undefined> {
     try {
       console.debug(`Setting temperature target of ${identifier} to ${temp}`)
+      const stats = await this.getBasicDeviceStats(identifier)
+      if (stats == null) {
+        console.error('FritzController: Error getting basic device stats')
+        return undefined
+      }
       const tempTarget = await this.fritz.setTempTarget(identifier, temp)
       return tempTarget
-    } catch (error) {
+    } catch (error: any) {
       console.error(
         'FritzController: Error setting temperature target:',
         error
