@@ -33,7 +33,7 @@ export async function loadCombinedHeaters() {
 
     let heatingDevices: any[] = [];
     try {
-      const responseHeating = await fetch('http://localhost:3000/heating-control');
+      const responseHeating = await fetch('http://localhost:3000/device/heating-control');
       if (responseHeating.ok) {
         heatingDevices = await responseHeating.json();
         console.log("Using real Data: ", heatingDevices);

@@ -7,8 +7,6 @@
   let svgContent = '';
   let focusedElement = null;
 
-  
-
   onMount(() => {
     loadSVG('FloorplanLightMode');
     loadCombinedHeaters();
