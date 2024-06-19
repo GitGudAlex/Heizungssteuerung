@@ -3,7 +3,6 @@ import Navigation from '../components/Navigation.astro'
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from '~/utils/auth/CheckAuth';
 import checkAdmin from '~/utils/auth/CheckAdmin';
-
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
@@ -77,4 +76,8 @@ if(!Astro.cookies.has('token')) {
       }
     }
   }
+
+
+
+
 </style>

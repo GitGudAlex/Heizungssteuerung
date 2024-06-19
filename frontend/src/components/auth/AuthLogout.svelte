@@ -11,6 +11,7 @@
 
     // clear local storage
     localStorage.removeItem('sepiaMode')
+    localStorage.removeItem('fontSize')
     localStorage.removeItem('settingsLoaded')
   }
 </script>
@@ -21,7 +22,7 @@
   </div>
   <p class="setting-description">{translations['logoutDescription']}</p>
   <button
-    class="rounded-full px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition duration-300 mt-2"
+    class="rounded-full px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition duration-300 mt-2 button-font-size"
     on:click={handleLogout}
   >
     {translations['logout']}
@@ -29,6 +30,10 @@
 </div>
 
 <style>
+  .button-font-size {
+      font-size: calc(16px + var(--add-font-size));
+      transition: font-size 0.5s ease; 
+  }
   .settings-container {
     max-width: 100%;
     margin: 0;
@@ -43,13 +48,15 @@
   .setting-title {
     flex: 1;
     margin: 0;
-    font-size: 24px;
+    font-size: calc(24px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
     font-weight: bold;
   }
 
   .setting-description {
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
-    font-size: 16px;
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease; 
   }
 </style>
