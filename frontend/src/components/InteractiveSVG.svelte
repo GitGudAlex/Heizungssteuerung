@@ -19,7 +19,6 @@
 
   function filterSVGElements() {
     const devices = get(deviceList);
-    console.log(devices);
     const svgElement = document.querySelector('.interactive-svg svg');
     if (svgElement) {
       const paths = svgElement.querySelectorAll('path');
@@ -30,7 +29,6 @@
           path.style.fill = '#fcba03';
           path.classList.remove('hidden');
           const textElement = svgElement.querySelector(`#Text${path.id}`);
-          console.log("textElement", textElement);
           if (textElement) {
             textElement.style.display = '';
             const tspanElement = textElement.querySelector('tspan');
@@ -61,18 +59,15 @@
     }
 	}
 	function handleMouseOut(e) {
-		console.log('Mouse out');
     const tooltip = document.querySelector('.tooltip');
     tooltip.classList.add('hidden');
 	}
 
   function onClick(e) {
     if (e.target.tagName !== 'path') return;
-    console.log(e.target.id);
 
     const devices = get(deviceList);
     const device = devices.find(d => d.heaterMap === e.target.id);
-    console.log("onClick device: ", device);
     if (device) {
       const deviceElement = document.getElementById(`device-${device.heaterMap}`);
       if (deviceElement) {
