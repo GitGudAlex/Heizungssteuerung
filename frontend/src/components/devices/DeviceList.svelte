@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { deviceList } from '~/stores/deviceStore.ts'
+  import { deviceList, loadCombinedHeaters } from '~/stores/deviceStore.ts'
   import { addFontSize } from '~/components/settings/getTextSize.js';
   
   export let translations: { [key: string]: string }
@@ -9,24 +9,6 @@
 
   let updateMessage = ''
   let errorMessage = ''
-
-  const loadDevicesFromDb = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/device/db/devices', {
-        method: 'GET',
-      })
-      if (response.ok) {
-        const devices = await response.json()
-        deviceList.set(devices)
-        console.log('Devices fetched successfully:', deviceList)
-      } else {
-        errorMessage = translations['failedLoadDevices']
-        console.error('Failed to load devices:', response.statusText)
-      }
-    } catch (error) {
-      console.error('Error fetching devices:', error)
-    }
-  }
 
   const handleConfirm = async (identifier: string, temperature: number) => {
     try {
@@ -59,7 +41,7 @@
   }
 
   onMount(() => {
-    loadDevicesFromDb()
+    loadCombinedHeaters();
   })
 
   $: {
@@ -101,7 +83,7 @@
                 type="number"
                 aria-describedby="helper-text-explanation"
                 class="w-20 mr-2 ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="23°C"
+                placeholder={`${parseInt(device.temperature.celsius) / 10}°C`}
                 on:blur={handleInput}
                 bind:this={device.inputRef}
               />
