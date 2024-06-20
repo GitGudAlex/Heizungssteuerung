@@ -3,15 +3,9 @@ layout: ../../../layouts/MarkdownLayout.astro
 title: Installation guide
 ---
 
-# Installation Guide
-
----
-
 ## Table of Contents
 
 - [Installation Guide](#installation-guide)
-  - [Table of Contents](#table-of-contents)
-  - [Guide](#guide)
     - [Prerequisites](#prerequisites)
     - [Installing Node.js and npm](#installing-nodejs-and-npm)
     - [Docker and Docker Compose Installation Guide](#docker-and-docker-compose-installation-guide)
@@ -20,8 +14,9 @@ title: Installation guide
     - [Troubleshooting](#troubleshooting)
 
 ---
+# Installation Guide
 
-## Guide
+
 
 ### Prerequisites
 

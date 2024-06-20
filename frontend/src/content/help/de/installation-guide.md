@@ -3,15 +3,9 @@ layout: ../../../layouts/MarkdownLayout.astro
 title: Installationsanleitung
 ---
 
-# Installationsanleitung
-
----
-
 ## Inhaltsverzeichnis
 
 - [Installationsanleitung](#installationsanleitung)
-  - [Inhaltsverzeichnis](#inhaltsverzeichnis)
-  - [Anleitung](#anleitung)
     - [Voraussetzungen](#voraussetzungen)
     - [Installation von Node.js und npm](#installation-von-nodejs-und-npm)
     - [Docker und Docker Compose Installationsanleitung](#docker-und-docker-compose-installationsanleitung)
@@ -21,7 +15,8 @@ title: Installationsanleitung
 
 ---
 
-## Anleitung
+# Installationsanleitung
+
 
 ### Voraussetzungen
 
