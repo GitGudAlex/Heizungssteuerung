@@ -33,7 +33,7 @@ const translations = ui[lang];
         <div class="container">
             <LoadSettings client:load userId={userId} />
             <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
-            <InteractiveSVG client:load />
+            <InteractiveSVG client:load translations={translations} />
             <h1>Geräteliste</h1>
             <DeviceList client:load translations={translations} lang={lang} userId={userId} />
         </div>
