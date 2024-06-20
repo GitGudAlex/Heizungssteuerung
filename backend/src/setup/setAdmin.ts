@@ -2,9 +2,10 @@ import { User } from '../model/user'
 import mongoose from 'mongoose'
 const username = process.argv[2]
 const mongoURL = 'mongodb://root:example@localhost:27017/'
+const mongoDB = 'heizungssteuerung'
 
 async function makeAdmin (): Promise<void> {
-  if (!mongoose.connection.readyState) await mongoose.connect(mongoURL)
+  if (!mongoose.connection.readyState) await mongoose.connect(mongoURL, { dbName: mongoDB })
 
   if (!username) {
     console.log('Please enter your username')
