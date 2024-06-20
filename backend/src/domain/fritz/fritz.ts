@@ -46,6 +46,10 @@ class FritzController {
   public async getBasicDeviceStats (identifier: string): Promise<any> {
     try {
       const xml = await this.fritz.getBasicDeviceStats(identifier)
+      if (xml == null) {
+        console.error('FritzController: Error getting basic device stats')
+        return undefined
+      }
       return await this.xmlParser.parseXmlToJson(xml)
     } catch (error) {
       console.error(
