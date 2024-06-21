@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { addFontSize } from '~/components/settings/getTextSize.js';
+  import { addFontSize } from '~/components/settings/getTextSize.js'
 
   // Props for the component
   export let translations: { [key: string]: string }
@@ -10,12 +10,12 @@
   let initialSettings = {
     invitationCode: '',
     buildingOfInterest: '',
-    defaultTemp: 0
+    defaultTemp: 16,
   }
 
   let invitationCode = ''
   let buildingOfInterest = ''
-  let defaultTemp = 0
+  let defaultTemp = 16
 
   // Store for tracking changes in inputs
   const settingsChanged = writable(false)
@@ -84,8 +84,8 @@
 
   $: {
     if (typeof window !== 'undefined' && $addFontSize !== undefined) {
-      const cssVar = `${$addFontSize}px`;
-      document.documentElement.style.setProperty('--add-font-size', cssVar);
+      const cssVar = `${$addFontSize}px`
+      document.documentElement.style.setProperty('--add-font-size', cssVar)
     }
   }
 </script>
@@ -149,26 +149,23 @@
   </form>
 </div>
 
-
 <style>
   .button-font-size {
-      font-size: calc(16px + var(--add-font-size));
-      transition: font-size 0.5s ease; 
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease;
   }
-.setting-title {
-  flex: 1;
-  margin: 0;
-  font-size: calc(24px + var(--add-font-size));
-  transition: font-size 0.5s ease; 
-  font-weight: bold;
-}
+  .setting-title {
+    flex: 1;
+    margin: 0;
+    font-size: calc(24px + var(--add-font-size));
+    transition: font-size 0.5s ease;
+    font-weight: bold;
+  }
 
-.setting-description {
-  flex: 2;
-  margin: 0 1.5em 0.5em 0; /* top right bottom left */
-  font-size: calc(16px + var(--add-font-size));
-  transition: font-size 0.5s ease; 
-}
-
+  .setting-description {
+    flex: 2;
+    margin: 0 1.5em 0.5em 0; /* top right bottom left */
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease;
+  }
 </style>
- 
