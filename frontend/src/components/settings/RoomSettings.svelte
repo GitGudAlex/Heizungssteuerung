@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { Button } from 'flowbite-svelte'
+  import ButtonGroup from 'flowbite-svelte/ButtonGroup.svelte'
   import { onMount } from 'svelte'
-  import { fly } from 'svelte/transition'
 
   export let translations
   export let lang
@@ -8,8 +9,9 @@
 
   let rooms: string[] = []
   let roomName = ''
-  let initialRoomName = ''
+  let initialRoomName = 'n001'
   let hasChanged = false
+  let selectedRoom = ''
 
   onMount(() => {
     loadInitialRoomName()
@@ -40,6 +42,7 @@
       const settings = await response.json()
       initialRoomName = settings.room ?? initialRoomName
       roomName = initialRoomName
+      selectedRoom = initialRoomName
     } catch (error) {
       console.error('Error loading room name:', error)
     }
@@ -59,19 +62,21 @@
 
       hasChanged = false
       initialRoomName = roomName
+      selectedRoom = roomName
     } catch (error) {
       console.error('Error updating room name setting:', error)
     }
   }
 
-  const handleInputChange = (event: Event) => {
-    const value = (event.target as HTMLInputElement).value
-    roomName = value
-    hasChanged = value !== initialRoomName
-  }
-
   const saveRoomName = () => {
     updateDbSettings(userId, roomName)
+  }
+
+  const handleButtonClick = (room: string) => {
+    selectedRoom = room
+    roomName = room
+    hasChanged = room !== initialRoomName
+    saveRoomName()
   }
 </script>
 
@@ -81,24 +86,13 @@
   </div>
   <p class="setting-description">{translations['roomSettingDescription']}</p>
   <div class="my-8">
-    <select
-      class="appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-w-24 mr-2 roomFontSize"
-      id="room"
-      bind:value={roomName}
-      on:input={handleInputChange}
-    >
-      {#each rooms as r}
-        <option value={r}>{r}</option>
+    <ButtonGroup>
+      {#each rooms as room}
+        <Button outline checked={room === selectedRoom} color="dark" on:click={() => handleButtonClick(room)}>
+          {room}
+        </Button>
       {/each}
-    </select>
-    <button
-      on:click={saveRoomName}
-      class="save-button rounded-full"
-      transition:fly={{ y: 20, duration: 300 }}
-      class:disabled={!hasChanged}
-    >
-      {translations['saveRoomName']}
-    </button>
+    </ButtonGroup>
   </div>
 </div>
 
@@ -118,7 +112,7 @@
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    transition: font-size 0.5s ease;
     font-weight: bold;
   }
 
@@ -126,33 +120,6 @@
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
-  }
-
-  .save-button {
-    align-self: flex-start;
-    padding: 0.5rem 1rem;
-    font-size: calc(1rem + var(--add-font-size));
-    font-weight: 500;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    transition: font-size 0.5s ease; 
-  }
-
-  .save-button.disabled {
-    background-color: #c0c0c0;
-    cursor: not-allowed;
-  }
-
-  .save-button:hover:not(.disabled) {
-    background-color: #0056b3;
-  }
-  .roomFontSize{
-    font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    transition: font-size 0.5s ease;
   }
 </style>
