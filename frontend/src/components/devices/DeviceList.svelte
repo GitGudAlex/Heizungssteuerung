@@ -12,6 +12,8 @@
 
   const handleConfirm = async (identifier: string, temperature: number) => {
     try {
+      updateMessage = ''
+      errorMessage = ''
       console.log('Updating temperature setting:', identifier, temperature)
       const response = await fetch('http://localhost:3000/heating', {
         method: 'POST',
