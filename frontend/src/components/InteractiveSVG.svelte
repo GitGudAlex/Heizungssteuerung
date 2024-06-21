@@ -1,8 +1,9 @@
 <script>
-  import { onMount } from 'svelte'
-  import { deviceList, loadCombinedHeaters } from '~/stores/deviceStore.ts'
-  import FloorplanLightMode from '../floorplans/FloorplanLightModeAllHeaters.svg?raw'
-  import { get } from 'svelte/store'
+  import { onMount } from 'svelte';
+  import { deviceList, loadCombinedHeaters } from '~/stores/deviceStore.ts';
+  import FloorplanLightMode from '../floorplans/FloorplanLightModeAllHeaters.svg?raw';
+  import FloorplanDarkMode from '../floorplans/FloorplanDarkModeAllHeaters.svg?raw';
+  import { get } from 'svelte/store';
 
   export let translations
 
@@ -10,12 +11,25 @@
   let focusedElement = null
 
   onMount(() => {
-    loadSVG('FloorplanLightMode')
-    loadCombinedHeaters()
+    const darkModeStatus = localStorage.getItem('darkMode');
+    const svgName = darkModeStatus === 'enabled' ? 'FloorplanDarkMode' : 'FloorplanLightMode';
+
+    loadSVG(svgName);
+    loadCombinedHeaters();
     deviceList.subscribe(() => {
-      filterSVGElements()
-    })
-  })
+      filterSVGElements();
+    });
+
+    const darkModeToggle = document.querySelector('.darkmode-toggle');
+    darkModeToggle.addEventListener('click', handleDarkModeToggle);
+  });
+
+  function handleDarkModeToggle() {
+    const darkModeStatus = localStorage.getItem('darkMode');
+    const svgName = darkModeStatus === 'enabled' ? 'FloorplanDarkMode' : 'FloorplanLightMode';
+    loadSVG(svgName);
+    //filterSVGElements();
+  }
 
   function filterSVGElements() {
     const devices = get(deviceList)
@@ -102,10 +116,10 @@
 
   function loadSVG(svgName) {
     if (svgName === 'FloorplanLightMode') {
-      svgContent = FloorplanLightMode
-    } //else if (svgName === 'FloorplanDarkMode') {
-    //svgContent = FloorplanDarkMode;
-    // }
+      svgContent = FloorplanLightMode;
+    }else if (svgName === 'FloorplanDarkMode') {
+      svgContent = FloorplanDarkMode;
+    }
   }
 
   function changeSVG(svgName) {
