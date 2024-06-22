@@ -102,6 +102,7 @@ export const ui = {
     temperatureUpdated: 'Temperature updated successfully',
     failedUpdateTemperature: 'Failed to update temperature',
     logoutDescription: 'Click here to log out of the application',
+    loggedInAs: 'Logged in as',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -199,5 +200,6 @@ export const ui = {
     temperatureUpdated: 'Temperatur erfolgreich aktualisiert',
     failedUpdateTemperature: 'Fehler beim Aktualisieren der Temperatur',
     logoutDescription: 'Klicken Sie hier, um sich von der Anwendung abzumelden',
+    loggedInAs: 'Angemeldet als',
   },
 } as const

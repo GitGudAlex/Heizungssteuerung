@@ -10,6 +10,7 @@ import Temperature from "~/components/settings/Temperature.svelte";
 import RoomSettings from "~/components/settings/RoomSettings.svelte";
 import TextSizeSettings from "~/components/settings/TextSizeSettings.svelte";
 import { ui } from "~/i18n/ui";
+import UserInfo from "~/components/settings/UserInfo.svelte";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -33,6 +34,7 @@ const userId = await getUserId(token);
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
+        <UserInfo client:load translations={translations} userId={userId} />
         <Temperature client:load translations={translations} lang={lang} userId={userId} />
         <RoomSettings client:load translations={translations} lang={lang} userId={userId} />
         <SepiaToggle client:load translations={translations} lang={lang} userId={userId} />
