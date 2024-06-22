@@ -35,7 +35,7 @@
     }
   }
 
-  function handleInput(event) {
+  function handleInput(event: any) {
     const value = event.target.value
     if (value < 8 || value > 28) {
       event.target.value = Math.min(Math.max(parseInt(value), 8), 28)
