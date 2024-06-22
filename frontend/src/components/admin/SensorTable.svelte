@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fly } from 'svelte/transition'
   import { onMount } from 'svelte'
-  import { addFontSize } from '~/components/settings/getTextSize.js';
+  import { addFontSize } from '~/components/settings/getTextSize.js'
 
   export let translations: { [key: string]: string }
 
@@ -178,11 +178,10 @@
     loadDevicesFromDb()
   })
 
-
   $: {
     if (typeof window !== 'undefined' && $addFontSize !== undefined) {
-      const cssVar = `${$addFontSize}px`;
-      document.documentElement.style.setProperty('--add-font-size', cssVar);
+      const cssVar = `${$addFontSize}px`
+      document.documentElement.style.setProperty('--add-font-size', cssVar)
     }
   }
 </script>
@@ -218,9 +217,9 @@
     <select bind:value={newMap} class="border rounded p-2 mr-2 bg-transparent setting-description">
       {#each roomsHeaterMap as roomerHeaterOption}
         <option value={roomerHeaterOption}
-          >{roomerHeaterOption.heater.toLocaleUpperCase() +
+          >{roomerHeaterOption.heater.toLocaleLowerCase() +
             ' in ' +
-            roomerHeaterOption.room.toLocaleUpperCase()}</option
+            roomerHeaterOption.room.toLocaleLowerCase()}</option
         >
       {/each}
     </select>
@@ -275,14 +274,14 @@
     text-align: left !important;
   }
   .button-font-size {
-      font-size: calc(16px + var(--add-font-size));
-      transition: font-size 0.5s ease; 
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease;
   }
   .setting-title {
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    transition: font-size 0.5s ease;
     font-weight: bold;
   }
 
@@ -290,6 +289,6 @@
     flex: 2;
     margin: 0 1.5em 0.5em 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    transition: font-size 0.5s ease;
   }
 </style>
