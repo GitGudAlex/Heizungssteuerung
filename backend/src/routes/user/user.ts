@@ -64,6 +64,20 @@ userRouter.post('/fontSize', async (req, res) => {
   }
 })
 
+// endpoint to update text height setting
+userRouter.post('/lineHeight', async (req, res) => {
+  try {
+    const { userId, lineHeight } = req.body
+
+    await User.findByIdAndUpdate(userId, { lineHeight })
+
+    res.status(200).json({ message: 'Line height setting updated successfully' })
+  } catch (error) {
+    console.error('Error updating line height setting:', error)
+    res.status(500).json({ message: 'Could not update line height setting' })
+  }
+})
+
 // get full user object with settings
 userRouter.get('/:id', async (req, res) => {
   try {

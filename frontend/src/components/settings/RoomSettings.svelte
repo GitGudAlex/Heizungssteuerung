@@ -4,7 +4,6 @@
   import { onMount } from 'svelte'
 
   export let translations
-  export let lang
   export let userId
 
   let rooms: string[] = []
@@ -84,7 +83,7 @@
   <div class="setting">
     <h1 class="setting-title mr">{translations['roomSetting']}</h1>
   </div>
-  <p class="setting-description">{translations['roomSettingDescription']}</p>
+  <p class="setting-description text-space">{translations['roomSettingDescription']}</p>
   <div class="my-8">
     <ButtonGroup>
       {#each rooms as room}
@@ -112,7 +111,7 @@
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
     font-weight: bold;
   }
 
@@ -120,6 +119,11 @@
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
+  }
+
+  .text-space {
+    line-height: var(--line-height);
+    transition: line-height 0.5s ease;
   }
 </style>

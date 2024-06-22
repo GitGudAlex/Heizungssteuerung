@@ -2,6 +2,7 @@
   import { fly } from 'svelte/transition'
   import { onMount } from 'svelte'
   import { addFontSize } from '~/components/settings/getTextSize.js'
+  import { lineHeight } from '~/components/settings/TextSpaceSetting.svelte';
 
   export let translations: { [key: string]: string }
 
@@ -184,11 +185,18 @@
       document.documentElement.style.setProperty('--add-font-size', cssVar)
     }
   }
+
+  $: {
+    if (typeof window !== 'undefined' && $lineHeight !== undefined) {
+      const cssVar = `${$lineHeight}`;
+      document.documentElement.style.setProperty('--line-height', cssVar);
+    }
+  }
 </script>
 
 <main class="mb-4">
   <h2 class="setting-title">{translations['deviceManagement']}</h2>
-  <p class="setting-description">
+  <p class="setting-description text-space">
     {translations['deviceManagementDescription']}
   </p>
 
@@ -275,13 +283,13 @@
   }
   .button-font-size {
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
   }
   .setting-title {
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
     font-weight: bold;
   }
 
@@ -289,6 +297,11 @@
     flex: 2;
     margin: 0 1.5em 0.5em 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
+  }
+
+  .text-space {
+    line-height: var(--line-height);
+    transition: line-height 0.5s ease;
   }
 </style>

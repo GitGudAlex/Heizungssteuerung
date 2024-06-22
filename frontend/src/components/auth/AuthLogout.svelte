@@ -12,6 +12,7 @@
     // clear local storage
     localStorage.removeItem('sepiaMode')
     localStorage.removeItem('fontSize')
+    localStorage.removeItem('lineHeight')
     localStorage.removeItem('settingsLoaded')
   }
 </script>
@@ -32,7 +33,7 @@
 <style>
   .button-font-size {
       font-size: calc(16px + var(--add-font-size));
-      transition: font-size 0.5s ease; 
+      /*transition: font-size 0.5s ease;*/
   }
   .settings-container {
     max-width: 100%;
@@ -49,7 +50,7 @@
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    /*transition: font-size 0.5s ease;*/
     font-weight: bold;
   }
 
@@ -57,6 +58,7 @@
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    /*transition: font-size 0.5s ease;*/
   }
+  
 </style>

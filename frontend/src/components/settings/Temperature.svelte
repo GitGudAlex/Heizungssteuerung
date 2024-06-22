@@ -100,7 +100,7 @@
   <div class="setting">
     <h1 class="setting-title mr">{translations['temperature']}</h1>
   </div>
-  <p class="setting-description">
+  <p class="setting-description text-space">
     {translations['temperatureDescription']}
   </p>
   <div class="setting mt-4">
@@ -143,11 +143,11 @@
 <style>
   .button-font-size {
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
   }
   .max-temp-size {
     font-size: calc(22px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
   }
   .settings-container {
     max-width: 100%;
@@ -164,7 +164,7 @@
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
     font-weight: bold;
   }
 
@@ -172,6 +172,11 @@
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease;
+    /*transition: font-size 0.5s ease;*/
+  }
+
+  .text-space {
+    line-height: var(--line-height);
+    transition: line-height 0.5s ease;
   }
 </style>

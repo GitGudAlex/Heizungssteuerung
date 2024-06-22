@@ -4,7 +4,6 @@
     import { getFontSize } from '~/components/settings/getTextSize.js';
     import { addFontSize } from '~/components/settings/getTextSize.js';
     export let translations
-    export let lang
     export let userId
 
     onMount(() => {
@@ -75,7 +74,7 @@
 
   <style>
 
-    .settings-container {
+  .settings-container {
     max-width: 100%;
     margin: 0;
   }
@@ -90,7 +89,7 @@
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    /*transition: font-size 0.5s ease;*/ 
     font-weight: bold;
   }
 
@@ -98,7 +97,7 @@
     flex: 2;
     margin: 0 1.5em 0.5em 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    /*transition: font-size 0.5s ease;*/ 
   }
 
   </style>
