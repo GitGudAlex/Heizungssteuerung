@@ -33,7 +33,7 @@ export async function loadCombinedHeaters() {
 
     let heatingDevices: any[] = [];
     try {
-      const responseHeating = await fetch('http://localhost:3000/device/heating-control');
+      const responseHeating = await fetchWithTimeout('http://localhost:3000/device/heating-control', 10000);
       if (responseHeating.ok) {
         heatingDevices = await responseHeating.json();
         console.log("Using real Data: ", heatingDevices);
@@ -146,4 +146,25 @@ export async function loadCombinedHeaters() {
   } catch (error) {
     console.error('Error loading combined devices:', error);
   }
+}
+
+async function fetchWithTimeout (url: string, timeout: number): Promise<any> {
+  return await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error('timeout'))
+    }, timeout)
+
+    fetch(url)
+      .then(async (response) => {
+        clearTimeout(timer)
+        if (response.ok) {
+          return response
+        } else {
+          reject(new Error(`Request failed with status ${response.status}`))
+        }
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
 }

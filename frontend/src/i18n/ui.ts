@@ -102,6 +102,10 @@ export const ui = {
     temperatureUpdated: 'Temperature updated successfully',
     failedUpdateTemperature: 'Failed to update temperature',
     logoutDescription: 'Click here to log out of the application',
+    targetValue: 'Target',
+    actualValue: 'Actual',
+    actualTemperature: 'Measured Temperature',
+    targetTemperature: 'Set Temperature',
     loggedInAs: 'Logged in as',
   },
   de: {
@@ -200,6 +204,10 @@ export const ui = {
     temperatureUpdated: 'Temperatur erfolgreich aktualisiert',
     failedUpdateTemperature: 'Fehler beim Aktualisieren der Temperatur',
     logoutDescription: 'Klicken Sie hier, um sich von der Anwendung abzumelden',
+    targetValue: 'Soll',
+    actualValue: 'Ist',
+    actualTemperature: 'Gemessene Temperatur',
+    targetTemperature: 'Eingestellte Temperatur',
     loggedInAs: 'Angemeldet als',
   },
 } as const
