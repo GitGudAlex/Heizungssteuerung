@@ -26,7 +26,7 @@ export async function getAdminSettings (): Promise<AdminSettingsType> {
   } else {
     // create default settings
     const invitationCode = 'smarthome'
-    const defaultTemp = 20
+    const defaultTemp = 16
     const buildingOfInterest = 'n5'
     const newSettings: AdminSettingsDocument = new AdminSettings({
       invitationCode,

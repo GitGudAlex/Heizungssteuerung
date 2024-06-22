@@ -1,6 +1,6 @@
 export const languages = {
-  de: 'Deutsch',
-  en: 'English',
+  de: 'DE',
+  en: 'EN',
 }
 
 export const defaultLang = 'de'
@@ -106,6 +106,7 @@ export const ui = {
     actualValue: 'Actual',
     actualTemperature: 'Measured Temperature',
     targetTemperature: 'Set Temperature',
+    loggedInAs: 'Logged in as',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -207,5 +208,6 @@ export const ui = {
     actualValue: 'Ist',
     actualTemperature: 'Gemessene Temperatur',
     targetTemperature: 'Eingestellte Temperatur',
+    loggedInAs: 'Angemeldet als',
   },
 } as const

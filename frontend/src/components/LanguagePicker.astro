@@ -1,10 +1,12 @@
 ---
 import { languages } from '../i18n/ui';
 ---
-<ul class="flex space-x-4">
-  {Object.entries(languages).map(([lang, label]) => (
-    <li key={lang}>
+
+<ul>
+  {Object.entries(languages).map(([lang, label], index, array) => (
+    <li key={lang} class="inline">
       <a href={`/${lang}/`}>{label}</a>
+      {index < array.length - 1 && <span class="px-2">|</span>}
     </li>
   ))}
 </ul>
