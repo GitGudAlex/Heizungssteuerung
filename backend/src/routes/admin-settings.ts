@@ -12,6 +12,7 @@ interface AdminSettingsType {
   invitationCode: string
   defaultTemp: number
   buildingOfInterest: string
+  preheatingMinutesPerDegree: number
 }
 
 export async function getAdminSettings (): Promise<AdminSettingsType> {
@@ -21,20 +22,23 @@ export async function getAdminSettings (): Promise<AdminSettingsType> {
     return {
       invitationCode: existingSettings.invitationCode,
       defaultTemp: existingSettings.defaultTemp,
-      buildingOfInterest: existingSettings.buildingOfInterest
+      buildingOfInterest: existingSettings.buildingOfInterest,
+      preheatingMinutesPerDegree: existingSettings.preheatingMinutesPerDegree
     }
   } else {
     // create default settings
     const invitationCode = 'smarthome'
     const defaultTemp = 16
     const buildingOfInterest = 'n5'
+    const preheatingMinutesPerDegree = 5
     const newSettings: AdminSettingsDocument = new AdminSettings({
       invitationCode,
       defaultTemp,
-      buildingOfInterest
+      buildingOfInterest,
+      preheatingMinutesPerDegree
     })
     await newSettings.save()
-    return { invitationCode, defaultTemp, buildingOfInterest }
+    return { invitationCode, defaultTemp, buildingOfInterest, preheatingMinutesPerDegree }
   }
 }
 
@@ -58,17 +62,25 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
     const {
       invitationCode,
       defaultTemp,
-      buildingOfInterest
+      buildingOfInterest,
+      preheatingMinutesPerDegree
     }: AdminSettingsType = req.body
-    if (!invitationCode || !defaultTemp || !buildingOfInterest) {
+    if (!invitationCode || !defaultTemp || !buildingOfInterest || !preheatingMinutesPerDegree) {
       res.status(400).json({ message: 'Invalid request' })
       return
     }
+
     console.debug('Admin settings received:', {
       invitationCode,
       defaultTemp,
-      buildingOfInterest
+      buildingOfInterest,
+      preheatingMinutesPerDegree
     })
+
+    if (typeof invitationCode !== 'string' || typeof defaultTemp !== 'number' || typeof buildingOfInterest !== 'string' || typeof preheatingMinutesPerDegree !== 'number') {
+      res.status(400).json({ message: 'Invalid request, Input type is incorrect' })
+      return
+    }
 
     // check if there is already an admin settings document
     const existingSettings = await AdminSettings.findOne({})
@@ -76,13 +88,15 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
       existingSettings.invitationCode = invitationCode
       existingSettings.defaultTemp = defaultTemp
       existingSettings.buildingOfInterest = buildingOfInterest
+      existingSettings.preheatingMinutesPerDegree = preheatingMinutesPerDegree
       await existingSettings.save()
       res.json({ message: 'Settings saved successfully' })
     } else {
       const newSettings: AdminSettingsDocument = new AdminSettings({
         invitationCode,
         defaultTemp,
-        buildingOfInterest
+        buildingOfInterest,
+        preheatingMinutesPerDegree
       })
       await newSettings.save()
       res.json({ message: 'Settings saved successfully' })
