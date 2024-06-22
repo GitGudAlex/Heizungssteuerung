@@ -11,8 +11,8 @@
 
   const minTemp = 8
   const maxTemp = 28
-  const temperature = writable<number>(18)
-  let initialTemperature = 18 // Default initial temperature
+  let initialTemperature = 16 // Default initial temperature
+  const temperature = writable<number>(initialTemperature)
   let hasChanged = false
 
   const loadInitialValue = async () => {
@@ -113,6 +113,9 @@
       class="w-24 p-2 mb-4 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center max-temp-size"
       aria-label={translations['setTemperature']}
     />
+    <div class="text-xl font-semibold ml-8 mb-4 max-temp-size">
+      {minTemp}°C
+    </div>
     <input
       type="range"
       min={minTemp}
@@ -123,7 +126,7 @@
       aria-label="Temperature slider"
     />
     <div class="text-xl font-semibold mb-4 max-temp-size">
-      {$temperature}°C
+      {maxTemp}°C
     </div>
   </div>
   {#if hasChanged}
@@ -139,12 +142,12 @@
 
 <style>
   .button-font-size {
-      font-size: calc(16px + var(--add-font-size));
-      transition: font-size 0.5s ease; 
+    font-size: calc(16px + var(--add-font-size));
+    transition: font-size 0.5s ease;
   }
   .max-temp-size {
-      font-size: calc(22px + var(--add-font-size));
-      transition: font-size 0.5s ease; 
+    font-size: calc(22px + var(--add-font-size));
+    transition: font-size 0.5s ease;
   }
   .settings-container {
     max-width: 100%;
@@ -161,7 +164,7 @@
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    transition: font-size 0.5s ease;
     font-weight: bold;
   }
 
@@ -169,6 +172,6 @@
     flex: 2;
     margin: 0 1.5em 0 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    transition: font-size 0.5s ease; 
+    transition: font-size 0.5s ease;
   }
 </style>
