@@ -9,6 +9,7 @@
 
   let username: string = '';
   let password: string = '';
+  let calString: string = '';
   let invitationCode: string = '';
   let errorMessage: string = '';
   let signUpSuccess: boolean = false;
@@ -45,7 +46,7 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, room, invitationCode }),
+        body: JSON.stringify({ username, password, room, calString, invitationCode }),
       });
 
       if (response.ok) {
@@ -121,6 +122,17 @@
           <option value={r}>{r}</option>
         {/each}
       </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-bold mb-2" for="calString">{translations['registerCalString']}</label>
+      <input
+        class="appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="calString"
+        type="text"
+        placeholder={translations['registerCalString']}
+        bind:value={calString}
+      />
     </div>
 
     <div class="mb-6">

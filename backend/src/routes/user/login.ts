@@ -20,7 +20,7 @@ if (port == null) {
 
 loginRouter.post('/register', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, password, invitationCode, room }: { username: string, password: string, invitationCode: string, room: string } = req.body
+    const { username, password, calString, invitationCode, room }: { username: string, password: string, calString: string, invitationCode: string, room: string } = req.body
 
     const rooms = ROOMS_HEATERS_MAP.map((room) => room.room)
     if (!rooms.includes(room)) {
@@ -49,7 +49,7 @@ loginRouter.post('/register', async (req: Request, res: Response): Promise<void>
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user: UserDocument = new User({ username, password: hashedPassword, room })
+    const user: UserDocument = new User({ username, password: hashedPassword, calString, room })
     await user.save()
 
     res.json({ message: 'User created successfully' })

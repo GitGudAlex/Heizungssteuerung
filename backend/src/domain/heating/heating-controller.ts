@@ -297,24 +297,26 @@ export class HeatingController {
     const { user, building } = this.regexCalendarEntryForRoomAndUser(
       event.summary
     )
-    if (!user || !building) {
+    const userDb = await User.findOne({ username: user })
+
+    if (!userDb) {
+      console.warn(
+        `CalendarFritzSyncController: Calendar entry ${event.summary} includes ${user}, which has not been found`
+      )
+      return undefined
+    }
+    const userDbCalString = userDb?.calString
+
+    if (!user) {
       console.warn(
         `CalendarFritzSyncController: Calendar entry ${event.summary} does not include a username`
       )
       return undefined
     }
 
-    if (building !== this.buildingOfInterest) {
+    if (userDbCalString !== event.summary) {
       console.warn(
-        `CalendarFritzSyncController: Calendar entry ${event.summary} does not include the building we are look for`
-      )
-      return undefined
-    }
-
-    const userDb = await User.findOne({ username: user })
-    if (!userDb) {
-      console.warn(
-        `CalendarFritzSyncController: Calendar entry ${event.summary} includes ${user}, which has not been found`
+        `CalendarFritzSyncController: Calendar entry ${event.summary} does not match found string pattern: ${userDbCalString}`
       )
       return undefined
     }
@@ -354,7 +356,6 @@ export class HeatingController {
     building: string | undefined
   } {
     const match = str.match(CALENDAR_PARSING_REGEX)
-
     if (!match || match.length < 3) {
       console.warn(
         `Could not extract user and building from calendar entry ${str}, using RegEx ${CALENDAR_PARSING_REGEX.toString()}`
@@ -362,7 +363,7 @@ export class HeatingController {
       return { user: undefined, building: undefined }
     }
 
-    return { user: match[1], building: match[2] }
+    return { user: match[1], building: match[2].toLowerCase() }
   }
 }
 

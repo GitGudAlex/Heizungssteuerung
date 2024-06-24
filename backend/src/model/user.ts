@@ -8,6 +8,7 @@ export interface UserDocument extends Document {
   sepiaMode: boolean
   fontSize: string
   lineHeight: number
+  calString: string
   temperature: number
 }
 
@@ -19,6 +20,7 @@ const userSchema = new Schema<UserDocument>({
   sepiaMode: { type: Boolean, default: false },
   fontSize: { type: String, default: 'medium' },
   lineHeight: { type: Number, default: 1.5 },
+  calString: { type: String, default: '' },
   temperature: { type: Number, default: 18 }
 })
 
