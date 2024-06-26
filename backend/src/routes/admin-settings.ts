@@ -13,6 +13,7 @@ interface AdminSettingsType {
   defaultTemp: number
   buildingOfInterest: string
   preheatingMinutesPerDegree: number
+  isSyncActive: boolean
 }
 
 export async function getAdminSettings (): Promise<AdminSettingsType> {
@@ -23,7 +24,8 @@ export async function getAdminSettings (): Promise<AdminSettingsType> {
       invitationCode: existingSettings.invitationCode,
       defaultTemp: existingSettings.defaultTemp,
       buildingOfInterest: existingSettings.buildingOfInterest,
-      preheatingMinutesPerDegree: existingSettings.preheatingMinutesPerDegree
+      preheatingMinutesPerDegree: existingSettings.preheatingMinutesPerDegree,
+      isSyncActive: existingSettings.isSyncActive
     }
   } else {
     // create default settings
@@ -31,14 +33,16 @@ export async function getAdminSettings (): Promise<AdminSettingsType> {
     const defaultTemp = 16
     const buildingOfInterest = 'n5'
     const preheatingMinutesPerDegree = 5
+    const isSyncActive = true
     const newSettings: AdminSettingsDocument = new AdminSettings({
       invitationCode,
       defaultTemp,
       buildingOfInterest,
-      preheatingMinutesPerDegree
+      preheatingMinutesPerDegree,
+      isSyncActive
     })
     await newSettings.save()
-    return { invitationCode, defaultTemp, buildingOfInterest, preheatingMinutesPerDegree }
+    return { invitationCode, defaultTemp, buildingOfInterest, preheatingMinutesPerDegree, isSyncActive }
   }
 }
 
@@ -63,9 +67,10 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
       invitationCode,
       defaultTemp,
       buildingOfInterest,
-      preheatingMinutesPerDegree
+      preheatingMinutesPerDegree,
+      isSyncActive
     }: AdminSettingsType = req.body
-    if (!invitationCode || !defaultTemp || !buildingOfInterest || !preheatingMinutesPerDegree) {
+    if (!invitationCode || !defaultTemp || !buildingOfInterest || !preheatingMinutesPerDegree || !isSyncActive) {
       res.status(400).json({ message: 'Invalid request' })
       return
     }
@@ -74,10 +79,11 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
       invitationCode,
       defaultTemp,
       buildingOfInterest,
-      preheatingMinutesPerDegree
+      preheatingMinutesPerDegree,
+      isSyncActive
     })
 
-    if (typeof invitationCode !== 'string' || typeof defaultTemp !== 'number' || typeof buildingOfInterest !== 'string' || typeof preheatingMinutesPerDegree !== 'number') {
+    if (typeof invitationCode !== 'string' || typeof defaultTemp !== 'number' || typeof buildingOfInterest !== 'string' || typeof preheatingMinutesPerDegree !== 'number' || typeof isSyncActive !== 'boolean') {
       res.status(400).json({ message: 'Invalid request, Input type is incorrect' })
       return
     }
@@ -89,6 +95,7 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
       existingSettings.defaultTemp = defaultTemp
       existingSettings.buildingOfInterest = buildingOfInterest
       existingSettings.preheatingMinutesPerDegree = preheatingMinutesPerDegree
+      existingSettings.isSyncActive = isSyncActive
       await existingSettings.save()
       res.json({ message: 'Settings saved successfully' })
     } else {
@@ -96,7 +103,8 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
         invitationCode,
         defaultTemp,
         buildingOfInterest,
-        preheatingMinutesPerDegree
+        preheatingMinutesPerDegree,
+        isSyncActive
       })
       await newSettings.save()
       res.json({ message: 'Settings saved successfully' })

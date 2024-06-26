@@ -5,13 +5,15 @@ export interface AdminSettingsDocument extends Document {
   defaultTemp: number
   buildingOfInterest: string
   preheatingMinutesPerDegree: number
+  isSyncActive: boolean
 }
 
 const adminSchema = new Schema<AdminSettingsDocument>({
   invitationCode: String,
   defaultTemp: Number,
   buildingOfInterest: String,
-  preheatingMinutesPerDegree: Number
+  preheatingMinutesPerDegree: Number,
+  isSyncActive: Boolean
 })
 
 export const AdminSettings: Model<AdminSettingsDocument> = model<AdminSettingsDocument>('AdminSettings', adminSchema)
