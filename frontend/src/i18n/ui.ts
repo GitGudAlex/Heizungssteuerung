@@ -112,7 +112,9 @@ export const ui = {
     targetTemperature: 'Set Temperature',
     loggedInAs: 'Logged in as',
     preheatingMinutesPerDegree: 'Preheating Minutes per Degree',
-    preheatingMinutesPerDegreeDescription: 'The preheating minutes per degree is used to calculate the time needed to reach the desired temperature.'
+    preheatingMinutesPerDegreeDescription: 'The preheating minutes per degree is used to calculate the time needed to reach the desired temperature.',
+    isSyncActive: "Synchronize between calendar and heating",
+    isSyncActiveDescription: "Enables the minutly synchronization between calendar and heating. ATTENTION: This function deactivates the system.",
   },
   de: {
     title: 'Heizungssteuerung',
@@ -221,5 +223,8 @@ export const ui = {
     loggedInAs: 'Angemeldet als',
     preheatingMinutesPerDegree: 'Vorheizzeit in Minuten pro Grad',
     preheatingMinutesPerDegreeDescription: 'Die Vorheizzeit in Minuten pro Grad wird verwendet, um die Zeit zu berechnen, die benötigt wird, um die gewünschte Temperatur zu erreichen.',
+    isSyncActive: 'Synchronisation zwischen Kalender und Heizung',
+    isSyncActiveDescription:
+      'Aktiviert die minütliche Synchronisation zwischen Kalender und Heizung. ACHTUNG: Diese Funktion deaktiviert das System.', 
   },
 } as const

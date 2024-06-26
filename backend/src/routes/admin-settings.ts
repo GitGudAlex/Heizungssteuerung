@@ -70,10 +70,6 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
       preheatingMinutesPerDegree,
       isSyncActive
     }: AdminSettingsType = req.body
-    if (!invitationCode || !defaultTemp || !buildingOfInterest || !preheatingMinutesPerDegree || !isSyncActive) {
-      res.status(400).json({ message: 'Invalid request' })
-      return
-    }
 
     console.debug('Admin settings received:', {
       invitationCode,
@@ -82,6 +78,11 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
       preheatingMinutesPerDegree,
       isSyncActive
     })
+
+    if (!invitationCode || !defaultTemp || !buildingOfInterest || !preheatingMinutesPerDegree) {
+      res.status(400).json({ message: 'Invalid request' })
+      return
+    }
 
     if (typeof invitationCode !== 'string' || typeof defaultTemp !== 'number' || typeof buildingOfInterest !== 'string' || typeof preheatingMinutesPerDegree !== 'number' || typeof isSyncActive !== 'boolean') {
       res.status(400).json({ message: 'Invalid request, Input type is incorrect' })
