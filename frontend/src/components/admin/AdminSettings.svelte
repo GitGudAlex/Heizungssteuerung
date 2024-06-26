@@ -11,11 +11,13 @@
     invitationCode: '',
     buildingOfInterest: '',
     defaultTemp: 16,
+    preheatingMinutesPerDegree: 5,
   }
 
   let invitationCode = ''
   let buildingOfInterest = ''
   let defaultTemp = 16
+  let preheatingMinutesPerDegree = 5
 
   // Store for tracking changes in inputs
   const settingsChanged = writable(false)
@@ -29,6 +31,7 @@
         invitationCode = initialSettings.invitationCode
         buildingOfInterest = initialSettings.buildingOfInterest
         defaultTemp = initialSettings.defaultTemp
+        preheatingMinutesPerDegree = initialSettings.preheatingMinutesPerDegree
         console.log('Settings fetched successfully:', initialSettings)
       } else {
         console.error('Failed to fetch settings:', response.statusText)
@@ -50,6 +53,7 @@
           invitationCode,
           buildingOfInterest,
           defaultTemp,
+          preheatingMinutesPerDegree
         }),
       })
       if (response.ok) {
@@ -140,11 +144,25 @@
     </p>
     <label class="input input-bordered flex items-center gap-2 mb-4">
       <input
-        type="text"
+        type="number"
         class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
         id="defaultTemp"
         placeholder={translations['defaultTemp']}
         bind:value={defaultTemp}
+        on:input={handleInputChange}
+      />
+    </label>
+    <h2 class="text-2xl font-semibold mb-4">{translations['preheatingMinutesPerDegree']}</h2>
+    <p class="mb-4">
+      {translations['preheatingMinutesPerDegreeDescription']}
+    </p>
+    <label class="input input-bordered flex items-center gap-2 mb-4">
+      <input
+        type="number"
+        class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
+        id="preheatingMinutesPerDegree"
+        placeholder={translations['preheatingMinutesPerDegree']}
+        bind:value={preheatingMinutesPerDegree}
         on:input={handleInputChange}
       />
     </label>
