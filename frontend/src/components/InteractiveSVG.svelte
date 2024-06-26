@@ -15,12 +15,10 @@
     const darkModeStatus = localStorage.getItem('darkMode');
     const svgName = darkModeStatus === 'enabled' ? 'FloorplanDarkMode' : 'FloorplanLightMode';
     loadSVG(svgName);
-    
     deviceList.subscribe(() => {
       filterSVGElements();
     });
     
-
     const darkModeToggle = document.querySelector('.darkmode-toggle');
     darkModeToggle.addEventListener('click', handleDarkModeToggle);
   });
@@ -30,7 +28,6 @@
     const svgName = darkModeStatus === 'enabled' ? 'FloorplanDarkMode' : 'FloorplanLightMode';
     loadSVG(svgName);
     loadCombinedHeaters(); // Update Sensor Data
-    //filterSVGElements();
   }
 
   function filterSVGElements() {
