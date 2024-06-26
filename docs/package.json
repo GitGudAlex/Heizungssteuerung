@@ -1,0 +1,20 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "pdf": "ts-node autogen.ts && openapi2pdf --spec ./swagger.json --out ./swagger.pdf"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "openapi2pdf": "^1.0.0",
+    "swagger-autogen": "^2.23.7",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9"
+  }
+}
