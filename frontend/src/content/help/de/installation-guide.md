@@ -12,6 +12,28 @@ title: Installationsanleitung
     - [Schnellstart](#schnellstart)
     - [Einrichtung zusätzlicher Heizkörperregler](#einrichtung-zusätzlicher-heizkörperregler)
     - [Troubleshooting](#troubleshooting)
+- [Einrichten eines Raspberry Pi 4b als Server](#einrichten-eines-raspberry-pi-4b-als-server)
+  - [Voraussetzungen](#voraussetzungen-1)
+    - [1. Installation](#1-installation)
+    - [2. Update und Upgrade](#2-update-und-upgrade)
+    - [3. Aktivieren Sie SSH auf dem Raspberry Pi](#3-aktivieren-sie-ssh-auf-dem-raspberry-pi)
+    - [4. Installieren Sie Docker \& Docker-Compose](#4-installieren-sie-docker--docker-compose)
+    - [5. HdM VPN Setup Anleitung](#5-hdm-vpn-setup-anleitung)
+    - [6. Verbindungseinstellungen für Raspberry Pi](#6-verbindungseinstellungen-für-raspberry-pi)
+    - [7. Neustart der Netzwerkdienste](#7-neustart-der-netzwerkdienste)
+    - [8. Überprüfen Sie die statische IP-Adresse](#8-überprüfen-sie-die-statische-ip-adresse)
+    - [9. Verbindung zum Raspberry Pi über SSH](#9-verbindung-zum-raspberry-pi-über-ssh)
+    - [10. Zusätzliche Empfehlung](#10-zusätzliche-empfehlung)
+    - [11. Troubleshooting](#11-troubleshooting)
+      - [Firewall-Einstellungen](#firewall-einstellungen)
+    - [12. Optional: Ändern des Hostnamens des Raspberry Pi](#12-optional-ändern-des-hostnamens-des-raspberry-pi)
+      - [Hostname ändern:](#hostname-ändern)
+      - [Hosts-Datei aktualisieren:](#hosts-datei-aktualisieren)
+      - [Starten Sie den Raspberry Pi neu:](#starten-sie-den-raspberry-pi-neu)
+    - [Schritt 2: Aktualisieren Sie die Hosts-Datei auf anderen Geräten](#schritt-2-aktualisieren-sie-die-hosts-datei-auf-anderen-geräten)
+      - [Aktualisieren Sie die Hosts-Datei auf einem Windows-PC:](#aktualisieren-sie-die-hosts-datei-auf-einem-windows-pc)
+      - [Aktualisieren Sie die Hosts-Datei auf einem macOS- oder Linux-Gerät:](#aktualisieren-sie-die-hosts-datei-auf-einem-macos--oder-linux-gerät)
+    - [Schritt 3: Zugriff auf den Raspberry Pi über den Alias](#schritt-3-zugriff-auf-den-raspberry-pi-über-den-alias)
 
 ---
 
@@ -204,3 +226,235 @@ title: Installationsanleitung
 - **Admin-User Fehler**: Prüfen Sie, ob Sie den korrekten Usernamen eingegeben haben. Im Zweifel, probieren Sie eine neue Registrierung.
 
 ---
+---
+
+# Einrichten eines Raspberry Pi 4b als Server
+
+## Voraussetzungen
+
+### 1. Installation
+- Raspberry Pi mit einem laufenden [Raspbian OS] (https://www.raspberrypi.com/software/).
+- Zugang zum Raspberry Pi entweder über eine physische Verbindung oder über ssh.
+
+### 2. Update und Upgrade
+
+Vergewissern Sie sich zunächst, dass auf dem System die neueste Version der Software läuft. Führen Sie den Befehl aus:
+
+```bash
+sudo apt-get update && sudo apt-get upgrade
+```
+### 3. Aktivieren Sie SSH auf dem Raspberry Pi
+(falls nicht während des Installationsprozesses aktiviert)
+
+1. Öffnen Sie das **Terminal** auf Ihrem Raspberry Pi.
+2. Geben Sie den folgenden Befehl ein, um das Raspberry Pi Konfigurationstool zu öffnen:
+    ```bash
+    sudo raspi-config
+    ```
+3. Navigieren Sie zu **Interfacing Options** > **SSH** und aktivieren Sie SSH.
+4. Beenden Sie das Konfigurationstool.
+
+### 4. Installieren Sie Docker & Docker-Compose
+
+1. Geben Sie den folgenden Befehl ein, um das Docker-Installationsskript zu erhalten:
+    ```bash
+    curl -fsSL test.docker.com -o get-docker.sh && sh get-docker.sh
+    ```
+2. Fügen Sie einen Nicht-Root-Benutzer zur Docker-Gruppe hinzu (falls erforderlich)
+
+    ```bash
+    sudo usermod -aG docker ${USER}
+    ```
+3. Starten Sie den Raspberry Pi neu
+4. Installieren Sie Docker-Compose
+    ```bash
+    sudo apt-get install libffi-dev libssl-dev
+    sudo apt install python3-dev
+    sudo apt-get install -y python3 python3-pip
+    ```
+    Nach der Installation von python3 und pip3:
+    ```bash
+    sudo pip3 install docker-compose
+    ```
+5. Aktivieren Sie das Docker-System
+    ```bash
+    sudo systemctl enable docker
+    ```
+### 5. HdM VPN Setup Anleitung
+
+Ausführliche Informationen finden Sie im [HdM VPN Wiki] (https://wiki.mi.hdm-stuttgart.de/doku.php?id=studium:infrastruktur:vpn).
+
+1. **OpenVPN installieren**
+    - Installieren Sie OpenVPN über Ihren Paketmanager, wenn es nicht bereits installiert ist. Sie können auch die Kommandozeile für die Installation verwenden.
+    ```bash
+    sudo apt-get install openvpn
+    ```
+
+2. **Erstellen einer OpenVPN-Verbindung**
+    - Öffnen Sie den Verbindungseditor.
+    - Klicken Sie auf die Schaltfläche "Hinzufügen" und wählen Sie "OpenVPN" unter dem Abschnitt "VPN".
+    - Geben Sie der Verbindung einen Namen und setzen Sie das Gateway auf `mi-vpn.mi.hdm-stuttgart.de`.
+
+3. **Geben Sie Ihre Zugangsdaten ein**
+    - Geben Sie Ihren HdM-Benutzernamen und Ihr Passwort ein.
+    - Wählen Sie, ob das Passwort dauerhaft gespeichert werden soll oder ob Sie bei jeder Verbindung dazu aufgefordert werden möchten.
+
+4. **Erweiterte Einstellungen**
+    - Klicken Sie auf "Erweitert".
+    - Setzen Sie den Port auf "1197" für Mitarbeiter oder "1198" für Studenten.
+    - Aktivieren Sie "LZO-Datenkompression verwenden".
+
+5. **Speichern und Verbinden**
+    - Speichern Sie die Verbindungseinstellungen.
+    - Sie können nun die VPN-Verbindung nutzen, indem Sie sie im Netzwerkmanager auswählen.
+
+Wenn Sie diese Schritte befolgen, können Sie das HdM-VPN einrichten und verwenden. Denken Sie daran, dass ca.crt als Zertifikat für Linux-Systeme benötigt wird.
+
+![VPN-Einstellungen im Netzwerkmanager](../resources/vpn_networkmanger_kde1.png)
+![Zusätzliche VPN-Einstellungen](../resources/vpn_networkmanger_kde2.png)
+
+
+### 6. Verbindungseinstellungen für Raspberry Pi
+
+1. Öffnen Sie das **Terminal** auf Ihrem Raspberry Pi.
+2. Geben Sie den folgenden Befehl ein, um die aktuelle IP-Adresse zu ermitteln:
+    ```bash
+    hostname -I
+    ```
+3. Geben Sie den folgenden Befehl ein, um die aktuelle IP-Adresse Ihres Routers zu ermitteln:
+    ```bash
+    ip r | grep default
+    ```
+4. Öffnen Sie die **Netzwerkeinstellungen**:
+   - Klicken Sie auf das Netzwerksymbol in der oberen rechten Ecke des Bildschirms und wählen Sie **Wireless & Wired Network Settings**.
+5. Wählen Sie die Netzwerkschnittstelle aus, die Sie konfigurieren möchten (z. B. "wlan0" für Wi-Fi oder "eth0" für Ethernet).
+6. Ändern Sie die Methode **IPv4-Adresse konfigurieren** in **Manuell**.
+7. Geben Sie die gewünschte statische IP-Adresse, Netzmaske, Gateway und DNS ein.
+   - Beispielhafte Einstellungen:
+       - IP-Adresse: 192.168.2.113" (Gewählte statische IP-Adresse)
+       - Netzmaske: `255.255.255.0`
+       - Gateway: "192.168.2.1" (IP-Adresse des Routers)
+       - DNS-Server: 192.168.2.1" (IP-Adresse des Routers)
+8. Klicken Sie auf **Anwenden**, um die Änderungen zu speichern.
+
+### 7. Neustart der Netzwerkdienste
+
+1. Öffnen Sie das **Terminal** auf Ihrem Raspberry Pi.
+2. Starten Sie den Netzwerkdienst neu, um die Änderungen zu übernehmen:
+    ```bash
+    sudo systemctl restart networking
+    ```
+
+### 8. Überprüfen Sie die statische IP-Adresse
+
+1. Öffnen Sie das **Terminal** auf Ihrem Raspberry Pi.
+2. Geben Sie den folgenden Befehl ein, um die IP-Adresse zu überprüfen:
+    ```bash
+    hostname -I
+    ```
+
+### 9. Verbindung zum Raspberry Pi über SSH
+
+1. Öffnen Sie von einem anderen Computer im selben Netzwerk ein Terminal oder eine Eingabeaufforderung.
+2. Verwenden Sie den folgenden Befehl, um sich mit Ihrem Raspberry Pi über SSH zu verbinden:
+    ```bash
+    ssh rasp@192.168.2.113
+    ```
+    - Ersetzen Sie `192.168.2.113` durch die statische IP-Adresse, die Sie konfiguriert haben.
+
+### 10. Zusätzliche Empfehlung
+ Ohne VPN-Zugang kann es zu Problemen beim Zugriff auf den Nextcloud-Kalender kommen.
+So aktivieren Sie die automatische VPN-Verbindung für Ihr Netzwerk:
+
+- Navigieren Sie zu:
+  - **Verbindungen** 
+  - -> **Erweiterte Optionen** 
+  - -> **Verbindungen bearbeiten** 
+  - -> **PXLab** oder **Ethernet-Verbindung** 
+  - -> **Allgemein** 
+  - -> Haken bei **Automatische VPN-Verbindung** setzen
+
+### 11. Troubleshooting
+
+#### Firewall-Einstellungen
+
+Stellen Sie sicher, dass Ihre Firewall den SSH-Port nicht blockiert (Standard ist 22). Sie können den SSH-Port mit den folgenden Befehlen für die Firewall freigeben:
+
+- **UFW (Uncomplicated Firewall) auf Raspberry Pi:**
+    ```bash
+    sudo apt-get install ufw
+    sudo ufw allow 22/tcp
+    sudo ufw aktivieren
+    sudo ufw status
+    ```
+
+
+### 12. Optional: Ändern des Hostnamens des Raspberry Pi
+
+Wenn Sie nicht über eine IP-Adresse auf die intelligente Heizungssteuerung zugreifen möchten, können Sie den Hostnamen des Raspberry Pi ändern:
+
+#### Hostname ändern:
+
+1. Bearbeiten Sie die Datei `/etc/hostname`:
+    ```bash
+    sudo nano /etc/hostname
+    ```
+2. Ändern Sie den Inhalt in den gewünschten Hostnamen, z.B. `Heizungssteuerung`.
+3. Speichern und schließen Sie die Datei.
+
+#### Hosts-Datei aktualisieren:
+
+
+1. Bearbeiten Sie die Datei `/etc/hosts`:
+    ```bash
+    sudo nano /etc/hosts
+    ```
+2. Fügen Sie eine Zeile hinzu oder aktualisieren Sie die bestehende Zeile, die `127.0.1.1` enthält:
+    ```bash
+    127.0.1.1 heizungssteuerung
+    ```
+3. Speichern und schließen Sie die Datei.
+
+#### Starten Sie den Raspberry Pi neu:
+
+1. Starten Sie den Raspberry Pi neu, um die Änderungen zu übernehmen:
+    ```bash
+    sudo reboot
+    ```
+
+### Schritt 2: Aktualisieren Sie die Hosts-Datei auf anderen Geräten
+
+Um den Raspberry Pi von anderen Geräten im Netzwerk unter dem neuen Hostnamen zu erreichen, müssen Sie die Hosts-Datei auf diesen Geräten aktualisieren.
+
+#### Aktualisieren Sie die Hosts-Datei auf einem Windows-PC:
+
+1. Öffnen Sie den Editor als Administrator.
+2. Bearbeiten Sie die Datei `C:\Windows\System32\drivers\etc\hosts`.
+3. Fügen Sie die folgende Zeile hinzu:
+    ```plaintext
+    192.168.2.113 heizungssteuerung
+    ```
+    - Ersetzen Sie `192.168.2.113` durch Ihre konfigurierte statische IP-Adresse
+4. Speichern Sie die Datei und schließen Sie den Editor.
+
+#### Aktualisieren Sie die Hosts-Datei auf einem macOS- oder Linux-Gerät:
+
+1. Öffnen Sie ein Terminal.
+2. Bearbeiten Sie die Datei `/etc/hosts` mit einem Texteditor:
+    ```bash
+    sudo nano /etc/hosts
+    ```
+3. Fügen Sie die folgende Zeile ein:
+    ```plaintext
+    192.168.2.113 heizungssteuerung
+    ```
+      - Ersetzen Sie `192.168.2.113` durch Ihre konfigurierte statische IP-Adresse
+4. Speichern und schließen Sie die Datei.
+
+### Schritt 3: Zugriff auf den Raspberry Pi über den Alias
+
+Nachdem Sie die hosts-Datei auf den anderen Geräten im Netzwerk aktualisiert haben, sollten Sie in der Lage sein, auf den Raspberry Pi über den neuen Hostnamen zuzugreifen:
+
+```plaintext
+http://heizungssteuerung:4321
+```
