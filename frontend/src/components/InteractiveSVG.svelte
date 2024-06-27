@@ -192,4 +192,8 @@
     outline: 3px solid rgb(252, 186, 3);
     outline-style: dashed;
   }
+
+  .tooltip {
+    pointer-events: none;
+  }
 </style>

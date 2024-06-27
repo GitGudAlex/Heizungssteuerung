@@ -8,6 +8,7 @@ import { DEVICE_CONTROLLER_SINGLETON } from '../devices/device'
 import { CALENDAR_SINGLETON } from '../calendar/calendar'
 import { CALENDAR_PARSING_REGEX } from './calendar-parsing-regex'
 import { getAdminSettings } from '../../routes/admin-settings'
+import { OFFSET_CALCULATOR_SINGLETON } from './offset-calculator'
 
 // The calendar events include the building name and the user name in the summary.
 // This is the building name we are interested in.
@@ -26,6 +27,7 @@ export class HeatingController {
   readonly deviceController: IDeviceController = DEVICE_CONTROLLER_SINGLETON
 
   readonly fritzController = FRITZ_SINGLETON
+  readonly offsetCalculator = OFFSET_CALCULATOR_SINGLETON
   readonly _heatingOrders: HeatingOrder[] = []
   defaultTemp = 16
   buildingOfInterest = 'n5'
@@ -72,7 +74,7 @@ export class HeatingController {
    * @param heaterId
    * @returns
    */
-  private IsHeaterManuallySet (heaterId: string): boolean {
+  IsHeaterManuallySet (heaterId: string): boolean {
     const manuallySetHeater = this.manuallySetHeaters.find(
       (heater) => heater.heaterId === heaterId
     )
@@ -101,47 +103,19 @@ export class HeatingController {
    */
   public addHeatingOrder (heatingOrder: HeatingOrder): void {
     const heatingOrderParameters = heatingOrder.getParameters()
-    const isAlreadyInList = this._heatingOrders.some((order) => {
-      return (
-        JSON.stringify(order.getParameters()) ===
-        JSON.stringify(heatingOrderParameters)
-      )
+
+    // Check if there is an existing order by the same user
+    const indexToReplace = this._heatingOrders.findIndex((order) => {
+      return order.getParameters().username === heatingOrderParameters.username
     })
-    const isOrderWithSameUserAndTime = this._heatingOrders.some((order) => {
-      return (
-        order.getParameters().startDateTime ===
-          heatingOrderParameters.startDateTime &&
-        order.getParameters().endDataTime ===
-          heatingOrderParameters.endDataTime &&
-        order.getParameters().username === heatingOrderParameters.username
-      )
-    })
-    if (isOrderWithSameUserAndTime) {
+
+    if (indexToReplace !== -1) {
       console.warn(
-        `HeatingController addHeatingOrder(): Heating order ${JSON.stringify(
-          heatingOrderParameters
-        )} has matching user and time with another order. Replace the existing order.`
+        `HeatingController addHeatingOrder(): User ${heatingOrderParameters.username} already has an existing order. Replacing the existing order.`
       )
-      this._heatingOrders.forEach((order, index) => {
-        if (
-          order.getParameters().startDateTime ===
-            heatingOrderParameters.startDateTime &&
-          order.getParameters().endDataTime ===
-            heatingOrderParameters.endDataTime &&
-          order.getParameters().username === heatingOrderParameters.username
-        ) {
-          this._heatingOrders.splice(index, 1)
-        }
-      })
+      this._heatingOrders.splice(indexToReplace, 1)
     }
-    if (isAlreadyInList) {
-      console.warn(
-        `HeatingController addHeatingOrder(): Heating order ${JSON.stringify(
-          heatingOrderParameters
-        )} is already in the list.`
-      )
-      return
-    }
+
     this._heatingOrders.push(heatingOrder)
   }
 
@@ -163,21 +137,15 @@ export class HeatingController {
       JSON.stringify(heatingOrders, null, 2)
     )
     for (const room of uniqueRooms) {
-      if (!room || room === '' || typeof room !== 'string') {
-        console.warn(
-          'HeatingController setHeatersAccordingToHeatingOrders(): Room is undefined'
-        )
-        continue
-      }
       const roomHeatingOrdersForTheMoment = heatingOrders.filter((order) => {
         const parameters = order.getParameters()
+        // the time is not working as expected for the calendar, so we are working with UTC all the time
+        // Even if the time is set to Berlin, the time is still in UTC
         const getCurrentTimeInBerlin = (): Date => {
           const options = { timeZone: 'Europe/Berlin', hour12: false }
           const berlinTimeString = new Date().toLocaleString('en-US', options)
           return new Date(berlinTimeString)
         }
-        console.log('getCurrentTimeInBerlin', getCurrentTimeInBerlin())
-        console.log('parameters.startDateTime', parameters.startDateTime)
         return (
           parameters.startDateTime < getCurrentTimeInBerlin() &&
           parameters.endDataTime > getCurrentTimeInBerlin() &&
@@ -196,7 +164,7 @@ export class HeatingController {
    * @param heatingOrders - The heating orders that affect the room for the moment.
    * @param room - The room for which to set the heaters.
    */
-  private async setHeatersOfRoom (
+  async setHeatersOfRoom (
     heatingOrders: HeatingOrder[],
     room: string
   ): Promise<void> {
@@ -239,7 +207,7 @@ export class HeatingController {
   /**
    * Checks the calendar for events and sets heating orders accordingly.
    */
-  private async syncCalendarHeatingOrders (): Promise<void> {
+  async syncCalendarHeatingOrders (): Promise<void> {
     const events = await CALENDAR_SINGLETON.getTodaysEvents()
 
     // !!! use for Testing, Dates are always in UTC timezone
@@ -283,7 +251,7 @@ export class HeatingController {
    * @param event
    * @returns HeatingOrder if the event is valid, undefined otherwise.
    */
-  private async parseCalendarEvent (
+  async parseCalendarEvent (
     event: CalendarComponent
   ): Promise<HeatingOrder | undefined> {
     if (!event.summary) {
@@ -326,11 +294,14 @@ export class HeatingController {
       return undefined
     }
 
+    // Calculate the preheating offset, so the room reaches the target temperature at the start of the event
+    const preheatingOffsetStartDate = await this.offsetCalculator.calculatePreheatingOffset(event.start, userDb.room, userDb.temperature)
+
     try {
       return new HeatingOrder(
         userDb.room,
         userDb.temperature,
-        event.start,
+        preheatingOffsetStartDate,
         event.end,
         user
       )
@@ -340,6 +311,7 @@ export class HeatingController {
           userDb.temperature
         } and start ${event.start.toString()} and end ${event.end.toString()} \n`
       )
+      console.warn(e)
       return undefined
     }
   }
@@ -349,7 +321,7 @@ export class HeatingController {
    * @param str - The calendar entry.
    * @returns The user and building.
    */
-  private regexCalendarEntryForRoomAndUser (str: string): {
+  regexCalendarEntryForRoomAndUser (str: string): {
     user: string | undefined
     building: string | undefined
   } {
