@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Button, ButtonGroup } from 'flowbite-svelte'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
   import { addFontSize } from '~/components/settings/getTextSize.js'
@@ -12,12 +13,14 @@
     buildingOfInterest: '',
     defaultTemp: 16,
     preheatingMinutesPerDegree: 5,
+    isSyncActive: true,
   }
 
   let invitationCode = ''
   let buildingOfInterest = ''
   let defaultTemp = 16
   let preheatingMinutesPerDegree = 5
+  let isSyncActive = true
 
   // Store for tracking changes in inputs
   const settingsChanged = writable(false)
@@ -32,6 +35,7 @@
         buildingOfInterest = initialSettings.buildingOfInterest
         defaultTemp = initialSettings.defaultTemp
         preheatingMinutesPerDegree = initialSettings.preheatingMinutesPerDegree
+        isSyncActive = initialSettings.isSyncActive
         console.log('Settings fetched successfully:', initialSettings)
       } else {
         console.error('Failed to fetch settings:', response.statusText)
@@ -53,7 +57,8 @@
           invitationCode,
           buildingOfInterest,
           defaultTemp,
-          preheatingMinutesPerDegree
+          preheatingMinutesPerDegree,
+          isSyncActive
         }),
       })
       if (response.ok) {
@@ -98,6 +103,11 @@
       const cssVar = `${$lineHeight}`;
       document.documentElement.style.setProperty('--line-height', cssVar);
     }
+  }
+
+  const handleButtonClick = (makeSyncActive: boolean) => {
+    isSyncActive = makeSyncActive
+    settingsChanged.set(true);
   }
  
 </script>
@@ -166,6 +176,20 @@
         on:input={handleInputChange}
       />
     </label>
+    <h2 class="text-2xl font-semibold mb-4">{translations['isSyncActive']}</h2>
+    <div class="settings-container">
+      <p class="setting-description text-space">{translations['isSyncActiveDescription']}</p>
+      <div class="my-8">
+        <ButtonGroup>
+            <Button outline checked={true === isSyncActive} color="dark" on:click={() => handleButtonClick(true)}>
+              enable
+            </Button>
+            <Button outline checked={false === isSyncActive} color="dark" on:click={() => handleButtonClick(false)}>
+              disable
+            </Button>
+        </ButtonGroup>
+      </div>
+    </div>
     <button
       class="rounded-full px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition duration-300 button-font-size"
       type="submit"

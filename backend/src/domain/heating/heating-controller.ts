@@ -44,8 +44,13 @@ export class HeatingController {
     )
 
     cron.schedule('* * * * *', async () => {
-      await this.syncCalendarHeatingOrders()
-      await this.setHeatersAccordingToHeatingOrders()
+      const { isSyncActive } = await getAdminSettings()
+      if (isSyncActive) {
+        await this.syncCalendarHeatingOrders()
+        await this.setHeatersAccordingToHeatingOrders()
+      } else {
+        console.info('HeatingController: Sync is not active.')
+      }
     })
   }
 
