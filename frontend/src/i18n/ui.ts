@@ -111,6 +111,9 @@ export const ui = {
     actualTemperature: 'Measured Temperature',
     targetTemperature: 'Set Temperature',
     loggedInAs: 'Logged in as',
+    // Floorplan translations
+    showMapping: 'Show Mapping',
+    showTemperature: 'Show Temperature',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -217,5 +220,8 @@ export const ui = {
     actualTemperature: 'Gemessene Temperatur',
     targetTemperature: 'Eingestellte Temperatur',
     loggedInAs: 'Angemeldet als',
+    // Floorplan translations
+    showMapping: 'Id-Zuordnung anzeigen',
+    showTemperature: 'Temperatur anzeigen',
   },
 } as const
