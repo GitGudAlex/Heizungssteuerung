@@ -111,6 +111,9 @@ export const ui = {
     actualTemperature: 'Measured Temperature',
     targetTemperature: 'Set Temperature',
     loggedInAs: 'Logged in as',
+    // Floorplan translations
+    showMapping: 'Show Mapping',
+    showTemperature: 'Show Temperature',
     preheatingMinutesPerDegree: 'Preheating Minutes per Degree',
     preheatingMinutesPerDegreeDescription: 'The preheating minutes per degree is used to calculate the time needed to reach the desired temperature.',
     isSyncActive: "Synchronize between calendar and heating",
@@ -221,6 +224,9 @@ export const ui = {
     actualTemperature: 'Gemessene Temperatur',
     targetTemperature: 'Eingestellte Temperatur',
     loggedInAs: 'Angemeldet als',
+    // Floorplan translations
+    showMapping: 'Id-Zuordnung anzeigen',
+    showTemperature: 'Temperatur anzeigen',
     preheatingMinutesPerDegree: 'Vorheizzeit in Minuten pro Grad',
     preheatingMinutesPerDegreeDescription: 'Die Vorheizzeit in Minuten pro Grad wird verwendet, um die Zeit zu berechnen, die benötigt wird, um die gewünschte Temperatur zu erreichen.',
     isSyncActive: 'Synchronisation zwischen Kalender und Heizung',

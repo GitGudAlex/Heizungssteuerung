@@ -1,25 +1,26 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { deviceList, loadCombinedHeaters } from '~/stores/deviceStore.ts';
   import FloorplanLightMode from '../floorplans/FloorplanLightModeAllHeaters.svg?raw';
   import FloorplanDarkMode from '../floorplans/FloorplanDarkModeAllHeaters.svg?raw';
   import { get } from 'svelte/store';
 
-  export let translations
+  export let translations: { [key: string]: string }
+  export let lang: string
 
   let svgContent = ''
-  let focusedElement = null
+  let focusedElement = null;
+  let showTemperature = true;
 
   onMount(() => {
+    
     const darkModeStatus = localStorage.getItem('darkMode');
     const svgName = darkModeStatus === 'enabled' ? 'FloorplanDarkMode' : 'FloorplanLightMode';
-
     loadSVG(svgName);
-    loadCombinedHeaters();
     deviceList.subscribe(() => {
       filterSVGElements();
     });
-
+    
     const darkModeToggle = document.querySelector('.darkmode-toggle');
     darkModeToggle.addEventListener('click', handleDarkModeToggle);
   });
@@ -28,7 +29,12 @@
     const darkModeStatus = localStorage.getItem('darkMode');
     const svgName = darkModeStatus === 'enabled' ? 'FloorplanDarkMode' : 'FloorplanLightMode';
     loadSVG(svgName);
-    //filterSVGElements();
+    loadCombinedHeaters(); // Update Sensor Data
+  }
+
+  function toggleShowTemperature() {
+    showTemperature = !showTemperature;
+    filterSVGElements();
   }
 
   function filterSVGElements() {
@@ -47,9 +53,12 @@
             textElement.style.display = ''
             const tspanElement = textElement.querySelector('tspan')
             if (tspanElement) {
-              // Set the temperature value
-              const temperature = parseInt(device.temperature.celsius) / 10
-              tspanElement.textContent = `${temperature}°C`
+              if (showTemperature) {
+                const temperature = parseInt(device.temperature.celsius) / 10;
+                tspanElement.textContent = `${temperature}°C`;
+              } else {
+                tspanElement.textContent = path.id;
+              }
             }
           }
         } else {
@@ -161,6 +170,10 @@
 
 <!-- Tooltip -->
 <div class="tooltip hidden absolute bg-black text-white rounded p-1 dark:bg-gray-700">Tooltip Text</div>
+
+<button class="bg-white hover:bg-gray-100 text-gray-800 py-2 px-4 border border-gray-400 rounded shadow dark:bg-gray-700 dark:text-gray-100" on:click={toggleShowTemperature}>
+  {showTemperature ? translations['showMapping'] : translations['showTemperature']}
+</button>
 
 <div
   class="interactive-svg"
