@@ -2,7 +2,8 @@
   import { fly } from 'svelte/transition'
   import { onMount } from 'svelte'
   import { addFontSize } from '~/components/settings/getTextSize.js'
-  import { lineHeight } from '~/components/settings/TextSpaceSetting.svelte';
+  import LoadingIndicator from '../general/LoadingIndicator.svelte'
+  import { lineHeight } from '~/components/settings/TextSpaceSetting.svelte'
 
   export let translations: { [key: string]: string }
 
@@ -36,9 +37,11 @@
   let newIdentifier = ''
   let newMap: RoomsHeater = { heater: '', room: '' }
   let errorMessage = ''
+  let isLoading = false
 
   // load devices from db
   const loadDevicesFromDb = async () => {
+    isLoading = true
     const mapsResponse = await fetch('http://localhost:3000/device/device-map', {
       method: 'GET',
     })
@@ -63,14 +66,18 @@
       }
     } catch (error) {
       console.error('Error fetching devices:', error)
+      errorMessage = translations['failedLoadDevices']
+    } finally {
+      isLoading = false
     }
   }
 
   // Save device in db
   const saveDeviceInDb = async () => {
     try {
+      isLoading = true
       if (!(await verifyDeviceExistance(newIdentifier))) {
-        return
+        throw new Error('Device already exists')
       }
       const response = await fetch('http://localhost:3000/device/db/devices', {
         method: 'POST',
@@ -106,7 +113,10 @@
         console.error('Failed to save settings:', response.statusText)
       }
     } catch (error) {
+      errorMessage = translations['failedSaveDevice']
       console.error('Error saving settings:', error)
+    } finally {
+      isLoading = false
     }
   }
 
@@ -124,6 +134,10 @@
       }
     } catch (error) {
       console.error('Error saving settings:', error)
+      errorMessage = translations['failedVerifyDevice']
+      return false
+    } finally {
+      isLoading = false
     }
   }
 
@@ -188,8 +202,8 @@
 
   $: {
     if (typeof window !== 'undefined' && $lineHeight !== undefined) {
-      const cssVar = `${$lineHeight}`;
-      document.documentElement.style.setProperty('--line-height', cssVar);
+      const cssVar = `${$lineHeight}`
+      document.documentElement.style.setProperty('--line-height', cssVar)
     }
   }
 </script>
@@ -205,6 +219,9 @@
     {#if errorMessage.length > 0}
       <p class="text-red-500 setting-description">{errorMessage}</p>
     {/if}
+    <div>
+      <LoadingIndicator {isLoading} />
+    </div>
     <input
       type="text"
       bind:value={newDeviceName}
