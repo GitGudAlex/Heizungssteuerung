@@ -96,7 +96,7 @@
   })
 </script>
 
-<div class="settings-container">
+<div class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
   <div class="setting">
     <h1 class="setting-title mr">{translations['temperature']}</h1>
   </div>
@@ -152,6 +152,7 @@
   .settings-container {
     max-width: 100%;
     margin: 0;
+    margin-bottom: 20px;
   }
 
   .setting {
