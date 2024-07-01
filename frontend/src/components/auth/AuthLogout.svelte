@@ -17,13 +17,13 @@
   }
 </script>
 
-<div class="settings-container">
+<div class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
   <div class="setting">
-    <h1 class="setting-title mr">{translations['logout']}</h1>
+    <h2 class="setting-title mr">{translations['logout']}</h2>
   </div>
   <p class="setting-description">{translations['logoutDescription']}</p>
   <button
-    class="rounded-full px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition duration-300 mt-2 button-font-size"
+    class="rounded-full mt-4 px-4 py-2 bg-red-700 text-white hover:bg-red-500 transition duration-300 button-font-size"
     on:click={handleLogout}
   >
     {translations['logout']}

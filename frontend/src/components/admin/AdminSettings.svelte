@@ -112,72 +112,82 @@
  
 </script>
 
-<div class="admin-settings-container">
+<div class="admin-settings-container mx-auto space-y-4">
   <form on:submit|preventDefault={handleSaveSettings}>
-    <h2 class="setting-title">{translations['invitationCode']}</h2>
-    <p class="setting-description text-space">
-      {translations['invitationCodeDescription']}
-    </p>
-    <label class="input input-bordered flex items-center gap-2 mb-4">
-      <input
-        type="text"
-        class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
-        id="invitationCode"
-        placeholder={translations['invitationCode']}
-        bind:value={invitationCode}
-        on:input={handleInputChange}
-      />
-      <button
-        type="button"
-        class="rounded-full px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 transition duration-300 button-font-size"
-        on:click={() => copyToClipboard('http://localhost:4321/' + lang + '/register?invitationCode=' + invitationCode)}
-        >{translations['copyLink']}
-      </button>
-    </label>
-    <h2 class="text-2xl font-semibold mb-4 setting-title">{translations['buildingOfInterest']}</h2>
-    <p class="mb-4 setting-description text-space">
-      {translations['buildingOfInterestDescription']}
-    </p>
-    <label class="input input-bordered flex items-center gap-2 mb-4">
-      <input
-        type="text"
-        class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
-        id="buildingOfInterest"
-        placeholder={translations['buildingOfInterest']}
-        bind:value={buildingOfInterest}
-        on:input={handleInputChange}
-      />
-    </label>
-    <h2 class="text-2xl font-semibold mb-4 setting-title">{translations['defaultTemp']}</h2>
-    <p class="mb-4 setting-description text-space">
-      {translations['defaultTempDescription']}
-    </p>
-    <label class="input input-bordered flex items-center gap-2 mb-4">
-      <input
-        type="number"
-        class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
-        id="defaultTemp"
-        placeholder={translations['defaultTemp']}
-        bind:value={defaultTemp}
-        on:input={handleInputChange}
-      />
-    </label>
-    <h2 class="text-2xl font-semibold mb-4">{translations['preheatingMinutesPerDegree']}</h2>
-    <p class="mb-4">
-      {translations['preheatingMinutesPerDegreeDescription']}
-    </p>
-    <label class="input input-bordered flex items-center gap-2 mb-4">
-      <input
-        type="number"
-        class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
-        id="preheatingMinutesPerDegree"
-        placeholder={translations['preheatingMinutesPerDegree']}
-        bind:value={preheatingMinutesPerDegree}
-        on:input={handleInputChange}
-      />
-    </label>
-    <h2 class="text-2xl font-semibold mb-4">{translations['isSyncActive']}</h2>
-    <div class="settings-container">
+    <!-- Invitation Code Card -->
+    <div class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
+      <h2 class="text-lg font-bold mb-2">{translations['invitationCode']}</h2>
+      <p class="text-sm mb-4">{translations['invitationCodeDescription']}</p>
+      <div class="input input-bordered flex items-center gap-2 mb-4">
+        <input
+          type="text"
+          class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
+          id="invitationCode"
+          placeholder={translations['invitationCode']}
+          bind:value={invitationCode}
+          on:input={handleInputChange}
+        />
+        <button
+          type="button"
+          class="bg-purple-500 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-900 text-white font-bold py-3 px-6 rounded-full transition duration-300"
+          on:click={() => copyToClipboard(`http://localhost:4321/${lang}/register?invitationCode=${invitationCode}`)}
+        >
+          {translations['copyLink']}
+        </button>
+      </div>
+    </div>
+
+    <!-- Building of Interest Card -->
+    <div class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
+      <h2 class="text-lg font-bold mb-2">{translations['buildingOfInterest']}</h2>
+      <p class="text-sm mb-4">{translations['buildingOfInterestDescription']}</p>
+      <div class="input input-bordered flex items-center gap-2 mb-4">
+        <input
+          type="text"
+          class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
+          id="buildingOfInterest"
+          placeholder={translations['buildingOfInterest']}
+          bind:value={buildingOfInterest}
+          on:input={handleInputChange}
+        />
+      </div>
+    </div>
+
+    <!-- Default Temperature Card -->
+    <div class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
+      <h2 class="text-lg font-bold mb-2">{translations['defaultTemp']}</h2>
+      <p class="text-sm mb-4">{translations['defaultTempDescription']}</p>
+      <div class="input input-bordered flex items-center gap-2 mb-4">
+        <input
+          type="text"
+          class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
+          id="defaultTemp"
+          placeholder={translations['defaultTemp']}
+          bind:value={defaultTemp}
+          on:input={handleInputChange}
+        />
+      </div>
+    </div>
+
+    <!-- Preheating Minutes Per Degree  -->
+    <div class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
+      <h2 class="text-lg font-bold mb-2">{translations['preheatingMinutesPerDegree']}</h2>
+      <p class="text-sm mb-4">{translations['preheatingMinutesPerDegreeDescription']}</p>
+      <div class="input input-bordered flex items-center gap-2 mb-4">
+        <input
+          type="text"
+          class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-80 button-font-size"
+          id="preheatingMinutesPerDegree"
+          placeholder={translations['preheatingMinutesPerDegree']}
+          bind:value={preheatingMinutesPerDegree}
+          on:input={handleInputChange}
+        />
+      </div>
+    </div>
+
+    <!-- Sync Active Card -->
+    <div class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
+      <h2 class="text-lg font-bold mb-2">{translations['isSyncActive']}</h2>
       <p class="setting-description text-space">{translations['isSyncActiveDescription']}</p>
       <div class="my-8">
         <ButtonGroup>
@@ -190,8 +200,11 @@
         </ButtonGroup>
       </div>
     </div>
+
+
+    <!-- Save Button -->
     <button
-      class="rounded-full px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition duration-300 button-font-size"
+      class="rounded-full px-4 py-2 bg-red-700 text-white hover:bg-red-500 transition duration-300 button-font-size"
       type="submit"
     >
       {translations['save']}

@@ -168,5 +168,3 @@ async function fetchWithTimeout (url: string, timeout: number): Promise<any> {
       })
   })
 }
-
-
