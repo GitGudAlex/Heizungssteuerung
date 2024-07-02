@@ -67,6 +67,9 @@
   }
 </script>
 
+{#if $deviceList.length !== 0}
+  <h1>{translations['deviceList']}</h1>
+{/if}
 <div class="mt-8">
   {#if errorMessage.length > 0}
     <p class="text-red-500 mb-4">{errorMessage}</p>
