@@ -16,6 +16,9 @@ export class OffsetCalculator {
   async calculatePreheatingOffset (startDate: Date, room: string, targetTemperature: number): Promise<Date> {
     const roomTemperature = await this.getCurrentAverageRoomTemperature(room)
     const offsetTemperature = targetTemperature - roomTemperature
+    if (offsetTemperature <= 0) {
+      return startDate
+    }
     let preheatingMinutesPerDegree = 5
     try {
       const adminSettings = await getAdminSettings()
