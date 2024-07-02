@@ -122,6 +122,7 @@ export const ui = {
       'Enables the minutly synchronization between calendar and heating. ATTENTION: This function deactivates the system.',
     enable: 'Enable',
     disable: 'Disable',
+    deviceList: 'Connected Devices',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -240,5 +241,6 @@ export const ui = {
       'Aktiviert die minütliche Synchronisation zwischen Kalender und Heizung. ACHTUNG: Diese Funktion deaktiviert das System.',
     enable: 'Aktivieren',
     disable: 'Deaktivieren',
+    deviceList: 'Verbundene Geräte',
   },
 } as const
