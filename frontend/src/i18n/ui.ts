@@ -48,9 +48,9 @@ export const ui = {
     sepiaModeOff: 'Sepia mode off',
     sepiaModeDescription:
       'Sepia mode is a color scheme that reduces the amount of blue light emitted by the screen. This can help reduce eye strain and improve sleep quality.',
-    fontSize: "Font size",
+    fontSize: 'Font size',
     fontSizeDescription: 'Adjusts font sizes for all pages.',
-    lineHeight: "Line height",
+    lineHeight: 'Line height',
     lineHeightDescription: 'Adjusts whitespace between text lines for all pages.',
     lineHeightExample1: 'This is an example text.',
     lineHeightExample2: 'Adjust the value above for changes.',
@@ -115,9 +115,13 @@ export const ui = {
     showMapping: 'Show Mapping',
     showTemperature: 'Show Temperature',
     preheatingMinutesPerDegree: 'Preheating Minutes per Degree',
-    preheatingMinutesPerDegreeDescription: 'The preheating minutes per degree is used to calculate the time needed to reach the desired temperature.',
-    isSyncActive: "Synchronize between calendar and heating",
-    isSyncActiveDescription: "Enables the minutly synchronization between calendar and heating. ATTENTION: This function deactivates the system.",
+    preheatingMinutesPerDegreeDescription:
+      'The preheating minutes per degree is used to calculate the time needed to reach the desired temperature.',
+    isSyncActive: 'Synchronize between calendar and heating',
+    isSyncActiveDescription:
+      'Enables the minutly synchronization between calendar and heating. ATTENTION: This function deactivates the system.',
+    enable: 'Enable',
+    disable: 'Disable',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -161,9 +165,9 @@ export const ui = {
     sepiaModeOff: 'Sepia Modus aus',
     sepiaModeDescription:
       'Der Sepia Modus ist ein Farbschema, das die Menge an blauem Licht reduziert, das vom Bildschirm abgegeben wird. Dies kann helfen, die Augenbelastung zu reduzieren und die Schlafqualität zu verbessern.',
-    fontSize: "Textgröße",
+    fontSize: 'Textgröße',
     fontSizeDescription: 'Verändert die Textgröße für alle Seiten.',
-    lineHeight: "Zeilenabstand",
+    lineHeight: 'Zeilenabstand',
     lineHeightDescription: 'Verändert den Abstand zwischen Textzeilen für alle Seiten.',
     lineHeightExample1: 'Dies ist ein Beispieltext.',
     lineHeightExample2: 'Verändere den Wert, um den Abstand zu sehen.',
@@ -208,7 +212,8 @@ export const ui = {
     usernameTakenError: 'Benutzername existiert bereits. Bitte wählen Sie einen anderen.',
     passwordLengthError: 'Passwort muss mindestens 7 Zeichen lang sein.',
     loginNow: 'Schon registriert? Jetzt einloggen',
-    registerDisclaimer: 'Verwenden Sie Ihr HdM Kürzel, um Ihren Account einzurichten. Dieser wird verwendet, um Ihren Account mit dem Nextcloud-Kalender zu verbinden.',
+    registerDisclaimer:
+      'Verwenden Sie Ihr HdM Kürzel, um Ihren Account einzurichten. Dieser wird verwendet, um Ihren Account mit dem Nextcloud-Kalender zu verbinden.',
     roomName: 'Raumname',
     saveRoomName: 'Raumnamen speichern',
     confirm: 'Bestätigen',
@@ -228,9 +233,12 @@ export const ui = {
     showMapping: 'Id-Zuordnung anzeigen',
     showTemperature: 'Temperatur anzeigen',
     preheatingMinutesPerDegree: 'Vorheizzeit in Minuten pro Grad',
-    preheatingMinutesPerDegreeDescription: 'Die Vorheizzeit in Minuten pro Grad wird verwendet, um die Zeit zu berechnen, die benötigt wird, um die gewünschte Temperatur zu erreichen.',
+    preheatingMinutesPerDegreeDescription:
+      'Die Vorheizzeit in Minuten pro Grad wird verwendet, um die Zeit zu berechnen, die benötigt wird, um die gewünschte Temperatur zu erreichen.',
     isSyncActive: 'Synchronisation zwischen Kalender und Heizung',
     isSyncActiveDescription:
-      'Aktiviert die minütliche Synchronisation zwischen Kalender und Heizung. ACHTUNG: Diese Funktion deaktiviert das System.', 
+      'Aktiviert die minütliche Synchronisation zwischen Kalender und Heizung. ACHTUNG: Diese Funktion deaktiviert das System.',
+    enable: 'Aktivieren',
+    disable: 'Deaktivieren',
   },
 } as const
