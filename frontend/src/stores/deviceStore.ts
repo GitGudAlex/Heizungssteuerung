@@ -32,7 +32,7 @@ export async function loadCombinedHeaters(BACKEND_URL: string) {
 
     let heatingDevices: any[] = []
     try {
-      const responseHeating = await fetch(`${BACKEND_URL}/device/heating-control`, 10000)
+      const responseHeating = await fetch(`${BACKEND_URL}/device/heating-control`)
       if (responseHeating.ok) {
         heatingDevices = await responseHeating.json()
         console.log('Using real Data: ', heatingDevices)
@@ -41,92 +41,6 @@ export async function loadCombinedHeaters(BACKEND_URL: string) {
       }
     } catch (error) {
       console.error('Error fetching heating-control data:', error)
-    }
-
-    // If no heating devices are available, use dummy data
-    if (heatingDevices.length === 0) {
-      heatingDevices = [
-        {
-          identifier: '09995 0688917',
-          id: '25',
-          functionbitmask: '320',
-          fwversion: '05.08',
-          manufacturer: 'AVM',
-          productname: 'FRITZ!DECT 301',
-          present: '1',
-          txbusy: '0',
-          name: 'FRITZ!DECT 301 #10',
-          battery: '40',
-          batterylow: '0',
-          temperature: {
-            celsius: '220',
-            offset: '0',
-          },
-          hkr: {
-            tist: '44',
-            tsoll: '40',
-            absenk: '32',
-            komfort: '42',
-            lock: '0',
-            devicelock: '0',
-            errorcode: '0',
-            windowopenactiv: '0',
-            windowopenactiveendtime: '0',
-            boostactive: '0',
-            boostactiveendtime: '0',
-            batterylow: '0',
-            battery: '40',
-            nextchange: {
-              endperiod: '1718380800',
-              tchange: '42',
-            },
-            summeractive: '0',
-            holidayactive: '0',
-            adaptiveHeatingActive: '0',
-            adaptiveHeatingRunning: '0',
-          },
-        },
-        {
-          identifier: '09995 0593849',
-          id: '27',
-          functionbitmask: '320',
-          fwversion: '05.08',
-          manufacturer: 'AVM',
-          productname: 'FRITZ!DECT 301',
-          present: '1',
-          txbusy: '0',
-          name: 'FRITZ!DECT 301 #12',
-          battery: '100',
-          batterylow: '0',
-          temperature: {
-            celsius: '220',
-            offset: '0',
-          },
-          hkr: {
-            tist: '44',
-            tsoll: '40',
-            absenk: '32',
-            komfort: '42',
-            lock: '0',
-            devicelock: '0',
-            errorcode: '0',
-            windowopenactiv: '0',
-            windowopenactiveendtime: '0',
-            boostactive: '0',
-            boostactiveendtime: '0',
-            batterylow: '0',
-            battery: '100',
-            nextchange: {
-              endperiod: '1718380800',
-              tchange: '42',
-            },
-            summeractive: '0',
-            holidayactive: '0',
-            adaptiveHeatingActive: '0',
-            adaptiveHeatingRunning: '0',
-          },
-        },
-      ]
     }
 
     // Combine devices and heating devices
