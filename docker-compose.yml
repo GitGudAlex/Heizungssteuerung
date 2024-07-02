@@ -16,7 +16,7 @@ services:
     ports:
       - 4321:80
     environment:
-      - BACKEND_URL: http://backend:3000
+      BACKEND_URL: "http://backend:3000"
     depends_on:
       - backend
 
@@ -43,6 +43,6 @@ services:
       ME_CONFIG_BASICAUTH: false
     depends_on:
       - mongo
-    
+
 volumes:
   mongo-data:
