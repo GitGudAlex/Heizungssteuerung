@@ -19,7 +19,7 @@
       errorMessage = ''
       isLoading = true
       console.log('Updating temperature setting:', identifier, temperature)
-      const response = await fetch(`${backendUrl}/heating`, {
+      const response = await fetch('http://localhost:3000/heating', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,14 @@
   }
 
   onMount(() => {
-    loadCombinedHeaters(backendUrl)
+    isLoading = true
+    try {
+      loadCombinedHeaters(backendUrl)
+    } catch (error) {
+      console.error('Error loading device list:', error)
+    } finally {
+      isLoading = false
+    }
   })
 
   $: {
