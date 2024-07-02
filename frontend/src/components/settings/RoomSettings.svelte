@@ -5,6 +5,7 @@
 
   export let translations
   export let userId
+  export let backendUrl
 
   let rooms: string[] = []
   let roomName = ''
@@ -19,7 +20,7 @@
 
   const loadAvailableRooms = async () => {
     try {
-      const mapsResponse = await fetch('http://localhost:3000/device/device-map', {
+      const mapsResponse = await fetch(`${backendUrl}/device/device-map`, {
         method: 'GET',
       })
       const maps = await mapsResponse.json()
@@ -32,7 +33,7 @@
 
   const loadInitialRoomName = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/user/${userId}`, {
+      const response = await fetch(`${backendUrl}/user/${userId}`, {
         method: 'GET',
       })
 
@@ -49,7 +50,7 @@
 
   const updateDbSettings = async (userId: string, roomName: string) => {
     try {
-      const response = await fetch('http://localhost:3000/user/room', {
+      const response = await fetch(`${backendUrl}/user/room`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -11,6 +11,8 @@ import { ui } from '~/i18n/ui';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
+
 if(!Astro.cookies.has('token')) {
     return Astro.redirect(lang + '/401');
 } else {
@@ -30,11 +32,11 @@ const translations = ui[lang];
 <DefaultLayout title={t('dashboard')}>
     <section class="mb-12 mt-12">
         <div class="container">
-        <LoadSettings client:load userId={userId} />
+        <LoadSettings client:load userId={userId} backendUrl={BACKEND_URL}/>
         <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
-        <InteractiveSVG client:load translations={translations} />
+        <InteractiveSVG client:load translations={translations} backendUrl={BACKEND_URL}/>
         <h1>Device List</h1>
-        <DeviceList client:load translations={translations} lang={lang} userId={userId}  />
+        <DeviceList client:load translations={translations} lang={lang} userId={userId} backendUrl={BACKEND_URL} />
         </div>
     </section>
 </DefaultLayout>;

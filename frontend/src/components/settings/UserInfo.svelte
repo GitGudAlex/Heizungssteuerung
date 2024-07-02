@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
 
+  export let backendUrl
   export let translations
   export let userId
 
@@ -12,7 +13,7 @@
 
   const getUserInfo = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/user/${userId}`, {
+      const response = await fetch(`${backendUrl}/user/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

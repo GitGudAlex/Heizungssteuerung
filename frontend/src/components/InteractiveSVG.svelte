@@ -7,9 +7,10 @@
 
   export let translations: { [key: string]: string }
   export let lang: string
+  export let backendUrl: string
 
   let svgContent = ''
-  let focusedElement = null;
+  let focusedElement: any = null;
   let showTemperature = true;
 
   onMount(() => {
@@ -29,7 +30,7 @@
     const darkModeStatus = localStorage.getItem('darkMode');
     const svgName = darkModeStatus === 'enabled' ? 'FloorplanDarkMode' : 'FloorplanLightMode';
     loadSVG(svgName);
-    loadCombinedHeaters(); // Update Sensor Data
+    loadCombinedHeaters(backendUrl); // Update Sensor Data
   }
 
   function toggleShowTemperature() {

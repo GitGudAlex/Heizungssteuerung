@@ -4,6 +4,7 @@
   export let translations
   export let lang
   export let userId
+  export let backendUrl
 
   let sepiaMode = false
 
@@ -14,7 +15,7 @@
 
   const updateDbSettings = async () => {
     try {
-      const response = await fetch('http://localhost:3000/user/sepiaMode', {
+      const response = await fetch(`${backendUrl}/user/sepiaMode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,6 +66,7 @@
   </div>
   <p class="setting-description text-space">{translations['sepiaModeDescription']}</p>
   <label class="switch mt-4">
+    <!-- svelte-ignore a11y-role-supports-aria-props -->
     <input type="checkbox" on:change={toggleSepiaMode} on:keydown={handleKeyDown} aria-pressed={sepiaMode.toString()} />
     <span class="slider round"></span>
   </label>

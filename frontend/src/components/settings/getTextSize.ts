@@ -6,8 +6,8 @@ export const addFontSize = writable(0);
    * @param userId Current User
    * @returns font size as pixel value
    */
-  export async function getFontSize(userId: string): Promise<number> {
-    const response = await fetch(`http://localhost:3000/user/${userId}`, {
+  export async function getFontSize(userId: string, backendUrl: string): Promise<number> {
+    const response = await fetch(`${backendUrl}/user/${userId}`, {
       method: 'GET',
     })
     let userTextSetting; 

@@ -14,6 +14,8 @@ import TextSpaceSetting from "~/components/settings/TextSpaceSetting.svelte";
 import { ui } from "~/i18n/ui";
 import UserInfo from "~/components/settings/UserInfo.svelte";
 
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
+
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translations = ui[lang];
@@ -36,13 +38,13 @@ const userId = await getUserId(token);
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
-        <UserInfo client:load translations={translations} userId={userId} />
-        <Temperature client:load translations={translations} lang={lang} userId={userId} />
-        <RoomSettings client:load translations={translations} userId={userId} />
-        <SepiaToggle client:load translations={translations} lang={lang} userId={userId} />
-        <TextSizeSettings client:load translations={translations} userId={userId} />
-        <TextSpaceSetting client:load translations={translations} userId={userId} />
-        <AuthLogout client:load translations={translations} lang={lang}  />   
+        <UserInfo client:load translations={translations} userId={userId} backendUrl={BACKEND_URL}/>
+        <Temperature client:load translations={translations} lang={lang} userId={userId} backendUrl={BACKEND_URL}/>
+        <RoomSettings client:load translations={translations} userId={userId} backendUrl={BACKEND_URL}/>
+        <SepiaToggle client:load translations={translations} lang={lang} userId={userId} backendUrl={BACKEND_URL}/>
+        <TextSizeSettings client:load translations={translations} userId={userId} backendUrl={BACKEND_URL}/>
+        <TextSpaceSetting client:load translations={translations} userId={userId} backendUrl={BACKEND_URL}/>
+        <AuthLogout client:load translations={translations} lang={lang} />   
         </div>
     </section>
 </DefaultLayout>

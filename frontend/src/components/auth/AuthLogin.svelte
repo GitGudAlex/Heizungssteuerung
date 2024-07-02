@@ -3,6 +3,7 @@
 
   export let translations: { [key: string]: string }
   export let lang: string
+  export let backendUrl: string
 
   let username: string = ''
   let password: string = ''
@@ -12,7 +13,7 @@
   const handleLogin = async () => {
     errorMessage = ''
     try {
-      const response = await fetch('http://localhost:3000/user/login/login', {
+      const response = await fetch(`${backendUrl}/user/login/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -20,12 +20,12 @@ interface Device {
 export const deviceList = writable<Device[]>([]);
 
 // COmbine Data from /device/db/devices and /heating-control
-export async function loadCombinedHeaters() {
+export async function loadCombinedHeaters(BACKEND_URL: string) {
   try {
     let devices: Device[] = [];
 
   
-    const responseDevices = await fetch('http://localhost:3000/device/db/devices');
+    const responseDevices = await fetch(`${BACKEND_URL}/device/db/devices`);
     if (!responseDevices.ok) {
       throw new Error('Failed to fetch devices data');
     }
@@ -33,7 +33,7 @@ export async function loadCombinedHeaters() {
 
     let heatingDevices: any[] = [];
     try {
-      const responseHeating = await fetchWithTimeout('http://localhost:3000/device/heating-control', 10000);
+      const responseHeating = await fetchWithTimeout(`${BACKEND_URL}/device/heating-control`, 10000);
       if (responseHeating.ok) {
         heatingDevices = await responseHeating.json();
         console.log("Using real Data: ", heatingDevices);

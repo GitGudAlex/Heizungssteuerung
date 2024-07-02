@@ -3,6 +3,7 @@
 
   export let translations: { [key: string]: string };
   export let lang: string;
+  export let backendUrl: string;
 
   let rooms: string[] = [];
   let room: string = '';
@@ -14,7 +15,7 @@
   let signUpSuccess: boolean = false;
 
   const load = async () => {
-    const mapsResponse = await fetch('http://localhost:3000/device/device-map', {
+    const mapsResponse = await fetch(`${backendUrl}/device/device-map`, {
       method: 'GET',
     });
     const maps = await mapsResponse.json();
@@ -40,7 +41,7 @@
     }
 
     try {
-      const response = await fetch('http://localhost:3000/user/login/register', {
+      const response = await fetch(`${backendUrl}/user/login/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

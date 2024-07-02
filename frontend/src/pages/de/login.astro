@@ -11,6 +11,8 @@ const t = useTranslations(lang);
 
 const translations = ui[lang];
 
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
+
 if (Astro.cookies.has('token')) {
     var token = Astro.cookies.get('token');
     var auth = await checkAuth(token);
@@ -24,7 +26,7 @@ if (Astro.cookies.has('token')) {
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('login')}</h2>
-        <AuthLogin client:load translations={translations} lang={lang}  />
+        <AuthLogin client:load translations={translations} lang={lang} backendUrl={BACKEND_URL} />
         </div>
     </section>
 </DefaultLayout>

@@ -3,8 +3,10 @@
     import { ButtonGroup, Button } from 'flowbite-svelte';
     import { getFontSize } from '~/components/settings/getTextSize.js';
     import { addFontSize } from '~/components/settings/getTextSize.js';
+
     export let translations
     export let userId
+    export let backendUrl
 
     onMount(() => {
         loadNewFontSizeValue()
@@ -18,13 +20,13 @@
   }
 
     const loadNewFontSizeValue = async () => {
-      let fontSize = await getFontSize(userId);
+      let fontSize = await getFontSize(userId, backendUrl);
       addFontSize.set(fontSize);
     }
 
     const updateDbSettings = async (userId: string, fontSize: string) => {
     try {
-      const response = await fetch('http://localhost:3000/user/fontSize', {
+      const response = await fetch(`${backendUrl}/user/fontSize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +44,7 @@
     }
   }
 
-  const savefontSize = async (event) => {
+  const savefontSize = async (event: any) => {
     let fontSize = event.target.textContent.toLowerCase();
     if (fontSize == "klein"){
       fontSize = "small"

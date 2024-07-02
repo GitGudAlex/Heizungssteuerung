@@ -8,6 +8,8 @@ import AdminSettings from "~/components/admin/AdminSettings.svelte";
 import SensorTable from "~/components/admin/SensorTable.svelte";
 import { ui } from "~/i18n/ui";
 
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
+
 if(!Astro.cookies.has('token')) {
     return Astro.redirect('/401');
 } else {
@@ -33,8 +35,8 @@ const translations = ui[lang];
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('adminArea')}</h2>
-        <SensorTable client:load translations={translations} />
-        <AdminSettings client:load translations={translations} lang={lang} />
+        <SensorTable client:load translations={translations} backendUrl={BACKEND_URL}/>
+        <AdminSettings client:load translations={translations} lang={lang} backendUrl={BACKEND_URL}/>
         </div>
     </section>
 </DefaultLayout>

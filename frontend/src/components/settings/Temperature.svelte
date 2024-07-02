@@ -6,8 +6,7 @@
   export let translations
   export let lang
   export let userId
-
-  console.log(userId)
+  export let backendUrl
 
   const minTemp = 8
   const maxTemp = 28
@@ -22,7 +21,7 @@
 
   const fetchInitialTemperatureFromDB = async (userId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/user/${userId}`, {
+      const response = await fetch(`${backendUrl}/user/${userId}`, {
         method: 'GET',
       })
 
@@ -43,7 +42,7 @@
 
   const updateDbSettings = async (userId: string, temperature: Number) => {
     try {
-      const response = await fetch('http://localhost:3000/user/temperature', {
+      const response = await fetch(`${backendUrl}/user/temperature`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

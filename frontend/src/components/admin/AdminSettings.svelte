@@ -7,6 +7,7 @@
   // Props for the component
   export let translations: { [key: string]: string }
   export let lang: string
+  export let backendUrl: string
 
   let initialSettings = {
     invitationCode: '',
@@ -28,7 +29,7 @@
   // Fetch initial settings from the database
   onMount(async () => {
     try {
-      const response = await fetch('http://localhost:3000/admin-settings')
+      const response = await fetch(`${backendUrl}/admin-settings`)
       if (response.ok) {
         initialSettings = await response.json()
         invitationCode = initialSettings.invitationCode
@@ -48,7 +49,7 @@
   // Update settings in the database
   const saveSettings = async () => {
     try {
-      const response = await fetch('http://localhost:3000/admin-settings', {
+      const response = await fetch(`${backendUrl}/admin-settings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +132,7 @@
         <button
           type="button"
           class="bg-purple-500 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-900 text-white font-bold py-3 px-6 rounded-full transition duration-300"
-          on:click={() => copyToClipboard(`http://localhost:4321/${lang}/register?invitationCode=${invitationCode}`)}
+          on:click={() => copyToClipboard(`/${lang}/register?invitationCode=${invitationCode}`)}
         >
           {translations['copyLink']}
         </button>

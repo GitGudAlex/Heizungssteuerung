@@ -9,6 +9,7 @@
   import { ButtonGroup, Button } from 'flowbite-svelte';
   export let translations
   export let userId
+  export let backendUrl: string
 
   onMount(() => {
     loadLineHeight();
@@ -22,7 +23,7 @@
   }
   const updateDbSettings = async (userId: string, newLineHeight: number) => {
     try {
-      const response = await fetch('http://localhost:3000/user/lineHeight', {
+      const response = await fetch(`${backendUrl}/user/lineHeight`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +48,7 @@
 
 
   export async function getLineHeight(userId: string): Promise<number> {
-    const response = await fetch(`http://localhost:3000/user/${userId}`, {
+    const response = await fetch(`${backendUrl}/user/${userId}`, {
       method: 'GET',
     })
     let userLineHeight; 
@@ -61,7 +62,7 @@
     return userLineHeight
   }
 
-  const updateLineHeight = async (event) => {
+  const updateLineHeight = async (event: any ) => {
     const newLineHeight = event.target.textContent;
     await updateDbSettings(userId, newLineHeight);
     loadLineHeight()

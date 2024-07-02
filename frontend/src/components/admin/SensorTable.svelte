@@ -6,6 +6,7 @@
   import { lineHeight } from '~/components/settings/TextSpaceSetting.svelte'
 
   export let translations: { [key: string]: string }
+  export let backendUrl: string
 
   // Define the structure of a device
   interface Device {
@@ -42,7 +43,7 @@
   // load devices from db
   const loadDevicesFromDb = async () => {
     isLoading = true
-    const mapsResponse = await fetch('http://localhost:3000/device/device-map', {
+    const mapsResponse = await fetch(`${backendUrl}/device/device-map`, {
       method: 'GET',
     })
     const maps: Maps = await mapsResponse.json()
@@ -54,7 +55,7 @@
     newMap = roomsHeaterMap[0]
 
     try {
-      const response = await fetch('http://localhost:3000/device/db/devices', {
+      const response = await fetch(`${backendUrl}/device/db/devices`, {
         method: 'GET',
       })
       if (response.ok) {
@@ -79,7 +80,7 @@
       if (!(await verifyDeviceExistance(newIdentifier))) {
         throw new Error('Device already exists')
       }
-      const response = await fetch('http://localhost:3000/device/db/devices', {
+      const response = await fetch(`${backendUrl}/device/db/devices`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +123,7 @@
 
   const verifyDeviceExistance = async (identifier: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/device/heating-control/${identifier}`, {
+      const response = await fetch(`${backendUrl}/device/heating-control/${identifier}`, {
         method: 'GET',
       })
       if (!response.ok) {
@@ -144,7 +145,7 @@
   // Delete device from db
   const deleteDeviceFromDb = async (identifier: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/device/db/${identifier}`, {
+      const response = await fetch(`${backendUrl}/device/db/${identifier}`, {
         method: 'DELETE',
       })
       if (!response.ok) {

@@ -7,7 +7,7 @@ const checkAuth = async (token: any): Promise<boolean> => {
         console.error('BACKEND_URL is not set');
         return false;
       }
-      const response = await fetch(`http://${import.meta.env.BACKEND_URL}/user/auth/verifyAuth`, {
+      const response = await fetch(`${import.meta.env.BACKEND_URL}/user/auth/verifyAuth`, {
         headers: {
           'Authorization': `Bearer ${token.value}`
         }
