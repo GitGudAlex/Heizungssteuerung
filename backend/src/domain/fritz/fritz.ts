@@ -7,6 +7,7 @@ dotenv.config()
 class FritzController {
   public readonly fritz: Fritz
   private readonly xmlParser = new XmlParser()
+  private readonly _log: any = console.log
 
   constructor () {
     const fritzUsername = process.env.FRITZ_USERNAME
@@ -44,20 +45,22 @@ class FritzController {
    * @param identifier The identifier of the device. (e.g "09995 0688917")
    */
   public async getBasicDeviceStats (identifier: string): Promise<any> {
+    let returnValue
+    this.disableConsoleLog()
     try {
       const xml = await this.fritz.getBasicDeviceStats(identifier)
       if (xml == null) {
-        console.error('FritzController: Error getting basic device stats')
-        return undefined
+        console.error('FritzController: Getting basic device stats are empty.')
       }
-      return await this.xmlParser.parseXmlToJson(xml)
+      returnValue = await this.xmlParser.parseXmlToJson(xml)
     } catch (error) {
       console.error(
         'FritzController: Error getting basic device stats:',
         error
       )
-      return undefined
     }
+    this.enableConsoleLog()
+    return returnValue
   }
 
   /**
@@ -75,7 +78,7 @@ class FritzController {
       console.debug(`Setting temperature target of ${identifier} to ${temp}`)
       const stats = await this.getBasicDeviceStats(identifier)
       if (stats == null) {
-        console.error('FritzController: Error getting basic device stats')
+        console.error('FritzController: Could not verify connection to FritzBox, setting temperature target failed.')
         return undefined
       }
       const tempTarget = await this.fritz.setTempTarget(identifier, temp)
@@ -102,7 +105,7 @@ class FritzController {
     try {
       const stats = await this.getBasicDeviceStats(identifier)
       if (stats == null) {
-        console.error('FritzController: Error getting basic device stats')
+        console.error('FritzController: Could not verify connection to FritzBox, getting temperature target failed.')
         return undefined
       }
       return Number(await this.fritz.getHkrTsoll(identifier))
@@ -124,7 +127,7 @@ class FritzController {
     try {
       const stats = await this.getBasicDeviceStats(identifier)
       if (stats == null) {
-        console.error('FritzController: Error getting basic device stats')
+        console.error('FritzController: Could not verify connection to FritzBox, getting temperature failed.')
         return undefined
       }
       return Number(await this.fritz.getTemperature(identifier))
@@ -132,6 +135,14 @@ class FritzController {
       console.error('FritzController: Error getting temperature:', error)
       return undefined
     }
+  }
+
+  private disableConsoleLog (): void {
+    console.log = function () {} // Override console.log with an empty function
+  }
+
+  private enableConsoleLog (): void {
+    console.log = this._log // Restore the original console.log
   }
 }
 

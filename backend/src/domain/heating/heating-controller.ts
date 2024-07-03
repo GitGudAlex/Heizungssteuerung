@@ -9,6 +9,7 @@ import { CALENDAR_SINGLETON } from '../calendar/calendar'
 import { CALENDAR_PARSING_REGEX } from './calendar-parsing-regex'
 import { getAdminSettings } from '../../routes/admin-settings'
 import { OFFSET_CALCULATOR_SINGLETON } from './offset-calculator'
+import { NIGHTLY_SHUTOFF_HANDLER_SINGLETON } from './nightly-shutoff-handler'
 
 // The calendar events include the building name and the user name in the summary.
 // This is the building name we are interested in.
@@ -43,13 +44,40 @@ export class HeatingController {
       `📦 Admin Settings received:\n${JSON.stringify(adminSettings)}`
     )
 
-    cron.schedule('* * * * *', async () => {
+    // Sync the heating orders every other second at 0 seconds
+    cron.schedule('0 * * * * *', async () => {
       const { isSyncActive } = await getAdminSettings()
       if (isSyncActive) {
+        console.info(
+          '\n***HeatingController: Syncing calendar with heating orders.'
+        )
         await this.syncCalendarHeatingOrders()
-        await this.setHeatersAccordingToHeatingOrders()
+        console.info(
+          '***HeatingController: Calendar Events has been synced to heating orders.\n'
+        )
       } else {
-        console.info('HeatingController: Sync is not active.')
+        console.warn('HeatingController: Calendar Sync is not active.')
+      }
+    })
+
+    // Sync the heating orders every other second at 30 seconds
+    cron.schedule('30 * * * * *', async () => {
+      const { isSyncActive } = await getAdminSettings()
+      if (isSyncActive) {
+        console.info('\n***HeatingController: Syncing heating with heating orders.')
+
+        // if the nightly shutoff is active, set all heaters to default temp
+        if (NIGHTLY_SHUTOFF_HANDLER_SINGLETON.isNightlyShutoffActive()) {
+          console.info('HeatingController: Nightly shutoff is active.')
+          await NIGHTLY_SHUTOFF_HANDLER_SINGLETON.setHeatersToDefaultTemp(this.defaultTemp)
+        } else {
+          console.info('HeatingController: Nightly shutoff is not active.')
+          await this.setHeatersAccordingToHeatingOrders()
+        }
+
+        console.info('***HeatingController: Heaters have been set according to heating orders.\n')
+      } else {
+        console.warn('HeatingController: Heating Sync is not active.')
       }
     })
   }
@@ -219,15 +247,16 @@ export class HeatingController {
     // const events = [
     //   {
     //     type: 'VEVENT',
-    //     summary: 'fd040@n5',
-    //     uid: '3a1783dd-ced7-4a07-b753-5256b418993d',
+    //     params: [],
+    //     created: '2024-07-02T13:47:25.000Z',
+    //     dtstamp: '2024-07-03T08:29:49.000Z',
+    //     lastmodified: '2024-07-03T08:29:49.000Z',
+    //     sequence: '4',
+    //     uid: '8bd26f4e-8849-45cb-a4a6-ca4651b434a4',
+    //     start: '2024-07-02T22:00:00.000Z',
+    //     end: '2024-07-03T22:00:00.000Z',
     //     status: 'CONFIRMED',
-    //     start: new Date('2024-06-14T11:00:00.000Z'),
-    //     end: new Date('2024-06-14T22:00:00.000Z'),
-    //     created: new Date('2024-06-14T14:49:57.000Z'),
-    //     dtstamp: new Date('2024-06-14T08:21:50.000Z'),
-    //     lastmodified: new Date('2024-06-14T08:21:50.000Z'),
-    //     sequence: '4'
+    //     summary: 'admin@n5'
     //   }
     // ]
 
@@ -249,6 +278,13 @@ export class HeatingController {
         this.addHeatingOrder(userHeatingOrder)
       }
     }
+    console.info(
+      `HeatingController: Heating orders have been set according to the calendar events.\n ${JSON.stringify(
+        this._heatingOrders,
+        null,
+        2
+      )}`
+    )
   }
 
   /**
@@ -300,7 +336,12 @@ export class HeatingController {
     }
 
     // Calculate the preheating offset, so the room reaches the target temperature at the start of the event
-    const preheatingOffsetStartDate = await this.offsetCalculator.calculatePreheatingOffset(event.start, userDb.room, userDb.temperature)
+    const preheatingOffsetStartDate =
+      await this.offsetCalculator.calculatePreheatingOffset(
+        event.start,
+        userDb.room,
+        userDb.temperature
+      )
 
     try {
       return new HeatingOrder(

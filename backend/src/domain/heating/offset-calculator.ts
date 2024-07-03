@@ -36,9 +36,13 @@ export class OffsetCalculator {
   async getCurrentAverageRoomTemperature (room: string): Promise<number> {
     try {
       const heaterIds = await this.deviceController.getHeaterIdsByRoom(room)
-      const temperatures = await Promise.all(
-        heaterIds.map(async (heaterId) => await this.fritzController.getTemperature(heaterId))
-      )
+      const temperatures = []
+      for (const heaterId of heaterIds) {
+        const temperature = await this.fritzController.getTemperature(heaterId)
+        if (temperature !== undefined) {
+          temperatures.push(temperature)
+        }
+      }
       if (temperatures.length === 0) {
         console.warn(`OffsetCalculator: getAverageRoomTemperature(): No temperatures found for room ${room}, returning default temperature ${this.defaultTemp}`)
         return this.defaultTemp

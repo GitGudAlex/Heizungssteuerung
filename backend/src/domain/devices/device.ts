@@ -39,8 +39,6 @@ class DeviceController implements IDeviceController {
         console.error('getRoomHeaterIdMap(): Error finding device:', error)
       }
     }
-
-    console.info('DeviceController: RoomHeaterIdMap', heatingDevices)
     this.RoomHeaterIdMap = heatingDevices
   }
 
