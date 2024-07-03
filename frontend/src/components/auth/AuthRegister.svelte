@@ -134,6 +134,7 @@
         placeholder={translations['registerCalString']}
         bind:value={calString}
       />
+      <p class="block text-sm mb-2">{translations['registerCalStringDescription']}</p>
     </div>
 
     <div class="mb-6">
