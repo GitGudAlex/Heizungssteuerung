@@ -35,11 +35,8 @@ class NightlyShutoffHandler {
       console.error(`NightlyShutoffHandler: Invalid nightly shutoff hours: Off-${offHour}, On-${onHour}, ignoring nightly shutoff`)
       return false
     }
-    const hour = date.getHours()
-    // We need to offset the hours: 24:00 - 05:59 Local time is 22:00 - 03:59 UTC
-    const offsetOffHour = this.offsetHourByNumber(offHour, 2)
-    const offsetOnHour = this.offsetHourByNumber(onHour, 2)
-    return hour >= offsetOffHour || hour <= offsetOnHour
+    console.log('NightlyShutoffHandler: Checking if the current time is between', onHour, 'and', offHour, 'UTC', date.toUTCString())
+    return this.isHourBetweenOnAndOff(date.getHours(), onHour, offHour)
   }
 
   /**
@@ -58,14 +55,27 @@ class NightlyShutoffHandler {
     }
   }
 
-  /**
-   * Offsets the hour by a number. Makes sure the result is between 0 and 23.
-   * @param hours hour to offset
-   * @param offset hours to offset by
-   * @returns the offset hour
-   */
-  offsetHourByNumber (hours: number, offset: number): number {
-    return (hours + offset) % 24
+  isHourBetweenOnAndOff (hour: number, onHour: number, offHour: number): boolean {
+    // We need to offset the hours: 24:00 - 05:59 Local time is 22:00 - 03:59 UTC
+    const offsetHourByNumber = (hours: number, offset: number): number => {
+      return (hours + offset)
+    }
+
+    const offsetOffHour = offsetHourByNumber(offHour, 2)
+    const offsetOnHour = offsetHourByNumber(onHour, 2)
+
+    console.log('NightlyShutoffHandler: Checking if the current hour is between', offsetOnHour, 'and', offsetOffHour, 'UTC')
+    console.log('NightlyShutoffHandler: Current hour:', hour, 'UTC')
+
+    const isHourLessThanOffHour = hour < offsetOffHour
+    const isHourGreaterEqualThanOnHour = hour >= offsetOnHour
+
+    console.log('NightlyShutoffHandler: isHourLessThanOffHour:', isHourLessThanOffHour)
+    console.log('NightlyShutoffHandler: isHourGreaterThanOnHour:', isHourGreaterEqualThanOnHour)
+    if (isHourLessThanOffHour && isHourGreaterEqualThanOnHour) {
+      return true
+    }
+    return false
   }
 }
 
