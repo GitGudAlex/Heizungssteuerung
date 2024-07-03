@@ -4,6 +4,7 @@
   import { writable } from 'svelte/store'
   import { addFontSize } from '~/components/settings/getTextSize.js'
   import { lineHeight } from '~/components/settings/TextSpaceSetting.svelte'
+  import NightlyShutoffCard from './NightlyShutoffCard.svelte'
   // Props for the component
   export let translations: { [key: string]: string }
   export let lang: string
@@ -11,17 +12,17 @@
 
   let initialSettings = {
     invitationCode: '',
-    buildingOfInterest: '',
     defaultTemp: 16,
     preheatingMinutesPerDegree: 5,
     isSyncActive: true,
+    nightlyShutoff: { off: 22, on: 4 },
   }
 
   let invitationCode = ''
-  let buildingOfInterest = ''
   let defaultTemp = 16
   let preheatingMinutesPerDegree = 5
   let isSyncActive = true
+  let nightlyShutoff = { off: 22, on: 4 }
 
   // Store for tracking changes in inputs
   const settingsChanged = writable(false)
@@ -33,10 +34,10 @@
       if (response.ok) {
         initialSettings = await response.json()
         invitationCode = initialSettings.invitationCode
-        buildingOfInterest = initialSettings.buildingOfInterest
         defaultTemp = initialSettings.defaultTemp ?? defaultTemp
         preheatingMinutesPerDegree = initialSettings.preheatingMinutesPerDegree ?? preheatingMinutesPerDegree
         isSyncActive = initialSettings.isSyncActive ?? false
+        nightlyShutoff = initialSettings.nightlyShutoff ?? nightlyShutoff
         console.log('Settings fetched successfully:', initialSettings)
       } else {
         console.error('Failed to fetch settings:', response.statusText)
@@ -56,10 +57,10 @@
         },
         body: JSON.stringify({
           invitationCode,
-          buildingOfInterest,
           defaultTemp,
           preheatingMinutesPerDegree,
           isSyncActive,
+          nightlyShutoff,
         }),
       })
       if (response.ok) {
@@ -139,23 +140,16 @@
       </div>
     </div>
 
-    <!-- Building of Interest Card -->
-    <div
-      class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300"
-    >
-      <h2 class="text-lg font-bold mb-2">{translations['buildingOfInterest']}</h2>
-      <p class="text-sm mb-4">{translations['buildingOfInterestDescription']}</p>
-      <div class="input input-bordered flex items-center gap-2 mb-4">
-        <input
-          type="text"
-          class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
-          id="buildingOfInterest"
-          placeholder={translations['buildingOfInterest']}
-          bind:value={buildingOfInterest}
-          on:input={handleInputChange}
-        />
-      </div>
-    </div>
+    <!-- Nightly Shutoff Card -->
+    <NightlyShutoffCard
+      {translations}
+      initialSettings={nightlyShutoff}
+      on:change={(event) => {
+        nightlyShutoff = event.detail
+        console.log('Settings changed:', event.detail)
+        handleInputChange()
+      }}
+    />
 
     <!-- Default Temperature Card -->
     <div

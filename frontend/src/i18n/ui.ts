@@ -126,6 +126,10 @@ export const ui = {
     enable: 'Enable',
     disable: 'Disable',
     deviceList: 'Connected Devices',
+    nightlyShutoff: 'Nightly Shutoff',
+    nightlyShutoffDescription: 'Time of nightly shutoff, select the hour when the heating should turn off and on. The heating will be set to the default temperature during this time.',
+    nightlyShutoffOffTime: 'Shutoff Time (turns off from this hour)',
+    nightlyShutoffOnTime: 'On Time (turns on from this hour)',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -248,5 +252,9 @@ export const ui = {
     enable: 'Aktivieren',
     disable: 'Deaktivieren',
     deviceList: 'Verbundene Geräte',
+    nightlyShutoff: 'Nächtliche Abschaltung',
+    nightlyShutoffDescription: 'Zeitpunkt des nächtlichen Ausschaltens und Einschaltens der Heizung, wählen Sie die Stunde, zu der die Heizung aus- und eingeschaltet werden soll. Die Heizungen werden während dieser Zeit auf die Standardtemperatur gesetzt.',
+    nightlyShutoffOffTime: 'Abschaltzeit (schaltet ab dieser Stunde aus)',
+    nightlyShutoffOnTime: 'Einschaltzeit (schaltet ab dieser Stunde ein)',
   },
 } as const

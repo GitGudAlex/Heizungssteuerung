@@ -13,14 +13,14 @@ export interface UserDocument extends Document {
 }
 
 const userSchema = new Schema<UserDocument>({
-  username: String,
+  username: { type: String, unique: true },
+  calString: { type: String, unique: true },
   password: String,
   room: String,
   isAdmin: { type: Boolean, default: false },
   sepiaMode: { type: Boolean, default: false },
   fontSize: { type: String, default: 'medium' },
   lineHeight: { type: Number, default: 1.5 },
-  calString: { type: String, default: '' },
   temperature: { type: Number, default: 18 }
 })
 

@@ -49,8 +49,14 @@ loginRouter.post('/register', async (req: Request, res: Response): Promise<void>
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user: UserDocument = new User({ username, password: hashedPassword, calString, room })
-    await user.save()
+    try {
+      const user: UserDocument = new User({ username, password: hashedPassword, calString, room })
+      await user.save()
+    } catch (err) {
+      console.error('Login Router:', err)
+      res.status(500).json({ message: 'Could not create User' })
+      return
+    }
 
     res.json({ message: 'User created successfully' })
   } catch (error) {

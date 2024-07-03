@@ -31,7 +31,6 @@ export class HeatingController {
   readonly offsetCalculator = OFFSET_CALCULATOR_SINGLETON
   readonly _heatingOrders: HeatingOrder[] = []
   defaultTemp = 16
-  buildingOfInterest = 'n5'
 
   // array of manually set heaters
   readonly manuallySetHeaters: Array<{ heaterId: string, dueDate: Date }> = []
@@ -39,7 +38,6 @@ export class HeatingController {
   async startSync (): Promise<void> {
     const adminSettings = await getAdminSettings()
     this.defaultTemp = adminSettings.defaultTemp
-    this.buildingOfInterest = adminSettings.buildingOfInterest
     console.info(
       `📦 Admin Settings received:\n${JSON.stringify(adminSettings)}`
     )
@@ -303,10 +301,14 @@ export class HeatingController {
       return undefined
     }
 
-    const { user, building } = this.regexCalendarEntryForRoomAndUser(
-      event.summary
-    )
-    const userDb = await User.findOne({ username: user })
+    const userDb = await User.findOne({ username: event.summary })
+    if (!userDb) {
+      console.warn(
+        `CalendarFritzSyncController: Calendar entry ${event.summary} does not match a users Calender string.`
+      )
+      return undefined
+    }
+    const user = userDb.username
 
     if (!userDb) {
       console.warn(
@@ -362,26 +364,6 @@ export class HeatingController {
       console.warn(e)
       return undefined
     }
-  }
-
-  /**
-   * Extracts the user and building from a calendar entry using a universal regex, that can be defined by the admin.
-   * @param str - The calendar entry.
-   * @returns The user and building.
-   */
-  regexCalendarEntryForRoomAndUser (str: string): {
-    user: string | undefined
-    building: string | undefined
-  } {
-    const match = str.match(CALENDAR_PARSING_REGEX)
-    if (!match || match.length < 3) {
-      console.warn(
-        `Could not extract user and building from calendar entry ${str}, using RegEx ${CALENDAR_PARSING_REGEX.toString()}`
-      )
-      return { user: undefined, building: undefined }
-    }
-
-    return { user: match[1], building: match[2].toLowerCase() }
   }
 }
 

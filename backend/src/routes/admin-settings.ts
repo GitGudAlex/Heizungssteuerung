@@ -11,9 +11,9 @@ const adminRouter = express.Router()
 interface AdminSettingsType {
   invitationCode: string
   defaultTemp: number
-  buildingOfInterest: string
   preheatingMinutesPerDegree: number
   isSyncActive: boolean
+  nightlyShutoff: { off: number, on: number }
 }
 
 export async function getAdminSettings (): Promise<AdminSettingsType> {
@@ -23,7 +23,7 @@ export async function getAdminSettings (): Promise<AdminSettingsType> {
     return {
       invitationCode: existingSettings.invitationCode,
       defaultTemp: existingSettings.defaultTemp,
-      buildingOfInterest: existingSettings.buildingOfInterest,
+      nightlyShutoff: existingSettings.nightlyShutoff,
       preheatingMinutesPerDegree: existingSettings.preheatingMinutesPerDegree,
       isSyncActive: existingSettings.isSyncActive
     }
@@ -31,18 +31,18 @@ export async function getAdminSettings (): Promise<AdminSettingsType> {
     // create default settings
     const invitationCode = 'smarthome'
     const defaultTemp = 16
-    const buildingOfInterest = 'n5'
+    const nightlyShutoff = { off: 22, on: 4 }
     const preheatingMinutesPerDegree = 5
     const isSyncActive = true
     const newSettings: AdminSettingsDocument = new AdminSettings({
       invitationCode,
       defaultTemp,
-      buildingOfInterest,
+      nightlyShutoff,
       preheatingMinutesPerDegree,
       isSyncActive
     })
     await newSettings.save()
-    return { invitationCode, defaultTemp, buildingOfInterest, preheatingMinutesPerDegree, isSyncActive }
+    return { invitationCode, defaultTemp, nightlyShutoff, preheatingMinutesPerDegree, isSyncActive }
   }
 }
 
@@ -66,26 +66,31 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
     const {
       invitationCode,
       defaultTemp,
-      buildingOfInterest,
       preheatingMinutesPerDegree,
-      isSyncActive
+      isSyncActive,
+      nightlyShutoff
     }: AdminSettingsType = req.body
 
     console.debug('Admin settings received:', {
       invitationCode,
       defaultTemp,
-      buildingOfInterest,
       preheatingMinutesPerDegree,
-      isSyncActive
+      isSyncActive,
+      nightlyShutoff
     })
 
-    if (!invitationCode || !defaultTemp || !buildingOfInterest || !preheatingMinutesPerDegree) {
+    if (!invitationCode || !defaultTemp || !nightlyShutoff || !preheatingMinutesPerDegree) {
       res.status(400).json({ message: 'Invalid request' })
       return
     }
 
-    if (typeof invitationCode !== 'string' || typeof defaultTemp !== 'number' || typeof buildingOfInterest !== 'string' || typeof preheatingMinutesPerDegree !== 'number' || typeof isSyncActive !== 'boolean') {
+    if (typeof invitationCode !== 'string' || typeof defaultTemp !== 'number' || typeof nightlyShutoff !== 'object' || typeof preheatingMinutesPerDegree !== 'number' || typeof isSyncActive !== 'boolean') {
       res.status(400).json({ message: 'Invalid request, Input type is incorrect' })
+      return
+    }
+
+    if (typeof nightlyShutoff.off !== 'number' || typeof nightlyShutoff.on !== 'number') {
+      res.status(400).json({ message: 'Invalid request, Input type nightlyShutoff is incorrect' })
       return
     }
 
@@ -94,18 +99,18 @@ adminRouter.post('/', async (req: Request, res: Response): Promise<void> => {
     if (existingSettings !== null) {
       existingSettings.invitationCode = invitationCode
       existingSettings.defaultTemp = defaultTemp
-      existingSettings.buildingOfInterest = buildingOfInterest
       existingSettings.preheatingMinutesPerDegree = preheatingMinutesPerDegree
       existingSettings.isSyncActive = isSyncActive
+      existingSettings.nightlyShutoff = nightlyShutoff
       await existingSettings.save()
       res.json({ message: 'Settings saved successfully' })
     } else {
       const newSettings: AdminSettingsDocument = new AdminSettings({
         invitationCode,
         defaultTemp,
-        buildingOfInterest,
         preheatingMinutesPerDegree,
-        isSyncActive
+        isSyncActive,
+        nightlyShutoff
       })
       await newSettings.save()
       res.json({ message: 'Settings saved successfully' })
