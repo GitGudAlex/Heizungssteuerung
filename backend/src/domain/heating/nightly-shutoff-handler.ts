@@ -9,7 +9,7 @@ class NightlyShutoffHandler {
   /**
    * Make sure to pass a UTC date to this function.
    * @param date a UTC date to check if the hour is between 22:00 and 03:59
-   * @returns true if the current time is between 22:00 and 03:59, false otherwise
+   * @returns false if the current time is between 22:00 and 03:59, true otherwise
    */
   async isNightlyShutoffActive (date: Date = new Date()): Promise<boolean> {
     const nightlyShutoffSettings = await getAdminSettings()
@@ -35,8 +35,8 @@ class NightlyShutoffHandler {
       console.error(`NightlyShutoffHandler: Invalid nightly shutoff hours: Off-${offHour}, On-${onHour}, ignoring nightly shutoff`)
       return false
     }
-    console.log('NightlyShutoffHandler: Checking if the current time is between', onHour, 'and', offHour, 'UTC', date.toUTCString())
-    return this.isHourBetweenOnAndOff(date.getHours(), onHour, offHour)
+    // We need to falsify the return value to match the expected behavior of the function
+    return !this.isHourBetweenOnAndOff(date.getHours(), onHour, offHour)
   }
 
   /**
@@ -64,14 +64,9 @@ class NightlyShutoffHandler {
     const offsetOffHour = offsetHourByNumber(offHour, 2)
     const offsetOnHour = offsetHourByNumber(onHour, 2)
 
-    console.log('NightlyShutoffHandler: Checking if the current hour is between', offsetOnHour, 'and', offsetOffHour, 'UTC')
-    console.log('NightlyShutoffHandler: Current hour:', hour, 'UTC')
-
     const isHourLessThanOffHour = hour < offsetOffHour
     const isHourGreaterEqualThanOnHour = hour >= offsetOnHour
 
-    console.log('NightlyShutoffHandler: isHourLessThanOffHour:', isHourLessThanOffHour)
-    console.log('NightlyShutoffHandler: isHourGreaterThanOnHour:', isHourGreaterEqualThanOnHour)
     if (isHourLessThanOffHour && isHourGreaterEqualThanOnHour) {
       return true
     }
