@@ -37,9 +37,6 @@ export const ui = {
     defaultTemp: 'Default temperature',
     defaultTempDescription:
       'The default temperature is used when no other temperature is set. Adjust the temperature between 8°C and 28°C.',
-    buildingOfInterest: 'Building of interest',
-    buildingOfInterestDescription:
-      'The building of interest is used to filter the calendar events. Only events with this building in the title will be considered.',
     linkCopied: 'Link copied to clipboard',
     copyLink: 'Copy link',
     settingsSaved: 'Settings saved successfully',
@@ -164,9 +161,6 @@ export const ui = {
     defaultTemp: 'Standardtemperatur',
     defaultTempDescription:
       'Die Standardtemperatur wird verwendet, wenn keine andere Temperatur festgelegt ist. Passen Sie die Temperatur zwischen 8°C und 28°C an.',
-    buildingOfInterest: 'Gebäude',
-    buildingOfInterestDescription:
-      'Das Gebäude von Interesse wird verwendet, um die Kalenderereignisse zu filtern. Es werden nur Ereignisse mit diesem Gebäude im Titel berücksichtigt.',
     linkCopied: 'Link in die Zwischenablage kopiert',
     copyLink: 'Link kopieren',
     settingsSaved: 'Einstellungen erfolgreich gespeichert',
