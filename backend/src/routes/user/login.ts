@@ -50,6 +50,12 @@ loginRouter.post('/register', async (req: Request, res: Response): Promise<void>
     const hashedPassword = await bcrypt.hash(password, 10)
 
     try {
+      const exists = await User.findOne({ calString })
+      if (exists) {
+        res.status(410).json({ message: 'Calendar string already exists' })
+        return
+      }
+
       const user: UserDocument = new User({ username, password: hashedPassword, calString, room })
       await user.save()
     } catch (err) {
