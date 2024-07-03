@@ -15,8 +15,8 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 80:4321
-    environment:
-      BACKEND_URL: "http://backend:3000"
+    # Astro needs to read the .env file, it is copied to the container in the Dockerfile
+    env_file: ./frontend/.env.docker
     depends_on:
       - backend
 

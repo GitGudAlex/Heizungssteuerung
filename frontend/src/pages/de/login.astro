@@ -5,13 +5,12 @@ import AuthLogin from "~/components/auth/AuthLogin.svelte";
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from "~/utils/auth/CheckAuth";
 import { ui } from "~/i18n/ui";
+import config from "~/utils/config";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const translations = ui[lang];
-
-const BACKEND_URL = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
 
 if (Astro.cookies.has('token')) {
     var token = Astro.cookies.get('token');
@@ -26,7 +25,7 @@ if (Astro.cookies.has('token')) {
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('login')}</h2>
-        <AuthLogin client:load translations={translations} lang={lang} backendUrl={BACKEND_URL} />
+        <AuthLogin client:load translations={translations} lang={lang} backendUrl={config.BACKEND_URL_CLIENT} />
         </div>
     </section>
 </DefaultLayout>

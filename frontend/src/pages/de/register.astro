@@ -7,8 +7,7 @@ import checkAuth from "~/utils/auth/CheckAuth";
 import { Image } from 'astro:assets'
 import logo from '../../assets/img/warning.svg'
 import { ui } from "~/i18n/ui";
-
-const BACKEND_URL = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
+import config from "~/utils/config";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -33,7 +32,7 @@ if (Astro.cookies.has('token')) {
             <span class="font-bold">{t('registerDisclaimer')}</span>
         </a>
         <br>
-        <AuthRegister client:only translations={translations} lang={lang} backendUrl={BACKEND_URL}/>
+        <AuthRegister client:only translations={translations} lang={lang} backendUrl={config.BACKEND_URL_CLIENT}/>
         </div>
     </section>
 </DefaultLayout>

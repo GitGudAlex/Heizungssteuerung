@@ -7,11 +7,10 @@ import getUserId from "~/utils/auth/GetUserId";
 import LoadSettings from "~/components/settings/LoadSettings.svelte";
 import DeviceList from "~/components/devices/DeviceList.svelte";
 import { ui } from '~/i18n/ui';
+import config from "~/utils/config";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-
-const BACKEND_URL = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
 
 if(!Astro.cookies.has('token')) {
     return Astro.redirect(lang + '/401');
@@ -32,10 +31,10 @@ const translations = ui[lang];
 <DefaultLayout title={t('dashboard')}>
     <section class="mb-12 mt-12">
         <div class="container">
-        <LoadSettings client:load userId={userId} backendUrl={BACKEND_URL}/>
+        <LoadSettings client:load userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
-        <InteractiveSVG client:load translations={translations} backendUrl={BACKEND_URL}/>
-        <DeviceList client:load translations={translations} lang={lang} userId={userId} backendUrl={BACKEND_URL} />
+        <InteractiveSVG client:load translations={translations} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <DeviceList client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT} />
         </div>
     </section>
 </DefaultLayout>

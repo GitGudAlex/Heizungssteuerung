@@ -19,7 +19,7 @@
       errorMessage = ''
       isLoading = true
       console.log('Updating temperature setting:', identifier, temperature)
-      const response = await fetch('http://localhost:3000/heating', {
+      const response = await fetch(`${backendUrl}/heating`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

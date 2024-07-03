@@ -1,3 +1,5 @@
+import config from "../config";
+
 const getUserId = async (token: any): Promise<string> => {
     if (!token) {
       return "";
@@ -7,11 +9,7 @@ const getUserId = async (token: any): Promise<string> => {
         if (typeof token !== 'string') {
           tokenFormatted = token.value;
         } 
-        if (import.meta.env.BACKEND_URL === undefined) {
-          console.error('BACKEND_URL is not set');
-          return "";
-        }
-        const response = await fetch(`${import.meta.env.BACKEND_URL}/user/auth/userId`, {
+        const response = await fetch(`${config.BACKEND_URL_SERVER}/user/auth/userId`, {
           headers: {
             'Authorization': `Bearer ${tokenFormatted}`
           }
@@ -25,8 +23,7 @@ const getUserId = async (token: any): Promise<string> => {
             return res.userId;
         }
       } catch (error) {
-        console.error('getUserId() failed for error');
-        console.error(error);
+        console.error(`getUserId() failed for error [URL: ${config.BACKEND_URL_SERVER}, TOKEN: ${token}]:\n` + error);
         return "";
       }
     }

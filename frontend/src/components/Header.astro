@@ -7,6 +7,8 @@ import LanguagePicker from './LanguagePicker.astro';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? process.env.BACKEND_URL;
+
 var isAuthorized = false;
 var isAdmin = false;
 if(!Astro.cookies.has('token')) {
