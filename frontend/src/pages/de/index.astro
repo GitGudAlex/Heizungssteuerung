@@ -3,13 +3,13 @@ import DefaultLayout from "~/layouts/DefaultLayout.astro";
 
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from "~/utils/auth/CheckAuth";
+import config from "~/utils/config";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 if (Astro.cookies.has('token')) {
     var token = Astro.cookies.get('token');
-    console.log("checking auth")
     var auth = await checkAuth(token);
     if(auth === true) {
         return Astro.redirect('/' + lang + '/dashboard');
@@ -19,8 +19,8 @@ if (Astro.cookies.has('token')) {
 <DefaultLayout title={t('nav.home')}>
     <section class="mb-12 mt-12 text-center">
         <div class="container">
+            <div class="max-w-xl mx-auto">
             <h1 class="text-4xl sm:text-5xl lg:text-7xl mb-4">{t('heroTitle')}</h1>
-            <div class="max-w-lg mx-auto">
                 <h2 class="text-sm lg:text-lg text-gray-600 dark:text-white dark:opacity-70 mb-8">{t('heroSubtitle')}</h2>
             </div>
             <div class="flex flex-col sm:flex-row justify-center">

@@ -15,13 +15,15 @@ export const seedDatabase = async (): Promise<boolean> => {
   const admin = new User({
     username: 'admin',
     password: await bcrypt.hash('admin', 10),
-    isAdmin: true
+    isAdmin: true,
+    room: 'n001'
   })
 
   const user = new User({
     username: 'user',
     password: await bcrypt.hash('user', 10),
-    isAdmin: false
+    isAdmin: false,
+    room: 'n001'
   })
 
   await user.save()

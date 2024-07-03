@@ -14,7 +14,9 @@ services:
       context: ./frontend
       dockerfile: ./Dockerfile
     ports:
-      - 4321:4321
+      - 80:4321
+    # Astro needs to read the .env file, it is copied to the container in the Dockerfile
+    env_file: ./frontend/.env.docker
     depends_on:
       - backend
 
@@ -41,6 +43,6 @@ services:
       ME_CONFIG_BASICAUTH: false
     depends_on:
       - mongo
-    
+
 volumes:
   mongo-data:

@@ -7,6 +7,7 @@ import getUserId from "~/utils/auth/GetUserId";
 import LoadSettings from "~/components/settings/LoadSettings.svelte";
 import DeviceList from "~/components/devices/DeviceList.svelte";
 import { ui } from '~/i18n/ui';
+import config from "~/utils/config";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -30,11 +31,10 @@ const translations = ui[lang];
 <DefaultLayout title={t('dashboard')}>
     <section class="mb-12 mt-12">
         <div class="container">
-        <LoadSettings client:load userId={userId} />
+        <LoadSettings client:load userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
-        <InteractiveSVG client:load translations={translations} />
-        <h1>Device List</h1>
-        <DeviceList client:load translations={translations} lang={lang} userId={userId}  />
+        <InteractiveSVG client:load translations={translations} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <DeviceList client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT} />
         </div>
     </section>
-</DefaultLayout>;
+</DefaultLayout>

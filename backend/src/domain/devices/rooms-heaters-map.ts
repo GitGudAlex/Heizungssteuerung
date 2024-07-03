@@ -10,7 +10,7 @@ export const EXISTING_HEATERS = [
   'h9',
   'h10'
 ]
-export const EXISTING_ROOMS = ['n001', 'n005', 'n006']
+export const EXISTING_ROOMS = ['n001', 'n005', 'n006', 'n007']
 
 export interface RoomHeaterMap {
   heater: string
@@ -26,6 +26,6 @@ export const ROOMS_HEATERS_MAP: RoomHeaterMap[] = [
   { heater: 'h6', room: 'n001' },
   { heater: 'h7', room: 'n001' },
   { heater: 'h8', room: 'n001' },
-  { heater: 'h9', room: 'n001' },
-  { heater: 'h10', room: 'n001' }
+  { heater: 'h9', room: 'n007' },
+  { heater: 'h10', room: 'n007' }
 ]

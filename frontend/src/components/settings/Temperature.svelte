@@ -6,8 +6,7 @@
   export let translations
   export let lang
   export let userId
-
-  console.log(userId)
+  export let backendUrl
 
   const minTemp = 8
   const maxTemp = 28
@@ -22,7 +21,7 @@
 
   const fetchInitialTemperatureFromDB = async (userId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/user/${userId}`, {
+      const response = await fetch(`${backendUrl}/user/${userId}`, {
         method: 'GET',
       })
 
@@ -43,7 +42,7 @@
 
   const updateDbSettings = async (userId: string, temperature: Number) => {
     try {
-      const response = await fetch('http://localhost:3000/user/temperature', {
+      const response = await fetch(`${backendUrl}/user/temperature`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,7 +95,7 @@
   })
 </script>
 
-<div class="settings-container">
+<div class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
   <div class="setting">
     <h1 class="setting-title mr">{translations['temperature']}</h1>
   </div>
@@ -152,6 +151,7 @@
   .settings-container {
     max-width: 100%;
     margin: 0;
+    margin-bottom: 20px;
   }
 
   .setting {

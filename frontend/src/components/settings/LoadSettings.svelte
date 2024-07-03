@@ -2,6 +2,7 @@
   import { onMount } from 'svelte'
 
   export let userId
+  export let backendUrl: string
 
   onMount(async () => {
     if (!localStorage.getItem('settingsLoaded')) {
@@ -11,7 +12,7 @@
 
   const initLocalStorageFromDb = async (userId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/user/${userId}`, {
+      const response = await fetch(`${backendUrl}/user/${userId}`, {
         method: 'GET',
       })
 

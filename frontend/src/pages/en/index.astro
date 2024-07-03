@@ -3,6 +3,7 @@ import DefaultLayout from "~/layouts/DefaultLayout.astro";
 
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from "~/utils/auth/CheckAuth";
+import config from "~/utils/config";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);

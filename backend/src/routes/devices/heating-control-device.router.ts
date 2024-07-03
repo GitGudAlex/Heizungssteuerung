@@ -45,6 +45,12 @@ heatingControlRouter.get('/:identifier', async (req, res) => {
     const temperature = await FRITZ_SINGLETON.getTemperature(
       req.params.identifier
     )
+
+    if (!tempTarget || !temperature) {
+      res.status(404).send('Temp target or temperature not found')
+      return
+    }
+
     res.status(200).send({
       tempTarget,
       temperature

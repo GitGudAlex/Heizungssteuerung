@@ -3,39 +3,38 @@ import DefaultLayout from "~/layouts/DefaultLayout.astro";
 import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 import checkAuth from "~/utils/auth/CheckAuth";
 import InteractiveSVG from "~/components/InteractiveSVG.svelte";
-import LoadSettings from "~/components/settings/LoadSettings.svelte";
 import getUserId from "~/utils/auth/GetUserId";
+import LoadSettings from "~/components/settings/LoadSettings.svelte";
 import DeviceList from "~/components/devices/DeviceList.svelte";
 import { ui } from '~/i18n/ui';
+import config from "~/utils/config";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 if(!Astro.cookies.has('token')) {
-    return Astro.redirect('/401');
+    return Astro.redirect(lang + '/401');
 } else {
     var token = Astro.cookies.get('token');
     var auth = await checkAuth(token);
     if(auth === false) {
         console.log('User not authorized');
-        return Astro.redirect('/401');
+        return Astro.redirect(lang + '/401');
     } else {
         console.log('User authorized');
     }
 }
 const userId = await getUserId(token);
-
 const translations = ui[lang];
 ---
 
 <DefaultLayout title={t('dashboard')}>
     <section class="mb-12 mt-12">
         <div class="container">
-            <LoadSettings client:load userId={userId} />
-            <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
-            <InteractiveSVG client:load translations={translations} />
-            <h1>Geräteliste</h1>
-            <DeviceList client:load translations={translations} lang={lang} userId={userId} />
+        <LoadSettings client:load userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
+        <InteractiveSVG client:load translations={translations} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <DeviceList client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT} />
         </div>
     </section>
 </DefaultLayout>

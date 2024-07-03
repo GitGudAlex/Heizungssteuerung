@@ -11,6 +11,7 @@ import heatingRouter from './routes/heating'
 import { HEATING_CONTROLLER_SINGLETON } from './domain/heating/heating-controller'
 import { heatingControlRouter } from './routes/devices/heating-control-device.router'
 import { seedDatabase } from './setup/seedDatabase'
+import http from 'http'
 dotenv.config()
 
 const app = express()
@@ -56,6 +57,7 @@ app.use('/heating-control', heatingControlRouter)
 app.get('/', (_, res) => {
   res.send('Hello World!')
 })
+const server = http.createServer(app)
 
 async function connectToDb (dbUrl: string): Promise<mongoose.Connection> {
   console.info('🛫 Connecting to database...')
@@ -70,8 +72,8 @@ connectToDb(dbUrl)
     }
     await HEATING_CONTROLLER_SINGLETON.startSync()
     console.info('🔥 Heating controller sync started')
-    app.listen(port, () => {
-      console.info(`Server running at http://localhost:${port} 🚀`)
+    server.listen(port, () => {
+      console.log(`Server running at http://localhost:${port} 🚀`)
     })
   })
   .catch((e) => {

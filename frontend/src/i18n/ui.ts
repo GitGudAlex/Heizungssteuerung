@@ -49,9 +49,9 @@ export const ui = {
     sepiaModeOff: 'Sepia mode off',
     sepiaModeDescription:
       'Sepia mode is a color scheme that reduces the amount of blue light emitted by the screen. This can help reduce eye strain and improve sleep quality.',
-    fontSize: "Font size",
+    fontSize: 'Font size',
     fontSizeDescription: 'Adjusts font sizes for all pages.',
-    lineHeight: "Line height",
+    lineHeight: 'Line height',
     lineHeightDescription: 'Adjusts whitespace between text lines for all pages.',
     lineHeightExample1: 'This is an example text.',
     lineHeightExample2: 'Adjust the value above for changes.',
@@ -114,6 +114,18 @@ export const ui = {
     actualTemperature: 'Measured Temperature',
     targetTemperature: 'Set Temperature',
     loggedInAs: 'Logged in as',
+    // Floorplan translations
+    showMapping: 'Show Mapping',
+    showTemperature: 'Show Temperature',
+    preheatingMinutesPerDegree: 'Preheating Minutes per Degree',
+    preheatingMinutesPerDegreeDescription:
+      'The preheating minutes per degree is used to calculate the time needed to reach the desired temperature.',
+    isSyncActive: 'Synchronize between calendar and heating',
+    isSyncActiveDescription:
+      'Enables the minutly synchronization between calendar and heating. ATTENTION: This function deactivates the system.',
+    enable: 'Enable',
+    disable: 'Disable',
+    deviceList: 'Connected Devices',
   },
   de: {
     title: 'Heizungssteuerung',
@@ -158,9 +170,9 @@ export const ui = {
     sepiaModeOff: 'Sepia Modus aus',
     sepiaModeDescription:
       'Der Sepia Modus ist ein Farbschema, das die Menge an blauem Licht reduziert, das vom Bildschirm abgegeben wird. Dies kann helfen, die Augenbelastung zu reduzieren und die Schlafqualität zu verbessern.',
-    fontSize: "Textgröße",
+    fontSize: 'Textgröße',
     fontSizeDescription: 'Verändert die Textgröße für alle Seiten.',
-    lineHeight: "Zeilenabstand",
+    lineHeight: 'Zeilenabstand',
     lineHeightDescription: 'Verändert den Abstand zwischen Textzeilen für alle Seiten.',
     lineHeightExample1: 'Dies ist ein Beispieltext.',
     lineHeightExample2: 'Verändere den Wert, um den Abstand zu sehen.',
@@ -224,5 +236,17 @@ export const ui = {
     actualTemperature: 'Gemessene Temperatur',
     targetTemperature: 'Eingestellte Temperatur',
     loggedInAs: 'Angemeldet als',
+    // Floorplan translations
+    showMapping: 'Id-Zuordnung anzeigen',
+    showTemperature: 'Temperatur anzeigen',
+    preheatingMinutesPerDegree: 'Vorheizzeit in Minuten pro Grad',
+    preheatingMinutesPerDegreeDescription:
+      'Die Vorheizzeit in Minuten pro Grad wird verwendet, um die Zeit zu berechnen, die benötigt wird, um die gewünschte Temperatur zu erreichen.',
+    isSyncActive: 'Synchronisation zwischen Kalender und Heizung',
+    isSyncActiveDescription:
+      'Aktiviert die minütliche Synchronisation zwischen Kalender und Heizung. ACHTUNG: Diese Funktion deaktiviert das System.',
+    enable: 'Aktivieren',
+    disable: 'Deaktivieren',
+    deviceList: 'Verbundene Geräte',
   },
 } as const

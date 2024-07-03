@@ -2,20 +2,24 @@
   import { onMount } from 'svelte'
   import { deviceList, loadCombinedHeaters } from '~/stores/deviceStore.ts'
   import { addFontSize } from '~/components/settings/getTextSize.js'
+  import LoadingIndicator from '../general/LoadingIndicator.svelte'
 
   export let translations: { [key: string]: string }
   export let lang: string
   export let userId: string
+  export let backendUrl: string
 
   let updateMessage = ''
   let errorMessage = ''
+  let isLoading = false
 
   const handleConfirm = async (identifier: string, temperature: number) => {
     try {
       updateMessage = ''
       errorMessage = ''
+      isLoading = true
       console.log('Updating temperature setting:', identifier, temperature)
-      const response = await fetch('http://localhost:3000/heating', {
+      const response = await fetch(`${backendUrl}/heating`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,6 +36,8 @@
       }
     } catch (error) {
       console.error('Error updating temperature setting:', error)
+    } finally {
+      isLoading = false
     }
   }
 
@@ -43,7 +49,14 @@
   }
 
   onMount(() => {
-    loadCombinedHeaters()
+    isLoading = true
+    try {
+      loadCombinedHeaters(backendUrl)
+    } catch (error) {
+      console.error('Error loading device list:', error)
+    } finally {
+      isLoading = false
+    }
   })
 
   $: {
@@ -54,6 +67,9 @@
   }
 </script>
 
+{#if $deviceList.length !== 0}
+  <h1>{translations['deviceList']}</h1>
+{/if}
 <div class="mt-8">
   {#if errorMessage.length > 0}
     <p class="text-red-500 mb-4">{errorMessage}</p>
@@ -61,6 +77,7 @@
   {#if updateMessage.length > 0}
     <p class="text-teal-500 mb-4">{updateMessage}</p>
   {/if}
+  <LoadingIndicator {isLoading} />
 </div>
 <div class="grid grid-cols-4 gap-4">
   {#each $deviceList as device (device.identifier)}

@@ -11,8 +11,10 @@ import RoomSettings from "~/components/settings/RoomSettings.svelte";
 import TextSizeSettings from "~/components/settings/TextSizeSettings.svelte";
 import TextSpaceSetting from "~/components/settings/TextSpaceSetting.svelte";
 import CalendarStringSetting from "~/components/settings/CalendarStringSetting.svelte";
+
 import { ui } from "~/i18n/ui";
 import UserInfo from "~/components/settings/UserInfo.svelte";
+import config from "~/utils/config";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -36,14 +38,13 @@ const userId = await getUserId(token);
     <section class="mb-12 mt-12">
         <div class="container">
         <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
-        <UserInfo client:load translations={translations} userId={userId} />
-        <Temperature client:load translations={translations} lang={lang} userId={userId} />
-        <RoomSettings client:load translations={translations} userId={userId} />
-        <SepiaToggle client:load translations={translations} lang={lang} userId={userId} />
-        <TextSizeSettings client:load translations={translations} userId={userId} />
-        <TextSpaceSetting client:load translations={translations} userId={userId} />
-        <CalendarStringSetting client:load translations={translations} userId={userId} />
-        <AuthLogout client:load translations={translations} lang={lang}  />     
+        <UserInfo client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <Temperature client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <RoomSettings client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <SepiaToggle client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <TextSizeSettings client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <TextSpaceSetting client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <AuthLogout client:load translations={translations} lang={lang} />   
         </div>
     </section>
 </DefaultLayout>

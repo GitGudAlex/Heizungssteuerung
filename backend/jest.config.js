@@ -7,4 +7,6 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
+  coverageDirectory: 'coverage', // Output directory for coverage reports
+  coverageReporters: ['text'], // Reporters you want to use (e.g., lcov, text, html)
 };
