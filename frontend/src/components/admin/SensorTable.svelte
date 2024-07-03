@@ -228,13 +228,13 @@
         type="text"
         bind:value={newDeviceName}
         placeholder={translations['name']}
-        class="dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
+        class="setting-description dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
       />
       <input
         type="text"
         bind:value={newIdentifier}
         placeholder={translations['identifier']}
-        class="dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
+        class="setting-description dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
       />
       <select bind:value={newDeviceType} class="dark:bg-gray-700 text-black dark:text-white border rounded-lg p-2 mb-2  setting-description hover:shadow transition-shadow duration-300">
         {#each deviceTypes as type}
@@ -266,23 +266,23 @@
   <table class="min-w-full bg-transparent shadow">
     <thead class="bg-primary-light dark:bg-primary-dark text-primary-dark shadow rounded-lg">
       <tr>
-        <th class="px-6 py-3 text-left font-semibold dark:bg-gray-700 rounded-l-lg">{translations['name']}</th>
-        <th class="px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['identifier']}</th>
-        <th class="px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['type']}</th>
-        <th class="px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['heaterMap']}</th>
-        <th class="px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['roomMap']}</th>
-        <th class="px-6 py-3 text-left font-semibold dark:bg-gray-700 rounded-r-lg">{translations['action']}</th>
+        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700 rounded-l-lg">{translations['name']}</th>
+        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['identifier']}</th>
+        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['type']}</th>
+        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['heaterMap']}</th>
+        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['roomMap']}</th>
+        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700 rounded-r-lg">{translations['action']}</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
       {#each devices as device (device.identifier)}
         <tr class="transition-all hover:bg-gray-100 dark:hover:bg-gray-700">
-          <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100">{device.name}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.identifier}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.type}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.heaterMap}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.roomMap}</td>
-          <td class="px-6 py-4 whitespace-nowrap">
+          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100">{device.name}</td>
+          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.identifier}</td>
+          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.type}</td>
+          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.heaterMap}</td>
+          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.roomMap}</td>
+          <td class="setting-description text-space px-6 py-4 whitespace-nowrap">
             <button
               class="bg-red-700 text-white font-bold px-4 py-2 rounded-md transition-colors duration-300 hover:bg-red-500"
               on:click={() => deleteDevice(device.identifier)}
