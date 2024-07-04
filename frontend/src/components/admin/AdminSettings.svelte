@@ -4,7 +4,6 @@
   import { writable } from 'svelte/store'
   import { addFontSize } from '~/components/settings/getTextSize.js'
   import { lineHeight } from '~/components/settings/TextSpaceSetting.svelte'
-  import NightlyShutoffCard from './NightlyShutoffCard.svelte'
   // Props for the component
   export let translations: { [key: string]: string }
   export let lang: string
@@ -141,16 +140,44 @@
     </div>
 
     <!-- Nightly Shutoff Card -->
-    <NightlyShutoffCard
-      {translations}
-      initialSettings={nightlyShutoff}
-      disabled={isSyncActive}
-      on:change={(event) => {
-        nightlyShutoff = event.detail
-        console.log('Settings changed:', event.detail)
-        handleInputChange()
-      }}
-    />
+    <div
+      class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300 {isSyncActive
+        ? ''
+        : 'disabled-card'}"
+    >
+      <h2 class="text-lg font-bold mb-2 setting-title">{translations['nightlyShutoff']}</h2>
+      <p class="text-sm mb-4 setting-description text-space">{translations['nightlyShutoffDescription']}</p>
+      <div class="input input-bordered flex flex-col gap-4">
+        <label class="flex items-center gap-2 setting-description text-space">
+          {translations['nightlyShutoffOffTime']}
+          <input
+            type="number"
+            class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent"
+            min="0"
+            max="23"
+            step="1"
+            placeholder={translations['offTime']}
+            bind:value={nightlyShutoff.off}
+            disabled={!isSyncActive}
+            on:input={handleInputChange}
+          />
+        </label>
+        <label class="flex items-center gap-2 setting-description text-space">
+          {translations['nightlyShutoffOnTime']}
+          <input
+            type="number"
+            class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent"
+            min="0"
+            max="23"
+            step="1"
+            placeholder={translations['onTime']}
+            disabled={!isSyncActive}
+            bind:value={nightlyShutoff.on}
+            on:input={handleInputChange}
+          />
+        </label>
+      </div>
+    </div>
 
     <!-- Default Temperature Card -->
     <div
