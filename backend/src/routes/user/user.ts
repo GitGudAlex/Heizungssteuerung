@@ -78,6 +78,25 @@ userRouter.post('/lineHeight', async (req, res) => {
   }
 })
 
+// endpoint to update text height setting
+userRouter.post('/calString', async (req, res) => {
+  try {
+    const { userId, calString } = req.body
+
+    const exists = await User.findOne({ calString })
+    if (exists) {
+      return res.status(400).json({ message: 'Calendar string already exists' })
+    }
+
+    await User.findByIdAndUpdate(userId, { calString })
+
+    res.status(200).json({ message: 'Calendar string updated successfully' })
+  } catch (error) {
+    console.error('Error updating calendar string setting:', error)
+    res.status(500).json({ message: 'Could not update calendar string setting' })
+  }
+})
+
 // get full user object with settings
 userRouter.get('/:id', async (req, res) => {
   try {

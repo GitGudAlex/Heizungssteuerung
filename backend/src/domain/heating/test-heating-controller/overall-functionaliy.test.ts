@@ -23,7 +23,6 @@ describe('HeatingController', () => {
 
   test('should initialize with default values', () => {
     expect(heatingController.defaultTemp).toBe(16)
-    expect(heatingController.buildingOfInterest).toBe('n5')
   })
 
   test('should add manually set heater correctly', () => {

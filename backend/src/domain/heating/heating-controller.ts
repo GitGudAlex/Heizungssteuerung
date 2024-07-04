@@ -6,13 +6,9 @@ import { FRITZ_SINGLETON } from '../fritz/fritz'
 import { type IDeviceController } from '../devices/device.interface'
 import { DEVICE_CONTROLLER_SINGLETON } from '../devices/device'
 import { CALENDAR_SINGLETON } from '../calendar/calendar'
-import { CALENDAR_PARSING_REGEX } from './calendar-parsing-regex'
 import { getAdminSettings } from '../../routes/admin-settings'
 import { OFFSET_CALCULATOR_SINGLETON } from './offset-calculator'
 import { NIGHTLY_SHUTOFF_HANDLER_SINGLETON } from './nightly-shutoff-handler'
-
-// The calendar events include the building name and the user name in the summary.
-// This is the building name we are interested in.
 
 /**
  * Controlls the heating orders for the system.
@@ -31,7 +27,6 @@ export class HeatingController {
   readonly offsetCalculator = OFFSET_CALCULATOR_SINGLETON
   readonly _heatingOrders: HeatingOrder[] = []
   defaultTemp = 16
-  buildingOfInterest = 'n5'
 
   // array of manually set heaters
   readonly manuallySetHeaters: Array<{ heaterId: string, dueDate: Date }> = []
@@ -39,7 +34,6 @@ export class HeatingController {
   async startSync (): Promise<void> {
     const adminSettings = await getAdminSettings()
     this.defaultTemp = adminSettings.defaultTemp
-    this.buildingOfInterest = adminSettings.buildingOfInterest
     console.info(
       `📦 Admin Settings received:\n${JSON.stringify(adminSettings)}`
     )
@@ -64,18 +58,24 @@ export class HeatingController {
     cron.schedule('30 * * * * *', async () => {
       const { isSyncActive } = await getAdminSettings()
       if (isSyncActive) {
-        console.info('\n***HeatingController: Syncing heating with heating orders.')
+        console.info(
+          '\n***HeatingController: Syncing heating with heating orders.'
+        )
 
         // if the nightly shutoff is active, set all heaters to default temp
-        if (NIGHTLY_SHUTOFF_HANDLER_SINGLETON.isNightlyShutoffActive()) {
+        if (await NIGHTLY_SHUTOFF_HANDLER_SINGLETON.isNightlyShutoffActive()) {
           console.info('HeatingController: Nightly shutoff is active.')
-          await NIGHTLY_SHUTOFF_HANDLER_SINGLETON.setHeatersToDefaultTemp(this.defaultTemp)
+          await NIGHTLY_SHUTOFF_HANDLER_SINGLETON.setHeatersToDefaultTemp(
+            this.defaultTemp
+          )
         } else {
           console.info('HeatingController: Nightly shutoff is not active.')
           await this.setHeatersAccordingToHeatingOrders()
         }
 
-        console.info('***HeatingController: Heaters have been set according to heating orders.\n')
+        console.info(
+          '***HeatingController: Heaters have been set according to heating orders.\n'
+        )
       } else {
         console.warn('HeatingController: Heating Sync is not active.')
       }
@@ -303,27 +303,51 @@ export class HeatingController {
       return undefined
     }
 
-    const { user, building } = this.regexCalendarEntryForRoomAndUser(
-      event.summary
+    const userCalStrings: Array<{ username: string, calString: string }> = []
+    const allUsernamesAndCalString = await User.find({}).select(
+      'username calString'
     )
-    if (!user || !building) {
+    for (const user of allUsernamesAndCalString) {
+      if (user?.calString && user?.username) {
+        userCalStrings.push({
+          username: user.username,
+          calString: user.calString
+        })
+      }
+    }
+
+    if (userCalStrings.length === 0) {
       console.warn(
-        `CalendarFritzSyncController: Calendar entry ${event.summary} does not include a username`
+        'CalendarFritzSyncController parseEvent(): No users with CalStrings found in the database. \n'
       )
       return undefined
     }
 
-    if (building !== this.buildingOfInterest) {
+    const userCalString = userCalStrings.find((user) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const eventName = event.summary!.toLowerCase()
+      const calString = user.calString.toLowerCase()
+      if (eventName.includes(calString)) {
+        return true
+      }
+      return false
+    })
+
+    if (!userCalString) {
       console.warn(
-        `CalendarFritzSyncController: Calendar entry ${event.summary} does not include the building we are look for`
+        `CalendarFritzSyncController: Calendar entry ${event.summary} does not match a users Calender string.`
       )
       return undefined
     }
+    console.debug(
+      `CalendarFritzSyncController: Found user ${userCalString.username} for event ${event.summary}`
+    )
 
-    const userDb = await User.findOne({ username: user })
+    const userDb = await User.findOne({ username: userCalString.username })
+
     if (!userDb) {
       console.warn(
-        `CalendarFritzSyncController: Calendar entry ${event.summary} includes ${user}, which has not been found`
+        `CalendarFritzSyncController: Calendar entry ${event.summary} does not match a users Calender string.`
       )
       return undefined
     }
@@ -349,7 +373,7 @@ export class HeatingController {
         userDb.temperature,
         preheatingOffsetStartDate,
         event.end,
-        user
+        userDb.username
       )
     } catch (e) {
       console.warn(
@@ -360,27 +384,6 @@ export class HeatingController {
       console.warn(e)
       return undefined
     }
-  }
-
-  /**
-   * Extracts the user and building from a calendar entry using a universal regex, that can be defined by the admin.
-   * @param str - The calendar entry.
-   * @returns The user and building.
-   */
-  regexCalendarEntryForRoomAndUser (str: string): {
-    user: string | undefined
-    building: string | undefined
-  } {
-    const match = str.match(CALENDAR_PARSING_REGEX)
-
-    if (!match || match.length < 3) {
-      console.warn(
-        `Could not extract user and building from calendar entry ${str}, using RegEx ${CALENDAR_PARSING_REGEX.toString()}`
-      )
-      return { user: undefined, building: undefined }
-    }
-
-    return { user: match[1], building: match[2] }
   }
 }
 

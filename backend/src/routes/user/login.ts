@@ -20,7 +20,7 @@ if (port == null) {
 
 loginRouter.post('/register', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, password, invitationCode, room }: { username: string, password: string, invitationCode: string, room: string } = req.body
+    const { username, password, calString, invitationCode, room }: { username: string, password: string, calString: string, invitationCode: string, room: string } = req.body
 
     const rooms = ROOMS_HEATERS_MAP.map((room) => room.room)
     if (!rooms.includes(room)) {
@@ -49,8 +49,20 @@ loginRouter.post('/register', async (req: Request, res: Response): Promise<void>
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user: UserDocument = new User({ username, password: hashedPassword, room })
-    await user.save()
+    try {
+      const exists = await User.findOne({ calString })
+      if (exists) {
+        res.status(410).json({ message: 'Calendar string already exists' })
+        return
+      }
+
+      const user: UserDocument = new User({ username, password: hashedPassword, calString, room })
+      await user.save()
+    } catch (err) {
+      console.error('Login Router:', err)
+      res.status(500).json({ message: 'Could not create User' })
+      return
+    }
 
     res.json({ message: 'User created successfully' })
   } catch (error) {
