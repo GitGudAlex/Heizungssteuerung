@@ -8,11 +8,13 @@ export interface UserDocument extends Document {
   sepiaMode: boolean
   fontSize: string
   lineHeight: number
+  calString: string
   temperature: number
 }
 
 const userSchema = new Schema<UserDocument>({
-  username: String,
+  username: { type: String, unique: true },
+  calString: { type: String, unique: true },
   password: String,
   room: String,
   isAdmin: { type: Boolean, default: false },

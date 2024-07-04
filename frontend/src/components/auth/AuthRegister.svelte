@@ -1,43 +1,44 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount } from 'svelte'
 
-  export let translations: { [key: string]: string };
-  export let lang: string;
-  export let backendUrl: string;
+  export let translations: { [key: string]: string }
+  export let lang: string
+  export let backendUrl: string
 
-  let rooms: string[] = [];
-  let room: string = '';
+  let rooms: string[] = []
+  let room: string = ''
 
-  let username: string = '';
-  let password: string = '';
-  let invitationCode: string = '';
-  let errorMessage: string = '';
-  let signUpSuccess: boolean = false;
+  let username: string = ''
+  let password: string = ''
+  let calString: string = ''
+  let invitationCode: string = ''
+  let errorMessage: string = ''
+  let signUpSuccess: boolean = false
 
   const load = async () => {
     const mapsResponse = await fetch(`${backendUrl}/device/device-map`, {
       method: 'GET',
-    });
-    const maps = await mapsResponse.json();
+    })
+    const maps = await mapsResponse.json()
 
-    const roomsHeaterMap: {room: string, heater: string}[] = maps.roomsHeatersMap;
-    rooms = Array.from(new Set(roomsHeaterMap.map((roomHeater) => roomHeater.room)));
+    const roomsHeaterMap: { room: string; heater: string }[] = maps.roomsHeatersMap
+    rooms = Array.from(new Set(roomsHeaterMap.map((roomHeater) => roomHeater.room)))
     if (rooms.length > 0) {
-      room = rooms[0];
+      room = rooms[0]
     }
-  };
+  }
 
   const handleInputChange = (event: Event) => {
-    const value = (event.target as HTMLInputElement).value;
-    room = value;
-  };
+    const value = (event.target as HTMLInputElement).value
+    room = value
+  }
 
   const handleSignUp = async () => {
-    errorMessage = '';
+    errorMessage = ''
     if (password.length < 7) {
-      console.log('Password too short');
-      errorMessage = translations['passwordLengthError'];
-      return;
+      console.log('Password too short')
+      errorMessage = translations['passwordLengthError']
+      return
     }
 
     try {
@@ -46,42 +47,44 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, room, invitationCode }),
-      });
+        body: JSON.stringify({ username, password, room, calString, invitationCode }),
+      })
 
       if (response.ok) {
-        signUpSuccess = true;
-        window.location.href = `/${lang}/login`;
+        signUpSuccess = true
+        window.location.href = `/${lang}/login`
       } else {
-        console.log('Sign up failed: ', response.status);
+        console.log('Sign up failed: ', response.status)
         if (response.status === 400) {
-          errorMessage = translations['invalidInviteCode'];
+          errorMessage = translations['invalidInviteCode']
         } else if (response.status === 409) {
-          errorMessage = translations['usernameTakenError'];
+          errorMessage = translations['usernameTakenError']
+        } else if (response.status === 410) {
+          errorMessage = translations['CalStringTaken']
         } else {
-          errorMessage = translations['genericError'];
+          errorMessage = translations['genericError']
         }
       }
     } catch (error: any) {
-      errorMessage = translations['internalError'];
+      errorMessage = translations['internalError']
     }
-  };
+  }
 
   const getUrlParameter = (name: string): string | null => {
-    name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
-    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    const results = regex.exec(window.location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-  };
+    name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]')
+    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)')
+    const results = regex.exec(window.location.search)
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '))
+  }
 
   // Check URL parameters when the script is executed
-  const codeFromURL = getUrlParameter('invitationCode');
+  const codeFromURL = getUrlParameter('invitationCode')
   if (codeFromURL) {
-    invitationCode = codeFromURL;
+    invitationCode = codeFromURL
   }
   onMount(() => {
-    load();
-  });
+    load()
+  })
 </script>
 
 <div class="flex h-screen">
@@ -109,7 +112,7 @@
         bind:value={password}
       />
     </div>
-    
+
     <div class="mb-4">
       <label class="block text-sm font-bold mb-2" for="room">{translations['roomMap']}</label>
       <select
@@ -122,6 +125,18 @@
           <option value={r}>{r}</option>
         {/each}
       </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-bold mb-2" for="calString">{translations['registerCalString']}</label>
+      <input
+        class="appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="calString"
+        type="text"
+        placeholder={translations['registerCalString']}
+        bind:value={calString}
+      />
+      <p class="block text-sm mb-2">{translations['registerCalStringDescription']}</p>
     </div>
 
     <div class="mb-6">

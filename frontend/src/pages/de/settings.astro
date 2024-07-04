@@ -10,6 +10,7 @@ import Temperature from "~/components/settings/Temperature.svelte";
 import RoomSettings from "~/components/settings/RoomSettings.svelte";
 import TextSizeSettings from "~/components/settings/TextSizeSettings.svelte";
 import TextSpaceSetting from "~/components/settings/TextSpaceSetting.svelte";
+import CalendarStringSetting from "~/components/settings/CalendarStringSetting.svelte";
 
 import { ui } from "~/i18n/ui";
 import UserInfo from "~/components/settings/UserInfo.svelte";
@@ -40,6 +41,7 @@ const userId = await getUserId(token);
         <UserInfo client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <Temperature client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <RoomSettings client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
+        <CalendarStringSetting client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <SepiaToggle client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <TextSizeSettings client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <TextSpaceSetting client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
