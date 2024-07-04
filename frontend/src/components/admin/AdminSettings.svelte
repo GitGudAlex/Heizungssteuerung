@@ -119,8 +119,8 @@
     <div
       class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300"
     >
-      <h2 class="text-lg font-bold mb-2">{translations['invitationCode']}</h2>
-      <p class="text-sm mb-4">{translations['invitationCodeDescription']}</p>
+      <h2 class="text-lg font-bold mb-2 setting-title">{translations['invitationCode']}</h2>
+      <p class="setting-description text-space">{translations['invitationCodeDescription']}</p>
       <div class="input input-bordered flex items-center gap-2 mb-4">
         <input
           type="text"
@@ -158,8 +158,8 @@
         ? ''
         : 'disabled-card'}"
     >
-      <h2 class="text-lg font-bold mb-2">{translations['defaultTemp']}</h2>
-      <p class="text-sm mb-4">{translations['defaultTempDescription']}</p>
+      <h2 class="text-lg font-bold mb-2 setting-title">{translations['defaultTemp']}</h2>
+      <p class="setting-description text-space">{translations['defaultTempDescription']}</p>
       <div class="input input-bordered flex items-center gap-2 mb-4">
         <input
           type="text"
@@ -179,8 +179,8 @@
         ? ''
         : 'disabled-card'}"
     >
-      <h2 class="text-lg font-bold mb-2">{translations['preheatingMinutesPerDegree']}</h2>
-      <p class="text-sm mb-4">{translations['preheatingMinutesPerDegreeDescription']}</p>
+      <h2 class="text-lg font-bold mb-2 setting-title">{translations['preheatingMinutesPerDegree']}</h2>
+      <p class="setting-description text-space">{translations['preheatingMinutesPerDegreeDescription']}</p>
       <div class="input input-bordered flex items-center gap-2 mb-4">
         <input
           type="text"
@@ -200,7 +200,7 @@
         ? 'bg-red-500'
         : 'bg-white dark:bg-gray-800'} card-container-transition text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300"
     >
-      <h2 class="text-lg font-bold mb-2">{translations['isSyncActive']}</h2>
+      <h2 class="text-lg font-bold mb-2 setting-title">{translations['isSyncActive']}</h2>
       <p class="setting-description text-space">{translations['isSyncActiveDescription']}</p>
       <div class="my-8">
         <ButtonGroup>
