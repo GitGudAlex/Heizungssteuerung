@@ -23,7 +23,7 @@
 
       if (response.ok) {
         const { token } = await response.json()
-        document.cookie = `token=${token}; path=/; max-age=${cookieMaxAge}; SameSite=None; Secure`
+        document.cookie = `token=${token}; path=/; max-age=${cookieMaxAge}; SameSite=None;`
         window.location.href = `/${lang}/dashboard`
       } else {
         if (response.status === 401) {
