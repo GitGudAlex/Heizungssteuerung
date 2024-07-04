@@ -29,9 +29,7 @@
     ? ''
     : 'disabled-card'}"
 >
-  <h2 class="text-lg font-bold mb-2">{translations['nightlyShutoff']}</h2>
-  <p class="text-sm mb-4">{translations['nightlyShutoffDescription']}</p>
-<div class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
+
   <h2 class="text-lg font-bold mb-2 setting-title">{translations['nightlyShutoff']}</h2>
   <p class="text-sm mb-4 setting-description text-space">{translations['nightlyShutoffDescription']}</p>
   <div class="input input-bordered flex flex-col gap-4">
@@ -66,16 +64,6 @@
   </div>
 </div>
 
-<style>
-  .disabled-card {
-    opacity: 0.35;
-    pointer-events: none;
-  }
-
-  .card-container-transition {
-    transition: background-color 0.3s ease;
-  }
-</style>
 
 <style>
   .button-font-size {
