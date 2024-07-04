@@ -17,9 +17,6 @@ const BACKEND_URL_CLIENT = import.meta.env.BACKEND_URL_CLIENT ?? process.env.BAC
 if (!BACKEND_URL_CLIENT) {
   throw new Error('BACKEND_URL_CLIENT is not set')
 }
-if (!BACKEND_URL_CLIENT.startsWith('http')) {
-  throw new Error('BACKEND_URL_CLIENT must start with http')
-}
 
 export default {
   BACKEND_URL_SERVER,
