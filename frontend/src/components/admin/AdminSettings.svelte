@@ -144,6 +144,7 @@
     <NightlyShutoffCard
       {translations}
       initialSettings={nightlyShutoff}
+      disabled={isSyncActive}
       on:change={(event) => {
         nightlyShutoff = event.detail
         console.log('Settings changed:', event.detail)

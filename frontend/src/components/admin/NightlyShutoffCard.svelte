@@ -1,34 +1,42 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte'
 
   // Dispatch function to communicate events to parent
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
   // Props
-  export let translations;
-  export let initialSettings = { off: 22, on: 4 };
+  export let translations
+  export let initialSettings
+  export let disabled
 
   // Local reactive variables
-  let off = initialSettings.off;
-  let on = initialSettings.on;
+  let off = initialSettings.off
+  let on = initialSettings.on
 
   // Function to handle changes and notify parent component
   function handleSettingChange(key, value) {
     if (key === 'off') {
-      off = value;
+      off = value
     } else if (key === 'on') {
-      on = value;
+      on = value
     }
-    dispatch('change', { off, on });
+    dispatch('change', { off, on })
   }
 </script>
 
+<div
+  class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300 {disabled
+    ? ''
+    : 'disabled-card'}"
+>
+  <h2 class="text-lg font-bold mb-2">{translations['nightlyShutoff']}</h2>
+  <p class="text-sm mb-4">{translations['nightlyShutoffDescription']}</p>
 <div class="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
   <h2 class="text-lg font-bold mb-2 setting-title">{translations['nightlyShutoff']}</h2>
   <p class="text-sm mb-4 setting-description text-space">{translations['nightlyShutoffDescription']}</p>
   <div class="input input-bordered flex flex-col gap-4">
     <label class="flex items-center gap-2 setting-description text-space">
-    {translations['nightlyShutoffOffTime']}
+      {translations['nightlyShutoffOffTime']}
       <input
         type="number"
         class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent "
@@ -37,11 +45,12 @@
         step="1"
         placeholder={translations['offTime']}
         value={off}
+        diabled={!disabled}
         on:input={(event) => handleSettingChange('off', parseInt(event.target.value))}
       />
     </label>
     <label class="flex items-center gap-2 setting-description text-space">
-    {translations['nightlyShutoffOnTime']}
+      {translations['nightlyShutoffOnTime']}
       <input
         type="number"
         class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent"
@@ -49,12 +58,24 @@
         max="23"
         step="1"
         placeholder={translations['onTime']}
+        diabled={!disabled}
         value={on}
         on:input={(event) => handleSettingChange('on', parseInt(event.target.value))}
       />
     </label>
   </div>
 </div>
+
+<style>
+  .disabled-card {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .card-container-transition {
+    transition: background-color 0.3s ease;
+  }
+</style>
 
 <style>
   .button-font-size {

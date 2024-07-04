@@ -10,7 +10,7 @@
   let calendarString = writable('')
   let message = writable('')
   let messageClass = writable('')
-  let initialCalendarString: string = ""
+  let initialCalendarString: string = ''
 
   onMount(() => {
     fetchCalendarString()
@@ -86,7 +86,7 @@
   </div>
   <p class="setting-description text-space">{translations['calStringDescription']}</p>
   <input class="input-field" type="text" bind:value={$calendarString} placeholder="e.g., ab12@n5" />
-  <Button color="dark" on:click={saveCalendarString}>Save</Button>
+  <Button color="dark" on:click={saveCalendarString}>{translations['save']}</Button>
   <p class="feedback-message {$messageClass} text-sm mt-2">{$message}</p>
 </div>
 
