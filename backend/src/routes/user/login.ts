@@ -18,78 +18,109 @@ if (port == null) {
   throw new Error('PORT is not set')
 }
 
-loginRouter.post('/register', async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { username, password, calString, invitationCode, room }: { username: string, password: string, calString: string, invitationCode: string, room: string } = req.body
-
-    const rooms = ROOMS_HEATERS_MAP.map((room) => room.room)
-    if (!rooms.includes(room)) {
-      res.status(400).json({ message: 'Room is not valid' })
-      return
-    }
-    if (!room) {
-      res.status(400).json({ message: 'Room is required' })
-      return
-    }
-
-    // check if username already exists
-    const existing = await User.findOne({ username })
-    if (existing != null) {
-      console.log(existing)
-      res.status(409).json({ message: 'Username already exists' })
-      return
-    }
-
-    // check if invitation code is correct
-    const adminSettings = await getAdminSettings()
-    if (invitationCode !== adminSettings.invitationCode) {
-      res.status(400).json({ message: 'Invalid invitation code' })
-      return
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10)
-
+loginRouter.post(
+  '/register',
+  async (req: Request, res: Response): Promise<void> => {
     try {
-      const exists = await User.findOne({ calString })
-      if (exists) {
-        res.status(410).json({ message: 'Calendar string already exists' })
+      const {
+        username,
+        password,
+        calString,
+        invitationCode,
+        room
+      }: {
+        username: string
+        password: string
+        calString: string
+        invitationCode: string
+        room: string
+      } = req.body
+
+      const rooms = ROOMS_HEATERS_MAP.map((room) => room.room)
+      if (!rooms.includes(room)) {
+        res.status(400).json({ message: 'Room is not valid' })
+        return
+      }
+      if (!room) {
+        res.status(400).json({ message: 'Room is required' })
         return
       }
 
-      const user: UserDocument = new User({ username, password: hashedPassword, calString, room })
-      await user.save()
-    } catch (err) {
-      console.error('Login Router:', err)
-      res.status(500).json({ message: 'Could not create User' })
-      return
+      // check if username already exists
+      const existing = await User.findOne({ username })
+      if (existing != null) {
+        console.log(existing)
+        res.status(409).json({ message: 'Username already exists' })
+        return
+      }
+
+      // check if invitation code is correct
+      const adminSettings = await getAdminSettings()
+      if (invitationCode !== adminSettings.invitationCode) {
+        res.status(400).json({ message: 'Invalid invitation code' })
+        return
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      try {
+        const exists = await User.findOne({ calString })
+        if (exists) {
+          res.status(410).json({ message: 'Calendar string already exists' })
+          return
+        }
+
+        const user: UserDocument = new User({
+          username,
+          password: hashedPassword,
+          calString,
+          room
+        })
+        await user.save()
+      } catch (err) {
+        console.error('Login Router:', err)
+        res.status(500).json({ message: 'Could not create User' })
+        return
+      }
+
+      res.json({ message: 'User created successfully' })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: 'Internal server error' })
     }
-
-    res.json({ message: 'User created successfully' })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Internal server error' })
   }
-})
+)
 
-loginRouter.post('/login', async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { username, password }: { username: string, password: string } = req.body
+loginRouter.post(
+  '/login',
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { username, password }: { username: string, password: string } =
+        req.body
 
-    const user = await User.findOne({ username })
+      const user = await User.findOne({ username })
 
-    if ((user == null) || !(await bcrypt.compare(password, user.password))) {
-      res.status(401).json({ message: 'Invalid username or password' })
-      return
+      if (user == null) {
+        res.status(401).json({ message: 'Could not access database' })
+        return
+      }
+
+      if (!(await bcrypt.compare(password, user.password))) {
+        res.status(401).json({ message: 'Invalid username or password' })
+        return
+      }
+
+      // Generate JWT token
+      const token = jwt.sign({ userId: user._id }, jwtWebTokenSecret, {
+        expiresIn: '1d'
+      })
+      res.json({ token })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: 'Internal server error' })
     }
-
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, jwtWebTokenSecret, { expiresIn: '1d' })
-    res.json({ token })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Internal server error' })
   }
-})
+)
 
 loginRouter.post('/logout', (req: Request, res: Response): void => {
   req.session.destroy((err: Error) => {
