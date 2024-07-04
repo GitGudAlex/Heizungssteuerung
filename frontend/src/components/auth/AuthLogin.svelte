@@ -25,7 +25,9 @@
         const { token } = await response.json()
         document.cookie = `token=${token}; path=/; max-age=${cookieMaxAge}; SameSite=None;`
         window.location.href = `/${lang}/dashboard`
+        console.debug("fetch /user/login/login succeeded, token:", token)
       } else {
+        console.debug("fetch /user/login/login failed", response.status, response.statusText)
         if (response.status === 401) {
           errorMessage = translations['loginFailed']
         } else {
