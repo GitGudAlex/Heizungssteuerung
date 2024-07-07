@@ -131,7 +131,7 @@
         />
         <button
           type="button"
-          class="bg-purple-500 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-900 text-white font-bold py-3 px-6 rounded-full transition duration-300"
+          class="bg-purple-800 hover:bg-purple-700 dark:hover:bg-purple-900 text-white font-bold py-3 px-8 rounded-full transition duration-300"
           on:click={() => copyToClipboard(`/${lang}/register?invitationCode=${invitationCode}`)}
         >
           {translations['copyLink']}
@@ -185,11 +185,16 @@
         ? ''
         : 'disabled-card'}"
     >
-      <h2 class="text-lg font-bold mb-2 setting-title">{translations['defaultTemp']}</h2>
+      <label for="defaultTemp">
+        <h2 class="text-lg font-bold mb-2 setting-title">{translations['defaultTemp']}</h2>
+      </label>
       <p class="setting-description text-space">{translations['defaultTempDescription']}</p>
       <div class="input input-bordered flex items-center gap-2 mb-4">
         <input
-          type="text"
+          min="8"
+          max="28"
+          step="1"
+          type="number"
           class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-60 button-font-size"
           id="defaultTemp"
           placeholder={translations['defaultTemp']}
@@ -206,11 +211,16 @@
         ? ''
         : 'disabled-card'}"
     >
-      <h2 class="text-lg font-bold mb-2 setting-title">{translations['preheatingMinutesPerDegree']}</h2>
+      <label for="preheatingMinutesPerDegree"
+        ><h2 class="text-lg font-bold mb-2 setting-title">{translations['preheatingMinutesPerDegree']}</h2></label
+      >
       <p class="setting-description text-space">{translations['preheatingMinutesPerDegreeDescription']}</p>
       <div class="input input-bordered flex items-center gap-2 mb-4">
         <input
-          type="text"
+          min="0"
+          max="180"
+          step="1"
+          type="number"
           class="rounded-full px-4 py-2 border border-gray-300 focus:border-blue-500 outline-none bg-transparent w-80 button-font-size"
           id="preheatingMinutesPerDegree"
           placeholder={translations['preheatingMinutesPerDegree']}
@@ -231,10 +241,22 @@
       <p class="setting-description text-space">{translations['isSyncActiveDescription']}</p>
       <div class="my-8">
         <ButtonGroup>
-          <Button outline checked={true === isSyncActive} color="dark" on:click={() => handleButtonClick(true)}>
+          <Button
+            size="lg"
+            outline
+            checked={true === isSyncActive}
+            color="dark"
+            on:click={() => handleButtonClick(true)}
+          >
             {translations['enable']}
           </Button>
-          <Button outline checked={false === isSyncActive} color="dark" on:click={() => handleButtonClick(false)}>
+          <Button
+            size="lg"
+            outline
+            checked={false === isSyncActive}
+            color="dark"
+            on:click={() => handleButtonClick(false)}
+          >
             {translations['disable']}
           </Button>
         </ButtonGroup>
@@ -243,7 +265,7 @@
 
     <!-- Save Button -->
     <button
-      class="rounded-full px-4 py-2 bg-red-700 text-white hover:bg-red-500 transition duration-300 button-font-size"
+      class="rounded-full px-4 py-2 bg-red-800 text-white hover:bg-red-500 transition duration-300 button-font-size"
       type="submit"
     >
       {translations['save']}

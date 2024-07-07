@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { ButtonGroup, Button } from 'flowbite-svelte'
 
   export let translations
   export let lang
@@ -39,10 +40,18 @@
     updateDbSettings()
   }
 
-  const updateCheckboxState = () => {
-    const checkbox = document.querySelector('.switch input[type="checkbox"]')
-    checkbox.checked = sepiaMode
-    checkbox.setAttribute('aria-pressed', sepiaMode.toString())
+  const disableSepiaMode = () => {
+    sepiaMode = false
+    localStorage.setItem('sepiaMode', sepiaMode ? 'enabled' : 'disabled')
+    updateBodyFilter()
+    updateDbSettings()
+  }
+
+  const enableSepiaMode = () => {
+    sepiaMode = true
+    localStorage.setItem('sepiaMode', sepiaMode ? 'enabled' : 'disabled')
+    updateBodyFilter()
+    updateDbSettings()
   }
 
   const updateBodyFilter = () => {
@@ -52,24 +61,22 @@
       document.body.style.filter = ''
     }
   }
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      toggleSepiaMode()
-    }
-  }
 </script>
 
-<div class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
+<div
+  class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300"
+>
   <div class="setting">
     <h1 class="setting-title mr">{translations['sepiaMode']}</h1>
   </div>
   <p class="setting-description text-space">{translations['sepiaModeDescription']}</p>
-  <label class="switch mt-4">
-    <!-- svelte-ignore a11y-role-supports-aria-props -->
-    <input type="checkbox" on:change={toggleSepiaMode} on:keydown={handleKeyDown} aria-pressed={sepiaMode.toString()} />
-    <span class="slider round"></span>
-  </label>
+
+  <ButtonGroup>
+    <Button size="lg" outline checked={sepiaMode === false} color="dark" on:click={disableSepiaMode}
+      >{translations['disable']}</Button
+    >
+    <Button outline checked={sepiaMode} color="dark" on:click={enableSepiaMode}>{translations['enable']}</Button>
+  </ButtonGroup>
 </div>
 
 <style>
@@ -95,74 +102,12 @@
 
   .setting-description {
     flex: 2;
-    margin: 0 1.5em 0 0; /* top right bottom left */
+    margin: 0 1.5em 0.5em 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
     /*transition: font-size 0.5s ease;*/
   }
   .text-space {
     line-height: var(--line-height);
     transition: line-height 0.5s ease;
-  }
-
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-  }
-
-  .switch input {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-  }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: '';
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
-  }
-
-  input:checked + .slider {
-    background-color: #2196f3;
-  }
-
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196f3;
-  }
-
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
-
-  .slider.round {
-    border-radius: 34px;
-  }
-
-  .slider.round:before {
-    border-radius: 50%;
   }
 </style>

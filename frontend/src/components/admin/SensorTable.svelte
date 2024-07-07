@@ -220,82 +220,135 @@
     {#if errorMessage.length > 0}
       <p class="text-red-500 setting-description">{errorMessage}</p>
     {/if}
-    <div class="flex flex-wrap items-center ">
+    <div class="flex flex-wrap items-center">
       <div>
         <LoadingIndicator {isLoading} />
       </div>
-      <input
-        type="text"
-        bind:value={newDeviceName}
-        placeholder={translations['name']}
-        class="setting-description dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
-      />
-      <input
-        type="text"
-        bind:value={newIdentifier}
-        placeholder={translations['identifier']}
-        class="setting-description dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
-      />
-      <select bind:value={newDeviceType} class="dark:bg-gray-700 text-black dark:text-white border rounded-lg p-2 mb-2  setting-description hover:shadow transition-shadow duration-300">
-        {#each deviceTypes as type}
-          <option value={type}>{type}</option>
-        {/each}
-      </select>
-      <select bind:value={newMap} class="dark:bg-gray-700 text-black dark:text-white border rounded-lg p-2 mb-2  setting-description hover:shadow transition-shadow duration-300">
-        {#each roomsHeaterMap as roomerHeaterOption}
-          <option value={roomerHeaterOption}
-            >{roomerHeaterOption.heater.toLocaleLowerCase() +
-              ' in ' +
-              roomerHeaterOption.room.toLocaleLowerCase()}</option
-          >
-        {/each}
-      </select>
+      <div class="mb-6">
+        <label for="nameInput" class="block text-sm font-medium text-gray-700 dark:text-white mb-1"
+          >{translations['name']}</label
+        >
+        <input
+          id="nameInput"
+          type="text"
+          bind:value={newDeviceName}
+          placeholder={translations['name']}
+          class="setting-description dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
+        />
+      </div>
+      <div class="mb-6">
+        <label for="idInput" class="block text-sm font-medium text-gray-700 dark:text-white mb-1"
+          >{translations['identifier']}</label
+        >
+        <input
+          id="idInput"
+          type="text"
+          bind:value={newIdentifier}
+          placeholder={translations['identifier']}
+          class="setting-description dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
+        />
+      </div>
+      <div class="mx-4 mb-6">
+        <label for="deviceType" class="block text-sm font-medium text-gray-700 dark:text-white mb-1"
+          >{translations['type']}</label
+        >
+        <select
+          bind:value={newDeviceType}
+          id="deviceType"
+          class="dark:bg-gray-700 text-black dark:text-white border rounded-lg p-2 mb-2 setting-description hover:shadow transition-shadow duration-300 w-full"
+        >
+          {#each deviceTypes as type}
+            <option value={type}>{type}</option>
+          {/each}
+        </select>
+      </div>
+
+      <div class="mx-4 mb-6">
+        <label for="mapInput" class="block text-sm font-medium text-gray-700 dark:text-white mb-1"
+          >{translations['heaterMap']}</label
+        >
+        <select
+          bind:value={newMap}
+          id="mapInput"
+          class="dark:bg-gray-700 text-black dark:text-white border rounded-lg p-2 mb-2 setting-description hover:shadow transition-shadow duration-300 w-full"
+        >
+          {#each roomsHeaterMap as roomerHeaterOption}
+            <option value={roomerHeaterOption}>
+              {roomerHeaterOption.heater.toLocaleLowerCase() + ' in ' + roomerHeaterOption.room.toLocaleLowerCase()}
+            </option>
+          {/each}
+        </select>
+      </div>
+
       <button
         on:click={addDevice}
-        class="bg-purple-500 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-900 text-white font-bold py-4 px-6 mb-2 rounded-full transition duration-300 button-font-size"
+        class="bg-purple-800 hover:bg-purple-700 dark:hover:bg-purple-900 text-white font-bold py-4 px-6 mb-2 rounded-full transition duration-300 button-font-size"
       >
         {translations['addDevice']}
       </button>
     </div>
-<!-- Display message if no devices -->
-{#if devices.length === 0}
-<p class="text-gray-700 dark:text-gray-100">{translations['noDevicesYet']}</p>
-{:else}
-<!-- Table -->
-<div class="overflow-x-auto">
-  <table class="min-w-full bg-transparent shadow">
-    <thead class="bg-primary-light dark:bg-primary-dark text-primary-dark shadow rounded-lg">
-      <tr>
-        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700 rounded-l-lg">{translations['name']}</th>
-        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['identifier']}</th>
-        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['type']}</th>
-        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['heaterMap']}</th>
-        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700">{translations['roomMap']}</th>
-        <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700 rounded-r-lg">{translations['action']}</th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
-      {#each devices as device (device.identifier)}
-        <tr class="transition-all hover:bg-gray-100 dark:hover:bg-gray-700">
-          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100">{device.name}</td>
-          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.identifier}</td>
-          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.type}</td>
-          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.heaterMap}</td>
-          <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100 ">{device.roomMap}</td>
-          <td class="setting-description text-space px-6 py-4 whitespace-nowrap">
-            <button
-              class="bg-red-700 text-white font-bold px-4 py-2 rounded-md transition-colors duration-300 hover:bg-red-500"
-              on:click={() => deleteDevice(device.identifier)}
-            >
-              {translations['remove']}
-            </button>
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
-</div>
-{/if}
+    <!-- Display message if no devices -->
+    {#if devices.length === 0}
+      <p class="text-gray-700 dark:text-gray-100">{translations['noDevicesYet']}</p>
+    {:else}
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-transparent shadow">
+          <thead class="bg-primary-light dark:bg-primary-dark text-primary-dark shadow rounded-lg">
+            <tr>
+              <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700 rounded-l-lg"
+                >{translations['name']}</th
+              >
+              <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700"
+                >{translations['identifier']}</th
+              >
+              <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700"
+                >{translations['type']}</th
+              >
+              <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700"
+                >{translations['heaterMap']}</th
+              >
+              <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700"
+                >{translations['roomMap']}</th
+              >
+              <th class="setting-description text-space px-6 py-3 text-left font-semibold dark:bg-gray-700 rounded-r-lg"
+                >{translations['action']}</th
+              >
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+            {#each devices as device (device.identifier)}
+              <tr class="transition-all hover:bg-gray-100 dark:hover:bg-gray-700">
+                <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100"
+                  >{device.name}</td
+                >
+                <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100"
+                  >{device.identifier}</td
+                >
+                <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100"
+                  >{device.type}</td
+                >
+                <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100"
+                  >{device.heaterMap}</td
+                >
+                <td class="setting-description text-space px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-100"
+                  >{device.roomMap}</td
+                >
+                <td class="setting-description text-space px-6 py-4 whitespace-nowrap">
+                  <button
+                    class="bg-red-800 text-white font-bold px-4 py-2 rounded-md transition-colors duration-300 hover:bg-red-500"
+                    on:click={() => deleteDevice(device.identifier)}
+                  >
+                    {translations['remove']}
+                  </button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {/if}
+  </div>
 </main>
 
 <style global>

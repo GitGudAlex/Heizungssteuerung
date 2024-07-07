@@ -25,14 +25,14 @@
         if (response.statusText) {
           throw new Error(`${response.statusText}`)
         }
-        throw new Error('Failed to load settings')
+        throw new Error(translations['failedLoadSettings'])
       }
       const { calString = '' } = await response.json()
       initialCalendarString = calString
       calendarString.set(calString)
     } catch (error) {
       console.error('Error loading calendar string:', error)
-      message.set('Failed to load settings')
+      message.set(translations['failedLoadSettings'])
       messageClass.set('text-red-500')
     }
   }
@@ -41,7 +41,6 @@
     const newCalString = $calendarString
     try {
       if (initialCalendarString === newCalString) {
-        message.set('No changes detected')
         messageClass.set('text-blue-500')
         return
       }
@@ -62,12 +61,12 @@
         }
         throw new Error('Failed to save new calendar string')
       }
-      message.set('Calendar string saved successfully!')
+      message.set(translations['calendarStringSaved'])
       messageClass.set('text-green-500')
       console.log('New calendar string was saved successfully:', newCalString)
     } catch (error: any) {
       console.error('Error saving new calendar string: ', error)
-      message.set('Failed to save new calendar string: ' + error.message)
+      message.set(translations['failedSaveCalendarString'] + ': ' + error.message)
       messageClass.set('text-red-500')
     }
     // Automatically clear the message after 3 seconds
