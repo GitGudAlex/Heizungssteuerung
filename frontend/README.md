@@ -41,6 +41,6 @@ This web app is used as a control panel to access and manage the smart heating o
    npm run dev
    ```
 
-2. Open your web browser and visit `http://localhost:4321` to view the app.
+2. Open your web browser and visit `http://localhost` to view the app.
 
 3. Make changes to the codebase. The development server will automatically reload the app to reflect your changes.
