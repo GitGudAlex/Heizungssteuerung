@@ -1,30 +1,30 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { ButtonGroup, Button } from 'flowbite-svelte';
-    import { getFontSize } from '~/components/settings/getTextSize.js';
-    import { addFontSize } from '~/components/settings/getTextSize.js';
+  import { onMount } from 'svelte'
+  import { ButtonGroup, Button } from 'flowbite-svelte'
+  import { getFontSize } from '~/components/settings/getTextSize.js'
+  import { addFontSize } from '~/components/settings/getTextSize.js'
 
-    export let translations
-    export let userId
-    export let backendUrl
+  export let translations
+  export let userId
+  export let backendUrl
 
-    onMount(() => {
-        loadNewFontSizeValue()
-    });
+  onMount(() => {
+    loadNewFontSizeValue()
+  })
 
-    $: {
+  $: {
     if (typeof window !== 'undefined' && $addFontSize !== undefined) {
-      const cssVar = `${$addFontSize}px`;
-      document.documentElement.style.setProperty('--add-font-size', cssVar);
+      const cssVar = `${$addFontSize}px`
+      document.documentElement.style.setProperty('--add-font-size', cssVar)
     }
   }
 
-    const loadNewFontSizeValue = async () => {
-      let fontSize = await getFontSize(userId, backendUrl);
-      addFontSize.set(fontSize);
-    }
+  const loadNewFontSizeValue = async () => {
+    let fontSize = await getFontSize(userId, backendUrl)
+    addFontSize.set(fontSize)
+  }
 
-    const updateDbSettings = async (userId: string, fontSize: string) => {
+  const updateDbSettings = async (userId: string, fontSize: string) => {
     try {
       const response = await fetch(`${backendUrl}/user/fontSize`, {
         method: 'POST',
@@ -37,7 +37,7 @@
       if (!response.ok) {
         throw new Error('Failed to update font size setting')
       } else {
-        console.log("Updated new font size to:", fontSize)
+        console.log('Updated new font size to:', fontSize)
       }
     } catch (error) {
       console.error('Error updating fontSize setting:', error)
@@ -45,37 +45,45 @@
   }
 
   const savefontSize = async (event: any) => {
-    let fontSize = event.target.textContent.toLowerCase();
-    if (fontSize == "klein"){
-      fontSize = "small"
+    let fontSize = event.target.textContent.toLowerCase()
+    if (fontSize == 'klein') {
+      fontSize = 'small'
     }
-    if (fontSize == "groß"){
-      fontSize = "large"
+    if (fontSize == 'groß') {
+      fontSize = 'large'
     }
-    if (fontSize == "größer"){
-      fontSize = "xlarge"
+    if (fontSize == 'größer') {
+      fontSize = 'xlarge'
     }
     await updateDbSettings(userId, fontSize)
     loadNewFontSizeValue()
   }
+</script>
 
+<div
+  class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300"
+>
+  <div class="setting">
+    <h1 class="setting-title mr">{translations['fontSize']}</h1>
+  </div>
+  <p class="setting-description">{translations['fontSizeDescription']}</p>
+  <ButtonGroup>
+    <Button size="lg" outline checked={$addFontSize === -3} color="dark" on:click={savefontSize}
+      >{translations['textSizeSmall']}</Button
+    >
+    <Button size="lg" outline checked={$addFontSize === 0} color="dark" on:click={savefontSize}
+      >{translations['textSizeMed']}</Button
+    >
+    <Button size="lg" outline checked={$addFontSize === 3} color="dark" on:click={savefontSize}
+      >{translations['textSizeLarge']}</Button
+    >
+    <Button size="lg" outline checked={$addFontSize === 6} color="dark" on:click={savefontSize}
+      >{translations['textSizeXlarge']}</Button
+    >
+  </ButtonGroup>
+</div>
 
-  </script>
-    <div class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
-        <div class="setting">
-          <h1 class="setting-title mr">{translations['fontSize']}</h1>
-        </div>
-        <p class="setting-description">{translations['fontSizeDescription']}</p>
-        <ButtonGroup>
-            <Button outline checked={$addFontSize === -3} color="dark" on:click={savefontSize}>{translations['textSizeSmall']}</Button>
-            <Button outline checked={$addFontSize ===  0} color="dark" on:click={savefontSize}>{translations['textSizeMed']}</Button>
-            <Button outline checked={$addFontSize ===  3} color="dark" on:click={savefontSize}>{translations['textSizeLarge']}</Button>
-            <Button outline checked={$addFontSize ===  6} color="dark" on:click={savefontSize}>{translations['textSizeXlarge']}</Button>
-        </ButtonGroup>
-    </div>
-
-  <style>
-
+<style>
   .settings-container {
     max-width: 100%;
     margin: 0;
@@ -92,7 +100,7 @@
     flex: 1;
     margin: 0;
     font-size: calc(24px + var(--add-font-size));
-    /*transition: font-size 0.5s ease;*/ 
+    /*transition: font-size 0.5s ease;*/
     font-weight: bold;
   }
 
@@ -100,8 +108,6 @@
     flex: 2;
     margin: 0 1.5em 0.5em 0; /* top right bottom left */
     font-size: calc(16px + var(--add-font-size));
-    /*transition: font-size 0.5s ease;*/ 
+    /*transition: font-size 0.5s ease;*/
   }
-
-  </style>
- 
+</style>

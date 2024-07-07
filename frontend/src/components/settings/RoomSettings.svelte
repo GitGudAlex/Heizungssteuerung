@@ -80,7 +80,9 @@
   }
 </script>
 
-<div class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300">
+<div
+  class="settings-container bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg p-6 mb-4 hover:shadow-xl transition-shadow duration-300"
+>
   <div class="setting">
     <h1 class="setting-title mr">{translations['roomSetting']}</h1>
   </div>
@@ -88,7 +90,7 @@
   <div class="my-8">
     <ButtonGroup>
       {#each rooms as room}
-        <Button outline checked={room === selectedRoom} color="dark" on:click={() => handleButtonClick(room)}>
+        <Button size="lg" outline checked={room === selectedRoom} color="dark" on:click={() => handleButtonClick(room)}>
           {room}
         </Button>
       {/each}

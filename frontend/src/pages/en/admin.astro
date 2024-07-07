@@ -33,7 +33,7 @@ const translations = ui[lang];
 <DefaultLayout title={t('adminArea')}>
     <section class="mb-12 mt-12">
         <div class="container">
-        <h2 class="mb-16 text-6xl">{t('adminArea')}</h2>
+        <h1 class="mb-16 text-6xl">{t('adminArea')}</h1>
         <SensorTable client:load translations={translations} backendUrl={config.BACKEND_URL_CLIENT}/>
         <AdminSettings client:load translations={translations} lang={lang} backendUrl={config.BACKEND_URL_CLIENT}/>
         </div>

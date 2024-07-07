@@ -37,7 +37,7 @@ const userId = await getUserId(token);
 <DefaultLayout title={t('nav.settings')}>
     <section class="mb-12 mt-12">
         <div class="container">
-        <h2 class="mb-16 text-6xl">{t('nav.settings')}</h2>
+        <h1 class="mb-16 text-6xl">{t('nav.settings')}</h1>
         <UserInfo client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <Temperature client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
         <RoomSettings client:load translations={translations} userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>

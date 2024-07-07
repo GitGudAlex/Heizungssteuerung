@@ -32,7 +32,7 @@ const translations = ui[lang];
     <section class="mb-12 mt-12">
         <div class="container">
         <LoadSettings client:load userId={userId} backendUrl={config.BACKEND_URL_CLIENT}/>
-        <h2 class="mb-16 text-6xl">{t('dashboard')}</h2>
+        <h1 class="mb-16 text-6xl">{t('dashboard')}</h1>
         <InteractiveSVG client:load translations={translations} backendUrl={config.BACKEND_URL_CLIENT}/>
         <DeviceList client:load translations={translations} lang={lang} userId={userId} backendUrl={config.BACKEND_URL_CLIENT} />
         </div>

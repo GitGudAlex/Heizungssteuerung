@@ -3,7 +3,7 @@ layout: ../../../layouts/MarkdownLayout.astro
 title: User manual
 ---
 
-## Table of contents
+# Table of contents
 
 - [User manual](#user-manual)
   - [Start Docker Container](#start-docker-container)
@@ -14,10 +14,10 @@ title: User manual
   - [Settings](#settings)
   - [Admin area](#admin-area)
   - [Troubleshooting](#troubleshooting)
+
 ---
 
 # User manual
-
 
 ## Start Docker Container
 
@@ -96,16 +96,21 @@ This area is only visible to admins.
 
 1. new devices can be added, managed and removed in the device management.
 2. you can customise the invitation code and provide it as a link for a new user.
+
 3) The building ID can be customised; this is important for the correct processing of NextCloud calendar events.
+
 4. for the default temperature, you can select a temperature that will be used as the default value.
 
 ## Troubleshooting
 
 - ### Registration failed
-  1 **Use of HdM abbreviations as user names**
-    - When registering in the system, it is essential that you use your HdM abbreviation as the user name. This abbreviation is crucial for the integration and smooth operation of the automated heating control system. Here are the reasons why it is necessary to use the HdM abbreviation as the user name:
-      - Integration with NextCloud calendar: the system is directly linked to the NextCloud calendar. Using your HdM abbreviation allows the system to recognise and process your specific calendar entries. This is essential to determine when you will be physically present and to be able to set the heating according to your preferences in advance.
-      - Personalised settings: By assigning the abbreviation to your account, the system can effectively manage your personalised settings, such as the desired heating temperature. This is the only way to ensure that the heating is regulated according to your individual needs.
 
-  2 **What to do if the wrong user name was used during registration?
-   - If an incorrect user name was selected during initial registration that does not correspond to your HdM abbreviation, it is necessary to create a new account. Please register again with your correct HdM code to ensure that all system functions work properly.
+  1 **Use of HdM abbreviations as user names**
+
+  - When registering in the system, it is essential that you use your HdM abbreviation as the user name. This abbreviation is crucial for the integration and smooth operation of the automated heating control system. Here are the reasons why it is necessary to use the HdM abbreviation as the user name:
+    - Integration with NextCloud calendar: the system is directly linked to the NextCloud calendar. Using your HdM abbreviation allows the system to recognise and process your specific calendar entries. This is essential to determine when you will be physically present and to be able to set the heating according to your preferences in advance.
+    - Personalised settings: By assigning the abbreviation to your account, the system can effectively manage your personalised settings, such as the desired heating temperature. This is the only way to ensure that the heating is regulated according to your individual needs.
+
+  2 \*\*What to do if the wrong user name was used during registration?
+
+  - If an incorrect user name was selected during initial registration that does not correspond to your HdM abbreviation, it is necessary to create a new account. Please register again with your correct HdM code to ensure that all system functions work properly.
