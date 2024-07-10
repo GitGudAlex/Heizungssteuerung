@@ -3,7 +3,7 @@ layout: ../../../layouts/MarkdownLayout.astro
 title: Infos zum Quellcode
 ---
 
-# Infos zum Quellcode
+# Informationen zum Quellcode
 
 ## GitLab Repository
 

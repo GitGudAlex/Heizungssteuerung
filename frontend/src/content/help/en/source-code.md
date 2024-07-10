@@ -3,7 +3,9 @@ layout: ../../../layouts/MarkdownLayout.astro
 title: Source Code Information
 ---
 
-# GitLab Repository
+# Information on the source code
+
+## GitLab Repository
 
 The complete source code, all documentation, as well as all changes and versions of the project can be viewed in our GitLab repository.
 
