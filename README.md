@@ -6,10 +6,10 @@ A smart heating control system for individual temperature control in office and 
 
 ## Functions and features
 
-- Presence-based temperature control
-- User-friendly web interface
-- Support for multiple languages (German/English)
-- Integration with Nextcloud calendar
+- Presence-based temperature control.
+- User-friendly web interface.
+- Support for multiple languages (German/English).
+- Integration with Nextcloud calendar.
 
 ## Technologies
 
@@ -23,33 +23,33 @@ A smart heating control system for individual temperature control in office and 
 
 ## Installation instructions (Quick Guide)
 
-1. clone repository:
+1. Clone repository:
     ```bash
     git clone https://gitlab.mi.hdm-stuttgart.de/tz023/heizungssteuerung.git
-    cd heating control
+    cd heizungssteuerung
     ```
 
-2. start docker container:
+2. Start docker container:
     ```bash
     docker-compose up
     ```
 
-3. open the application in the browser:
+3. Open the application in the browser:
     ```bash
-    http://localhost:4321
+    http://localhost
     ```
 
 ## Use
 
-- Registration and management of the heating control system via the web interface
+- Registration and management of the heating control system via the web interface.
 
 ## API endpoints
 
-- The API endpoints could be located here
+- The API endpoints can be found inside `./docs/swagger.pdf`.
 
 ## Configuration notes (server)
 
-- Set environment variables in an `.env` file (e.g., MongoDB URI, Nextcloud calendar, etc.) (see *backend/.env.example*)
+- Set environment variables in an `.env` file (e.g., MongoDB URI, Nextcloud calendar, etc.) (see `./backend/.env.docker`).
 
 
 ## Authors
