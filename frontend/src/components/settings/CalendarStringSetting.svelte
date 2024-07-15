@@ -84,7 +84,12 @@
     <h1 class="setting-title mr">{translations['calString']}</h1>
   </div>
   <p class="setting-description text-space">{translations['calStringDescription']}</p>
-  <input class="input-field" type="text" bind:value={$calendarString} placeholder="e.g., ab12@n5" />
+  <input
+    class="input-field setting-description dark:bg-gray-700 rounded-full px-4 py-2 border border-gray-300 dark:border-gray-700 focus:border-blue-500 outline-none bg-transparent w-full sm:w-auto setting-description hover:shadow transition-shadow duration-300"
+    type="text"
+    bind:value={$calendarString}
+    placeholder="e.g., ab12@n5"
+  />
   <Button color="dark" on:click={saveCalendarString}>{translations['save']}</Button>
   <p class="feedback-message {$messageClass} text-sm mt-2">{$message}</p>
 </div>
