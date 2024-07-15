@@ -18,7 +18,7 @@ title: Installation guide
     - [2. Update and Upgrade](#2-update-and-upgrade)
     - [3. Enable SSH on Raspberry Pi (optional)](#3-enable-ssh-on-raspberry-pi-optional)
     - [4. Install Docker \& Docker-Compose](#4-install-docker--docker-compose)
-    - [5. HdM VPN Setup Guide (optional)](#5-hdm-vpn-setup-guide-optional)
+    - [5. HdM VPN Setup](#5-hdm-vpn-setup)
     - [6. Connection settings for Raspberry Pi](#6-connection-settings-for-raspberry-pi)
     - [7. Restart Network Services](#7-restart-network-services)
     - [8. Verify the Static IP Address](#8-verify-the-static-ip-address)
@@ -191,8 +191,10 @@ title: Installation guide
    Alternatively, download as a ZIP file and extract.
    ![Repository zip file](../resources/repo_zip.png)
 
-2. **Configuration of the environment variables**:
-   To make the application operational, it is necessary to set the access data for the Fritz!Box and the Nextcloud calendar in the environment variables. To do this, the configuration file `./backend/.env.docker` must be adapted.
+2 **Configuration of the environment variables**:
+   To make the application operational, it is necessary to set the access data for the Fritz!Box and the Nextcloud calendar in the environment variables (**env**ironment variables). To do this, the configuration file `./backend/.env.docker` must be adapted. `./backend/.env` is required for local development operation.
+
+   There is a shell-script in root that enables an easy setup for both environment files, `set_users.sh`.
 
    The following variables must be set, these should already exist:
 
@@ -351,9 +353,11 @@ sudo apt-get update && sudo apt-get upgrade
    sudo systemctl enable docker
    ```
 
-### 5. HdM VPN Setup Guide (optional)
+### 5. HdM VPN Setup
 
-If you want to connect via the HdM VPN, the following steps must be carried out.
+As it is often not possible to connect to the Nextcloud in the PXLab WLAN without a VPN, we recommend connecting with the MI-VPN.
+
+**Automatic setup via script**: There is a `connect_vpn.sh` shell script in the root directory. This automatically installs OpenVPN and connects to the MI-VPN as a student. After starting, the username and password are requested, the abbreviation (e.g. ab123) and the password are required.
 
 For detailed information, visit the [HdM VPN Wiki](https://wiki.mi.hdm-stuttgart.de/doku.php?id=studium:infrastruktur:vpn).
 

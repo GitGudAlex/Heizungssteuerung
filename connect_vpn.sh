@@ -1,42 +1,38 @@
 #!/bin/bash
 
-# This script is used to connect to the HDM VPN using OpenVPN.
+# This script is used to connect to the HdM MI-VPN using OpenVPN.
 # It is meant to be run on a Raspberry Pi or any other Linux-based system. 
 
 sleep 5
 
-echo "Melde dich beim VPM an, damit die Heizungssteuerng funktioniert...\n"
+echo "Connect via MI-VPN so that the heating control works correctly...\n"
 
-# Name der Konfigurationsdatei ohne die Erweiterung (.ovpn)
+# name of the VPN certificate
 CONFIG_FILE="./vpn/hdm_mi_stud_new_ca.ovpn"
 
-# Funktion zur Überprüfung und Installation von OpenVPN
+# install and verify successful OpenVPN installation
 install_openvpn() {
     if ! command -v openvpn &> /dev/null
     then
-        echo "OpenVPN ist nicht installiert. Installation wird durchgeführt..."
+        echo "OpenVPN is not installed. Installation is being carried out..."
         sudo apt update
         sudo apt install -y openvpn
         if [ $? -ne 0 ]; then
-            echo "Fehler bei der Installation von OpenVPN."
+            echo "Error during the installation of OpenVPN."
             exit 1
         fi
-        echo "OpenVPN erfolgreich installiert."
+        echo "OpenVPN successfully installed."
     else
-        echo "OpenVPN ist bereits installiert."
+        echo "OpenVPN is already installed."
     fi
 }
 
-# Überprüfen und Installieren von OpenVPN
 install_openvpn
-
-# Starten von OpenVPN mit der angegebenen Konfigurationsdatei
 sudo openvpn --config ${CONFIG_FILE}
 
-# Überprüfen, ob OpenVPN erfolgreich gestartet wurde
 if [ $? -eq 0 ]; then
-    echo "VPN-Verbindung erfolgreich hergestellt."
+    echo "VPN connection successfully established."
 else
-    echo "Fehler beim Herstellen der VPN-Verbindung."
+    echo "Error while establishing the VPN connection."
     exit 1
 fi
