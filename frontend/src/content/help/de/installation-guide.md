@@ -18,7 +18,7 @@ title: Installationsanleitung
     - [2. Update und Upgrade](#2-update-und-upgrade)
     - [3. Aktivieren Sie SSH auf dem Raspberry Pi (optional)](#3-aktivieren-sie-ssh-auf-dem-raspberry-pi-optional)
     - [4. Installieren Sie Docker \& Docker-Compose](#4-installieren-sie-docker--docker-compose)
-    - [5. HdM VPN Setup Anleitung (optional)](#5-hdm-vpn-setup-anleitung-optional)
+    - [5. HdM VPN Setup](#5-hdm-vpn-setup)
     - [6. Verbindungseinstellungen für Raspberry Pi](#6-verbindungseinstellungen-für-raspberry-pi)
     - [7. Neustart der Netzwerkdienste](#7-neustart-der-netzwerkdienste)
     - [8. Überprüfen Sie die statische IP-Adresse](#8-überprüfen-sie-die-statische-ip-adresse)
@@ -191,7 +191,9 @@ title: Installationsanleitung
    ![Repository zip file](../resources/repo_zip.png)
 
 2. **Konfiguration der Umgebungsvariablen**:
-   Um die Anwendung betriebsbereit zu machen, ist es erforderlich die Zugangsdaten für die Fritz!Box und den Nextcloud Kalender in den Umgebungsvariablen (engl. **Env**ironment Variables) zu setzen. Hierfür muss das Konfigurations-File `./backend/.env.docker` angepasst werden.
+   Um die Anwendung betriebsbereit zu machen, ist es erforderlich die Zugangsdaten für die Fritz!Box und den Nextcloud Kalender in den Umgebungsvariablen (engl. **env**ironment variables) zu setzen. Hierfür muss das Konfigurations-File `./backend/.env.docker` angepasst werden. `./backend/.env` ist für den lokalen Entwicklungsbetrieb notwendig.
+
+   Es gibt ein Shell-Skript in `root`, das eine einfache Einrichtung für beide Umgebungsdateien ermöglicht, `set_users.sh`.
 
    Folgende Vaiablen müssen gesetzt werden, diese sollten bereits vorhanden sein:
 
@@ -350,9 +352,11 @@ sudo apt-get update && sudo apt-get upgrade
    sudo systemctl enable docker
    ```
 
-### 5. HdM VPN Setup Anleitung (optional)
+### 5. HdM VPN Setup
 
-Falls Sie sich über die HdM VPN verbinden wollen, müssen folgende Schritte ausgeführt werden.
+Da es oft nicht möglich ist im PXLab WLAN ohne VPN mit der Nextcloud Kontakt aufzunehmen, empfehlen wir die Verbindung mit dem MI-VPN.
+
+**Automatische Einrichtung per Script**: Im Root-Verzeichnis gibt es das `connect_vpn.sh` Shell Skript. Dieses installiert automatisch OpenVPN und verbindet sich mit dem MI-VPN als Student. Nach dem Starten werden der Username und das Passwort angefragt, es wird das Kürzel (bspw. ab123) und das Passwort benötigt.
 
 Ausführliche Informationen finden Sie im [HdM VPN Wiki](https://wiki.mi.hdm-stuttgart.de/doku.php?id=studium:infrastruktur:vpn).
 
@@ -441,8 +445,7 @@ Dieser Schritt ist essenziell, da sonst immer verschiedene IP-Adresse dem Raspbe
 
 ### 10. Zusätzliche Empfehlung für Nutzung des VPNs
 
-Falls Sie einen VPN-Zugang verwenden, können noch zusätzliche Optionen für eine angenehme Nutzererfarhung aktiviert werden.
-
+Falls Sie einen VPN-Zugang verwenden, können noch zusätzliche Optionen für eine angenehme Nutzererfahrung aktiviert werden.
 - Navigieren Sie zu:
   - **Verbindungen**
   - -> **Erweiterte Optionen**
