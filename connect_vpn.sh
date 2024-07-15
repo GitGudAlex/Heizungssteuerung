@@ -3,6 +3,10 @@
 # This script is used to connect to the HDM VPN using OpenVPN.
 # It is meant to be run on a Raspberry Pi or any other Linux-based system. 
 
+sleep 5
+
+echo "Melde dich beim VPM an, damit die Heizungssteuerng funktioniert...\n"
+
 # Name der Konfigurationsdatei ohne die Erweiterung (.ovpn)
 CONFIG_FILE="./vpn/hdm_mi_stud_new_ca.ovpn"
 
