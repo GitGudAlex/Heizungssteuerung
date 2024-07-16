@@ -36,8 +36,6 @@ loginRouter.post(
         room: string
       } = req.body
 
-      const calStringFormat = calString.toLocaleLowerCase()
-
       const rooms = ROOMS_HEATERS_MAP.map((room) => room.room)
       if (!rooms.includes(room)) {
         res.status(400).json({ message: 'Room is not valid' })
@@ -66,7 +64,7 @@ loginRouter.post(
       const hashedPassword = await bcrypt.hash(password, 10)
 
       try {
-        const exists = await User.findOne({ calStringFormat })
+        const exists = await User.findOne({ calString })
         if (exists) {
           res.status(410).json({ message: 'Calendar string already exists' })
           return
@@ -75,7 +73,7 @@ loginRouter.post(
         const user: UserDocument = new User({
           username,
           password: hashedPassword,
-          calStringFormat,
+          calString,
           room
         })
         await user.save()
