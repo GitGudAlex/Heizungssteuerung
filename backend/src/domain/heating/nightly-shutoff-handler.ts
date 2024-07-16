@@ -61,11 +61,13 @@ class NightlyShutoffHandler {
       return (hours + offset)
     }
 
-    const offsetOffHour = offsetHourByNumber(offHour, -1)
-    const offsetOnHour = offsetHourByNumber(onHour, -1)
+    const offsetOffHour = offsetHourByNumber(offHour, -2)
+    const offsetOnHour = offsetHourByNumber(onHour, -2)
 
     const isHourLessThanOffHour = hour < offsetOffHour
     const isHourGreaterEqualThanOnHour = hour >= offsetOnHour
+
+    console.info(`NightlyShutoffHandler: isHourBetweenOnAndOff: hour: ${hour}, onHour: ${offsetOnHour}, offHour: ${offsetOffHour}, isHourLessThanOffHour: ${isHourLessThanOffHour}, isHourGreaterEqualThanOnHour: ${isHourGreaterEqualThanOnHour}`)
 
     if (isHourLessThanOffHour && isHourGreaterEqualThanOnHour) {
       return true
