@@ -344,7 +344,8 @@ export class HeatingController {
       await this.offsetCalculator.calculatePreheatingOffset(
         event.start,
         userDb.room,
-        userDb.temperature
+        userDb.temperature,
+        this.defaultTemp
       )
 
     try {

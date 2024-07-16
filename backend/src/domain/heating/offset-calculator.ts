@@ -5,7 +5,6 @@ import { FRITZ_SINGLETON } from '../fritz/fritz'
 export class OffsetCalculator {
   readonly deviceController = DEVICE_CONTROLLER_SINGLETON
   readonly fritzController = FRITZ_SINGLETON
-  readonly defaultTemp = 16 // Is used as room temperature if it is not available via the FritzBox
 
   /**
    * @returnsthe date when the preheating should start to reach the @param targetTemperature at the @param room.
@@ -13,8 +12,8 @@ export class OffsetCalculator {
    * @param room The room where the temperature should be reached.
    * @param targetTemperature The temperature that should be reached.
    */
-  async calculatePreheatingOffset (startDate: Date, room: string, targetTemperature: number): Promise<Date> {
-    const roomTemperature = await this.getCurrentAverageRoomTemperature(room)
+  async calculatePreheatingOffset (startDate: Date, room: string, targetTemperature: number, defaultTemp: number): Promise<Date> {
+    const roomTemperature = await this.getCurrentAverageRoomTemperature(room, defaultTemp)
     const offsetTemperature = targetTemperature - roomTemperature
     if (offsetTemperature <= 0) {
       console.log(`OffsetCalculator: calculatePreheatingOffset(): No preheating needed, target temperature already reached, ${targetTemperature} <= ${roomTemperature}`)
@@ -36,7 +35,7 @@ export class OffsetCalculator {
   /**
    * @returns the current average room temperature of all heaters in the @param room.
    */
-  async getCurrentAverageRoomTemperature (room: string): Promise<number> {
+  async getCurrentAverageRoomTemperature (room: string, defaultTemp: number): Promise<number> {
     try {
       const heaterIds = await this.deviceController.getHeaterIdsByRoom(room)
       const temperatures = []
@@ -47,8 +46,8 @@ export class OffsetCalculator {
         }
       }
       if (temperatures.length === 0) {
-        console.warn(`OffsetCalculator: getAverageRoomTemperature(): No temperatures found for room ${room}, returning default temperature ${this.defaultTemp}`)
-        return this.defaultTemp
+        console.warn(`OffsetCalculator: getAverageRoomTemperature(): No temperatures found for room ${room}, returning default temperature ${defaultTemp}`)
+        return defaultTemp
       }
       // Calculate the average temperature
       let sum = 0
@@ -62,7 +61,7 @@ export class OffsetCalculator {
       return sum / count / 10 // Divide by 10 to get the temperature in °C
     } catch (error) {
       console.error('OffsetCalculator: getAverageRoomTemperature(): Error getting temperatures:', error)
-      return this.defaultTemp
+      return defaultTemp
     }
   }
 
