@@ -32,15 +32,10 @@ export class HeatingController {
   readonly manuallySetHeaters: Array<{ heaterId: string, dueDate: Date }> = []
 
   async startSync (): Promise<void> {
-    const adminSettings = await getAdminSettings()
-    this.defaultTemp = adminSettings.defaultTemp
-    console.info(
-      `📦 Admin Settings received:\n${JSON.stringify(adminSettings)}`
-    )
-
     // Sync the heating orders every other second at 0 seconds
     cron.schedule('0 * * * * *', async () => {
-      const { isSyncActive } = await getAdminSettings()
+      const { isSyncActive, defaultTemp } = await getAdminSettings()
+      this.defaultTemp = defaultTemp
       if (isSyncActive) {
         console.info(
           '\n***HeatingController: Syncing calendar with heating orders.'
@@ -56,7 +51,8 @@ export class HeatingController {
 
     // Sync the heating orders every other second at 30 seconds
     cron.schedule('30 * * * * *', async () => {
-      const { isSyncActive } = await getAdminSettings()
+      const { isSyncActive, defaultTemp } = await getAdminSettings()
+      this.defaultTemp = defaultTemp
       if (isSyncActive) {
         console.info(
           '\n***HeatingController: Syncing heating with heating orders.'

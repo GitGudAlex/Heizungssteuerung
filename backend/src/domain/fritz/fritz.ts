@@ -2,7 +2,7 @@ import { Fritz } from 'fritzdect-aha-nodejs'
 import { XmlParser } from './xml-parser'
 import { type FritzDeviceList } from './fritz-device.type'
 import dotenv from 'dotenv'
-import { HeatingLog, type HeatingLogDocument } from '../../model/heatingLog'
+// import { HeatingLog, type HeatingLogDocument } from '../../model/heatingLog'
 dotenv.config()
 
 class FritzController {
@@ -84,13 +84,13 @@ class FritzController {
       }
       const tempTarget = await this.fritz.setTempTarget(identifier, temp)
       // Write log
-      const log: HeatingLogDocument = new HeatingLog({
-        heater: identifier,
-        temperature: temp,
-        deviceStats: stats,
-        timestamp: new Date()
-      })
-      await log.save()
+      // const log: HeatingLogDocument = new HeatingLog({
+      //   heater: identifier,
+      //   temperature: temp,
+      //   deviceStats: stats,
+      //   timestamp: new Date()
+      // })
+      // await log.save()
       return tempTarget
     } catch (error: any) {
       console.error(
