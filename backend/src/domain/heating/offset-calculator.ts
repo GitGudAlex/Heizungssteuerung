@@ -17,7 +17,7 @@ export class OffsetCalculator {
     const roomTemperature = await this.getCurrentAverageRoomTemperature(room)
     const offsetTemperature = targetTemperature - roomTemperature
     if (offsetTemperature <= 0) {
-      console.log('OffsetCalculator: calculatePreheatingOffset(): No preheating needed, target temperature already reached')
+      console.log(`OffsetCalculator: calculatePreheatingOffset(): No preheating needed, target temperature already reached, ${targetTemperature} <= ${roomTemperature}`)
       return startDate
     }
     let preheatingMinutesPerDegree = 5
@@ -29,7 +29,7 @@ export class OffsetCalculator {
     }
     const offsetMinutes = offsetTemperature * preheatingMinutesPerDegree
     const offsetDate = this.offsetDateEarlierInMinutes(startDate, offsetMinutes)
-    console.log(`OffsetCalculator: calculatePreheatingOffset(): Preheating needed, offsetting date by ${offsetMinutes} minutes`)
+    console.log(`OffsetCalculator: calculatePreheatingOffset(): Preheating needed, offsetting date by ${offsetMinutes} minutes, offset temperature ${offsetTemperature}, room temperature ${roomTemperature}, target temperature ${targetTemperature}`)
     return offsetDate
   }
 
@@ -59,7 +59,7 @@ export class OffsetCalculator {
           count++
         }
       }
-      return sum / count
+      return sum / count / 10 // Divide by 10 to get the temperature in °C
     } catch (error) {
       console.error('OffsetCalculator: getAverageRoomTemperature(): Error getting temperatures:', error)
       return this.defaultTemp
