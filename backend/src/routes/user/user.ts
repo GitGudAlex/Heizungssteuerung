@@ -83,18 +83,12 @@ userRouter.post('/calString', async (req, res) => {
   try {
     const { userId, calString } = req.body
 
-    if (typeof calString !== 'string') {
-      return res.status(400).json({ message: 'Calendar string must be a string' })
-    }
-
-    const calStringFormated = calString.toLocaleLowerCase()
-
-    const exists = await User.findOne({ calStringFormated })
+    const exists = await User.findOne({ calString })
     if (exists) {
       return res.status(400).json({ message: 'Calendar string already exists' })
     }
 
-    await User.findByIdAndUpdate(userId, { calStringFormated })
+    await User.findByIdAndUpdate(userId, { calString })
 
     res.status(200).json({ message: 'Calendar string updated successfully' })
   } catch (error) {
