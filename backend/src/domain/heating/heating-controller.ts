@@ -25,7 +25,7 @@ export class HeatingController {
 
   readonly fritzController = FRITZ_SINGLETON
   readonly offsetCalculator = OFFSET_CALCULATOR_SINGLETON
-  readonly _heatingOrders: HeatingOrder[] = []
+  _heatingOrders: HeatingOrder[] = []
   defaultTemp = 16
 
   // array of manually set heaters
@@ -127,29 +127,6 @@ export class HeatingController {
       }
     }
     return false
-  }
-
-  /**
-   * Adds a heating order to the list of heating orders.
-   * Checks that the heating order is not already in the list based on its parameters.
-   * @param heatingOrder - The heating order to add.
-   */
-  public addHeatingOrder (heatingOrder: HeatingOrder): void {
-    const heatingOrderParameters = heatingOrder.getParameters()
-
-    // Check if there is an existing order by the same user
-    const indexToReplace = this._heatingOrders.findIndex((order) => {
-      return order.getParameters().username === heatingOrderParameters.username
-    })
-
-    if (indexToReplace !== -1) {
-      console.warn(
-        `HeatingController addHeatingOrder(): User ${heatingOrderParameters.username} already has an existing order. Replacing the existing order.`
-      )
-      this._heatingOrders.splice(indexToReplace, 1)
-    }
-
-    this._heatingOrders.push(heatingOrder)
   }
 
   /**
@@ -265,6 +242,8 @@ export class HeatingController {
       return
     }
     console.info(`HeatingController: ${events.length} Calendar Event found.`)
+    console.info('Cleaning up old heating orders.')
+    this._heatingOrders = []
     console.debug(
       'HeatingController: Calendar Events:',
       JSON.stringify(events, null, 2)
@@ -275,7 +254,7 @@ export class HeatingController {
         event as unknown as CalendarComponent
       )
       if (userHeatingOrder) {
-        this.addHeatingOrder(userHeatingOrder)
+        this._heatingOrders.push(userHeatingOrder)
       }
     }
     console.info(
