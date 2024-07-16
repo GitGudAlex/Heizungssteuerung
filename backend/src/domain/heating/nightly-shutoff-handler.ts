@@ -61,8 +61,8 @@ class NightlyShutoffHandler {
       return (hours + offset)
     }
 
-    const offsetOffHour = offsetHourByNumber(offHour, 2)
-    const offsetOnHour = offsetHourByNumber(onHour, 2)
+    const offsetOffHour = offsetHourByNumber(offHour, -1)
+    const offsetOnHour = offsetHourByNumber(onHour, -1)
 
     const isHourLessThanOffHour = hour < offsetOffHour
     const isHourGreaterEqualThanOnHour = hour >= offsetOnHour
