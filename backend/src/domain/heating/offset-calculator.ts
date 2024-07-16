@@ -17,6 +17,7 @@ export class OffsetCalculator {
     const roomTemperature = await this.getCurrentAverageRoomTemperature(room)
     const offsetTemperature = targetTemperature - roomTemperature
     if (offsetTemperature <= 0) {
+      console.log('OffsetCalculator: calculatePreheatingOffset(): No preheating needed, target temperature already reached')
       return startDate
     }
     let preheatingMinutesPerDegree = 5
@@ -27,7 +28,9 @@ export class OffsetCalculator {
       console.error('OffsetCalculator: calculatePreheatingOffset(): Error getting admin settings:', error)
     }
     const offsetMinutes = offsetTemperature * preheatingMinutesPerDegree
-    return this.offsetDateEarlierInMinutes(startDate, offsetMinutes)
+    const offsetDate = this.offsetDateEarlierInMinutes(startDate, offsetMinutes)
+    console.log(`OffsetCalculator: calculatePreheatingOffset(): Preheating needed, offsetting date by ${offsetMinutes} minutes`)
+    return offsetDate
   }
 
   /**

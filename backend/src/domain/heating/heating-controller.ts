@@ -339,6 +339,7 @@ export class HeatingController {
     }
 
     // Calculate the preheating offset, so the room reaches the target temperature at the start of the event
+    console.info(`Calculating preheating offset for ${event.summary}`)
     const preheatingOffsetStartDate =
       await this.offsetCalculator.calculatePreheatingOffset(
         event.start,
