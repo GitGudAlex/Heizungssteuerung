@@ -153,8 +153,8 @@
       tooltipText = `
         <div>
           <strong>${e.target.id}</strong><br>
-          ${translations['targetTemperature']}:<br>${measuredTemperature}°C<br><br>
-          ${translations['actualTemperature']}:<br>${setTemperature}°C
+          ${translations['targetTemperature']}:<br>${setTemperature}°C<br><br>
+          ${translations['actualTemperature']}:<br>${measuredTemperature}°C
         </div>
       `
     }
