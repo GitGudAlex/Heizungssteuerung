@@ -279,7 +279,6 @@ Auf der Oberfläche kann User Management innerhalb der `User` Collection der Dat
 Im Video ist zu sehen, wie der Login durchzuführen ist, wie eine Collection am Beispiel des Admin-Values angepasst werden kann und wie ein User gelöscht wird.
 
 - [Link zum Video](../resources/video/database_user_management.mp4)
-- [Link für exportierte PDFs](https://gitlab.mi.hdm-stuttgart.de/tz023/heizungssteuerung/-/wikis/resources/video/database_user_management.mp4)
 
 ### 6. Einrichtung zusätzlicher Heizkörperregler
 

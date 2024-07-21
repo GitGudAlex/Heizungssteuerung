@@ -278,7 +278,6 @@ User management can be carried out on the interface within the `user` collection
 The video shows how to log in, how to customise a collection using the admin value as an example and how to delete a user.
 
 - [Link to video](../resources/video/database_user_management.mp4)
-- [Link to exported PDFs](https://gitlab.mi.hdm-stuttgart.de/tz023/heizungssteuerung/-/wikis/resources/video/database_user_management.mp4)
 
 
 
