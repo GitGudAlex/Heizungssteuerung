@@ -24,23 +24,26 @@ A smart heating control system for individual temperature control in office and 
 ## Installation instructions (Quick Guide)
 
 1. Clone repository:
-    ```bash
-    git clone https://gitlab.mi.hdm-stuttgart.de/tz023/heizungssteuerung.git
-    cd heizungssteuerung
-    ```
+
+   ```bash
+   git clone https://gitlab.mi.hdm-stuttgart.de/tz023/heizungssteuerung.git
+   cd heizungssteuerung
+   ```
 
 2. Start docker container:
-    ```bash
-    docker-compose up
-    ```
+
+   ```bash
+   docker-compose up
+   ```
 
 3. Open the application in the browser:
-    ```bash
-    http://localhost
-    ```
+   ```bash
+   http://localhost
+   ```
 
 ## Documentation
-Further informations about the **install guide**, **user manual** and the **final product report** can be found in [PDFs](/docs/PDFs/) or inside the [heizungssteuerung.wiki](/heizungssteuerung.wiki). 
+
+Further informations about the **install guide**, **user manual** and the **final product report** can be found in [PDFs](/docs/PDFs/). The video is available in [Video](/docs/Video/).
 
 ## Use
 
@@ -54,12 +57,9 @@ Further informations about the **install guide**, **user manual** and the **fina
 
 - Set environment variables in an `.env` file (e.g., MongoDB URI, Nextcloud calendar, etc.) (see `./backend/.env.docker`).
 
-
 ## Authors
 
 - Alexander Kraus
 - Florian Demel
 - Steve Aschenbrenner
 - Torben Ziegler
-
-
