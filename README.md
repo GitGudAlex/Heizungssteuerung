@@ -51,7 +51,7 @@ Further informations about the **install guide**, **user manual** and the **fina
 
 ## API endpoints
 
-- The API endpoints can be found inside `./docs/swagger.pdf`.
+- The API endpoints can be found inside [API Docs](/docs/API Docs/).
 
 ## Configuration notes (server)
 
