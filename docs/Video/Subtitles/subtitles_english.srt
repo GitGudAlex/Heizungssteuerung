@@ -1,0 +1,87 @@
+1
+00:00:00,450 --> 00:00:11,650
+In this video, we would like to introduce our project Smart Heating Control, which was created as part of the Smart Home Internship at the University of Media.
+
+2
+00:00:12,450 --> 00:00:18,650
+In many offices, the heating is regulated manually, which is often inefficient and cumbersome.
+
+3
+00:00:19,250 --> 00:00:24,850
+Our project aims to automate and optimize this process.
+
+4
+00:00:24,850 --> 00:00:35,650
+Our system is specifically designed for teams working in offices. The idea is simple.
+
+5
+00:00:35,650 --> 00:00:42,050
+When employees come to the office, they enter their attendance times in the Nextcloud calendar.
+
+6
+00:00:42,050 --> 00:00:47,250
+Based on these entries, the heating is automatically controlled.
+
+7
+00:00:47,250 --> 00:00:53,050
+We have used various components for the implementation.
+
+8
+00:00:53,050 --> 00:01:03,530
+A Fritz-Box router as a smart hub, the intelligent radiator controllers from Fritz
+
+9
+00:01:03,530 --> 00:01:13,170
+DECT 301 and 302, the frontend and backend for the user interface and control logic,
+
+10
+00:01:13,170 --> 00:01:21,410
+a Raspberry Pi as the central control unit, and the integration of the Nextcloud calendar for
+
+11
+00:01:21,410 --> 00:01:29,090
+recording attendance times. Our development work was carried out in parallel for
+
+12
+00:01:29,090 --> 00:01:38,690
+the frontend and backend. A major challenge was to address the Fritz-Box
+
+13
+00:01:38,690 --> 00:01:47,170
+and integrate the thermostats into the system. In addition to the technical integration
+
+14
+00:01:47,170 --> 00:01:53,770
+of the thermostats, accessibility was important to us. Therefore, we support accessible
+
+15
+00:01:53,770 --> 00:02:00,210
+components for interaction with the keyboard and screen readers. Additionally, we offer
+
+16
+00:02:00,210 --> 00:02:11,210
+advanced settings such as text size adjustment, line spacing, and a sepia color filter, so that all team members can use the application.
+
+17
+00:02:11,210 --> 00:02:18,290
+The frontend provides an overview of the rooms and various settings.
+
+18
+00:02:30,290 --> 00:02:33,890
+Administrators can manage the entire system.
+
+19
+00:02:33,890 --> 00:02:46,050
+The heating control is done via the Nextcloud team calendar. Employees enter
+
+20
+00:02:46,050 --> 00:02:51,890
+the days they will be in the office. The system regularly checks the entries
+
+21
+00:02:51,890 --> 00:03:00,130
+in the calendar and plans the heating control with the appropriate lead time. If employees
+
+22
+00:03:00,130 --> 00:03:07,810
+do not come to the office or want to change the personally set temperature, they can do so at any time via the dashboard.

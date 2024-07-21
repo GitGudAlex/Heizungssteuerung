@@ -1,0 +1,88 @@
+1
+00:00:00,450 --> 00:00:11,650
+In diesem Video möchten wir Ihnen unser Projekt Smarte Heizungssteuerung vorstellen, das im Rahmen der Veranstaltung Smart Home Praktikum an der Hochschule der Medien entstanden ist.
+
+2
+00:00:12,450 --> 00:00:18,650
+In vielen Büros wird die Heizung manuell geregelt, was oft ineffizient und umständlich ist.
+
+3
+00:00:19,250 --> 00:00:24,850
+Unser Projekt zielt darauf ab, diesen Prozess zu automatisieren und zu optimieren.
+
+4
+00:00:24,850 --> 00:00:35,650
+Unser System richtet sich speziell an Teams, die in Büros arbeiten. Die Idee ist einfach.
+
+5
+00:00:35,650 --> 00:00:42,050
+Wenn Mitarbeiter ins Büro kommen, tragen sie ihre Anwesenheitszeiten im Nextcloud-Kalender ein.
+
+6
+00:00:42,050 --> 00:00:47,250
+Basierend auf diesen Einträgen wird die Heizung automatisch gesteuert.
+
+7
+00:00:47,250 --> 00:00:53,050
+Für die Umsetzung haben wir verschiedene Komponenten eingesetzt.
+
+8
+00:00:53,050 --> 00:01:03,530
+Einen Fritz-Box-Router als Smart Hub. Die intelligenten Heizkörper-Regler von Fritz
+
+9
+00:01:03,530 --> 00:01:13,170
+DECT 301 und 302. Das Frontend und Backend für die Benutzeroberfläche und Steuerlogik.
+
+10
+00:01:13,170 --> 00:01:21,410
+Einen Raspberry Pi als zentrale Steuereinhalt. Und die Einbindung des Nextcloud-Kalenders zur
+
+11
+00:01:21,410 --> 00:01:29,090
+Verfassung der Anwesenheitszeiten. Unsere Entwicklungsarbeit verlief parallel für
+
+12
+00:01:29,090 --> 00:01:38,690
+das Frontend und Backend. Eine wesentliche Herausforderung bestand darin, die Fritz-Box
+
+13
+00:01:38,690 --> 00:01:47,170
+und die Thermostate anzusprechen und ins System zu integrieren. Neben der technischen Integration
+
+14
+00:01:47,170 --> 00:01:53,770
+der Thermostate war uns die Barrierefreiheit ein Anliegen. Daher unterstützen wir barrierefreie
+
+15
+00:01:53,770 --> 00:02:00,210
+Komponenten für die Interaktion mit Tastatur und Screenreadern. Zusätzlich bieten wir
+
+16
+00:02:00,210 --> 00:02:11,210
+erweiterte Einstellungen wie die Anpassung der Textgröße, Zeilenabstände und einen Sepia Farbfilter an, sodass sämtliche Teammitglieder die Anwendung nutzen können.
+
+17
+00:02:11,210 --> 00:02:18,290
+Das Frontend bietet eine Übersicht der Räume und verschiedene Einstellungsmöglichkeiten.
+
+18
+00:02:30,290 --> 00:02:33,890
+Administratoren können das gesamte System verwalten.
+
+19
+00:02:33,890 --> 00:02:46,050
+Die Steuerung der Heizung erfolgt über den Nextcloud-Team-Kalender. Mitarbeiter tragen ein,
+
+20
+00:02:46,050 --> 00:02:51,890
+an welchen Tagen sie im Büro anwesend sind. Das System prüft regelmäßig die Einträge
+
+21
+00:02:51,890 --> 00:03:00,130
+im Kalender und plant entsprechend die Heizungssteuerung mit angepasster Vorlaufzeit. Falls Mitarbeitende
+
+22
+00:03:00,130 --> 00:03:07,810
+doch nicht ins Büro kommen oder die persönlich eingestellte Temperatur ändern möchten, kann man dies jederzeit über das Dashboard tun.
+
