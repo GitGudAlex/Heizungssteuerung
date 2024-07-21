@@ -39,6 +39,9 @@ A smart heating control system for individual temperature control in office and 
     http://localhost
     ```
 
+## Documentation
+Further informations about the **install guide**, **user manual** and the **final product report** can be found in [PDFs](/docs/PDFs/) or inside the [heizungssteuerung.wiki](/heizungssteuerung.wiki). 
+
 ## Use
 
 - Registration and management of the heating control system via the web interface.
