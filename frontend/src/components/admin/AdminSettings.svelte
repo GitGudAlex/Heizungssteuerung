@@ -132,7 +132,8 @@
         <button
           type="button"
           class="bg-purple-800 hover:bg-purple-700 dark:hover:bg-purple-900 text-white font-bold py-3 px-8 rounded-full transition duration-300"
-          on:click={() => copyToClipboard(`/${lang}/register?invitationCode=${invitationCode}`)}
+          on:click={() =>
+            copyToClipboard(`${window.location.origin}/${lang}/register?invitationCode=${invitationCode}`)}
         >
           {translations['copyLink']}
         </button>
